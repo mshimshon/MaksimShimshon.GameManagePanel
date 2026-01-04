@@ -1,59 +1,59 @@
 ﻿
 <MudItem xs=12 md=6 Class="d-flex flex-column gap-2">
-    @if (_viewModel.IsList)
+    @if (ViewModel.IsList)
     {
-    <MudSelect @ref=MudSelectRef @bind-Value=_viewModel.Value Label=@_viewModel.Parameter.Key.Key
-               HelperText=@_viewModel.Parameter.Description Variant="Variant.Filled"
-               Required=@(_viewModel.Parameter.Required)
-               ReadOnly=@(!_viewModel.Parameter.Editable)>
-        @foreach (var item in _viewModel.Parameter.Validation!.AllowedValues!)
+        <MudSelect @ref=MudSelectRef @bind-Value=ViewModel.Value Label=@ViewModel.Parameter.Key.Key
+               HelperText=@ViewModel.Parameter.Description Variant="Variant.Filled"
+               Required=@(ViewModel.Parameter.Required)
+               ReadOnly=@(!ViewModel.Parameter.Editable)>
+        @foreach (var item in ViewModel.Parameter.Validation!.AllowedValues!)
         {
             <MudSelectItem Value=@item.Value>@item.Label</MudSelectItem>
         }
     </MudSelect>
     }
-    else if (_viewModel.Parameter.Key.StartupParameterType == Domain.Enums.StartupParameterType.String)
+    else if (ViewModel.Parameter.Key.StartupParameterType == Domain.Enums.StartupParameterType.String)
     {
-        <MudTextField @ref=MudTextFieldRef @bind-Value=_viewModel.Value Label=@_viewModel.Parameter.Key.Key
-                        HelperText=@_viewModel.Parameter.Description Variant="Variant.Filled"
-                        MaxLength=@GetMaxLength() Pattern=@(_viewModel.Parameter.Validation?.PatternValidation ?? default)
-                        Required=@(_viewModel.Parameter.Required)
-                        ReadOnly=@(!_viewModel.Parameter.Editable) />
+        <MudTextField @ref=MudTextFieldRef @bind-Value=ViewModel.Value Label=@ViewModel.Parameter.Key.Key
+                        HelperText=@ViewModel.Parameter.Description Variant="Variant.Filled"
+                        MaxLength=@GetMaxLength() Pattern=@(ViewModel.Parameter.Validation?.PatternValidation ?? default)
+                        Required=@(ViewModel.Parameter.Required)
+                        ReadOnly=@(!ViewModel.Parameter.Editable) />
     }
-    else if (_viewModel.Parameter.Key.StartupParameterType == Domain.Enums.StartupParameterType.Bool)
+    else if (ViewModel.Parameter.Key.StartupParameterType == Domain.Enums.StartupParameterType.Bool)
     {
         <MudSwitch @ref=MudSwitchRef @bind-Value=ValueBool Color="Color.Success" UncheckedColor="Color.Error"
-                    Label=@_viewModel.Parameter.Key.Key />
-        <MudText Typo=@Typo.caption>@_viewModel.Parameter.Description</MudText>
+                    Label=@ViewModel.Parameter.Key.Key />
+        <MudText Typo=@Typo.caption>@ViewModel.Parameter.Description</MudText>
     }
-    else if (_viewModel.IsInt)
+    else if (ViewModel.IsInt)
     {
-        <MudNumericField @ref=MudNumericFieldIntRef @bind-Value=ValueInt Label=@_viewModel.Parameter.Key.Key
-                            HelperText=@_viewModel.Parameter.Description Variant="Variant.Filled"
-                            Min=@(_viewModel.Parameter.Validation?.Min ?? int.MinValue)
-                            Max=@(_viewModel.Parameter.Validation?.Max ?? int.MaxValue)
+        <MudNumericField @ref=MudNumericFieldIntRef @bind-Value=ValueInt Label=@ViewModel.Parameter.Key.Key
+                            HelperText=@ViewModel.Parameter.Description Variant="Variant.Filled"
+                            Min=@(ViewModel.Parameter.Validation?.Min ?? int.MinValue)
+                            Max=@(ViewModel.Parameter.Validation?.Max ?? int.MaxValue)
                             Step=@(1)
-                            Pattern=@(_viewModel.Parameter.Validation?.PatternValidation ?? default)
-                            Required=@(_viewModel.Parameter.Required)
-                            ReadOnly=@(!_viewModel.Parameter.Editable) />
+                            Pattern=@(ViewModel.Parameter.Validation?.PatternValidation ?? default)
+                            Required=@(ViewModel.Parameter.Required)
+                            ReadOnly=@(!ViewModel.Parameter.Editable) />
     }
-    else if (_viewModel.IsDecimal)
+    else if (ViewModel.IsDecimal)
     {
-        <MudNumericField @ref=MudNumericFieldDecimalRef @bind-Value=ValueDecimal Label=@_viewModel.Parameter.Key.Key
-                            HelperText=@_viewModel.Parameter.Description Variant="Variant.Filled"
-                            Min=@(_viewModel.Parameter.Validation?.Min ?? int.MinValue)
-                            Max=@(_viewModel.Parameter.Validation?.Max ?? int.MaxValue)
+        <MudNumericField @ref=MudNumericFieldDecimalRef @bind-Value=ValueDecimal Label=@ViewModel.Parameter.Key.Key
+                            HelperText=@ViewModel.Parameter.Description Variant="Variant.Filled"
+                            Min=@(ViewModel.Parameter.Validation?.Min ?? int.MinValue)
+                            Max=@(ViewModel.Parameter.Validation?.Max ?? int.MaxValue)
                             Step=@(0.01)
-                            Pattern=@(_viewModel.Parameter.Validation?.PatternValidation ?? default)
-                            Required=@(_viewModel.Parameter.Required)
-                            ReadOnly=@(!_viewModel.Parameter.Editable) />
+                            Pattern=@(ViewModel.Parameter.Validation?.PatternValidation ?? default)
+                            Required=@(ViewModel.Parameter.Required)
+                            ReadOnly=@(!ViewModel.Parameter.Editable) />
     }
     
-    @if (_viewModel.Parameter.Editable)
+    @if (ViewModel.Parameter.Editable)
     {
         <MudButtonGroup Color="Color.Primary" Variant="Variant.Filled">
-            <MudButton OnClick=@_viewModel.Save Disabled=@(!IsTouched)>Save</MudButton>
-            <MudButton OnClick=@_viewModel.Reset Disabled=@(!IsTouched)>Reset</MudButton>
+            <MudButton OnClick=@ViewModel.Save Disabled=@(!IsTouched)>Save</MudButton>
+            <MudButton OnClick=@ViewModel.Reset Disabled=@(!IsTouched)>Reset</MudButton>
         </MudButtonGroup>
     }
     else

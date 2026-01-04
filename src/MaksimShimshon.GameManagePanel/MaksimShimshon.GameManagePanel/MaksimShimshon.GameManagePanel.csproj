@@ -26,6 +26,10 @@
 	  <PackageReference Include="MediHater" PrivateAssets="false" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MaksimShimshon.GameManagePanel.Core\MaksimShimshon.GameManagePanel.Core.csproj" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />

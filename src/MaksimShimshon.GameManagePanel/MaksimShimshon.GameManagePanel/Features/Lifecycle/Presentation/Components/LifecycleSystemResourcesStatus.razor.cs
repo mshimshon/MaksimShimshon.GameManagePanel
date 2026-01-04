@@ -1,26 +1,42 @@
-﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Components.ViewModels;
+﻿using LunaticPanel.Core;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Components.ViewModels;
 using Microsoft.AspNetCore.Components;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Components;
 
-public partial class LifecycleSystemResourcesStatus : ComponentBase
+public partial class LifecycleSystemResourcesStatus : ComponentBase, IDisposable
 {
-    [Inject] public ISwizzleFactory SwizzleFactory { get; set; } = default!;
+    private readonly IPluginService<PluginEntry> _pluginService;
+    public LifecycleSystemResourcesStatus(IPluginService<PluginEntry> pluginService)
+    {
+        _pluginService = pluginService;
+    }
 
-    private LifecycleSystemResourcesStatusViewModel _viewModel = default!;
+    [Inject] public LifecycleSystemResourcesStatusViewModel ViewModel { get; set; } = default!;
+
     protected override async Task OnInitializedAsync()
     {
-        // Create or Get Exisintg Hook Binding
-        var articleVMHook = SwizzleFactory.CreateOrGet<LifecycleSystemResourcesStatusViewModel>(() => this, ShouldUpdate);
-        // Get View Model Type Instance of the Hook
-        _viewModel = articleVMHook.GetViewModel<LifecycleSystemResourcesStatusViewModel>()!;
+        ViewModel = _pluginService.GetRequired<LifecycleSystemResourcesStatusViewModel>();
+        ViewModel.SpreadChanges += ShouldUpdate;
     }
+
     private Task ShouldUpdate() => InvokeAsync(StateHasChanged);
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposing)
+            return;
 
-    private float CpuUsage => @MathF.Round((_viewModel.SystemState.SystemInfo?.Processor.Current ?? 0f) * 100, 0);
-    private float RamUsage => @MathF.Round((_viewModel.SystemState.SystemInfo?.Memory.Percentage ?? 0f) * 100, 0);
-    private float DiskUsage => @MathF.Round((_viewModel.SystemState.SystemInfo?.Disk.Percentage ?? 0f) * 100, 0);
+        ViewModel.SpreadChanges -= ShouldUpdate;
+    }
+    private float CpuUsage => @MathF.Round((ViewModel.SystemState.SystemInfo?.Processor.Current ?? 0f) * 100, 0);
+    private float RamUsage => @MathF.Round((ViewModel.SystemState.SystemInfo?.Memory.Percentage ?? 0f) * 100, 0);
+    private float DiskUsage => @MathF.Round((ViewModel.SystemState.SystemInfo?.Disk.Percentage ?? 0f) * 100, 0);
     public static string FormatMegabytes(float mb)
     {
         if (mb < 1024)

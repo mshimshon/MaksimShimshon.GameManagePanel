@@ -14,9 +14,8 @@ public class StatusResponseToServerInfoEntity : ICoreMapHandler<StatusResponse, 
         else if (string.Equals(data.Status, "stopped", StringComparison.InvariantCultureIgnoreCase))
             currentStatus = Status.Stopped;
 
-        return new ServerInfoEntity()
+        return new ServerInfoEntity(currentStatus)
         {
-            Status = currentStatus,
             Port = data.Server?.Port.ToString() ?? "????",
             Name = data.Server?.Name ?? "Unknown",
             LastUpdate = data.Timestamp,

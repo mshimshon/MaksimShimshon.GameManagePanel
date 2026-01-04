@@ -1,5 +1,5 @@
-﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
-using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Queries;
+﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.CQRS.Queries;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
 using MedihatR;
 using StatePulse.Net;
 
@@ -15,21 +15,12 @@ public class LifecycleFetchStartupParametersEffect : IEffect<LifecycleFetchStart
     }
     public async Task EffectAsync(LifecycleFetchStartupParametersAction action, IDispatcher dispatcher)
     {
-
         var exec = new GetStartupParametersQuery();
         Dictionary<string, string>? data = default;
-        try
-        {
-            data = await _medihater.Send(exec);
-        }
-        finally
-        {
-            var dispatchPrep = dispatcher.Prepare<LifecycleFetchStartupParametersDoneAction>();
-            dispatchPrep.With(p => p.StartupParameters, data);
-            await dispatchPrep.DispatchAsync();
-        }
-
-
-
+        data = await _medihater.Send(exec);
+        await dispatcher
+            .Prepare<LifecycleFetchStartupParametersDoneAction>()
+            .With(p => p.StartupParameters, data)
+            .DispatchAsync();
     }
 }

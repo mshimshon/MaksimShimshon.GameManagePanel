@@ -9,6 +9,7 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel;
 
+
 public class PluginEntry : IPlugin
 {
     public void Configure(IConfiguration configuration)

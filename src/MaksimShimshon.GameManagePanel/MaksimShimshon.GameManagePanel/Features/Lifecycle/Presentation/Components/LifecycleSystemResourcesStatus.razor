@@ -1,4 +1,4 @@
-﻿@if (_viewModel.Loading || _viewModel.SystemState.SystemInfo == default)
+﻿@if (ViewModel.Loading || ViewModel.SystemState.SystemInfo == default)
 {
     <MudGrid>
         <MudItem xs=12>
@@ -47,16 +47,16 @@ else {
         </MudItem>
         <MudItem xs=6>
             <MudText Typo=@Typo.subtitle1>@($"CPU")</MudText>
-            <MudText Typo=@Typo.caption>@($"{_viewModel.SystemState.SystemInfo.Processor.Cores} Cores")</MudText><br/>
-            <MudText Typo=@Typo.caption>@($"{_viewModel.SystemState.SystemInfo.Processor.Model}")</MudText>
+            <MudText Typo=@Typo.caption>@($"{ViewModel.SystemState.SystemInfo.Processor.Cores} Cores")</MudText><br />
+            <MudText Typo=@Typo.caption>@($"{ViewModel.SystemState.SystemInfo.Processor.Model}")</MudText>
         </MudItem >
         <MudItem xs=6>
             <MudText Typo=@Typo.subtitle1>@($"RAM")</MudText>
-            <MudText Typo=@Typo.caption>@FormatMegabytes(_viewModel.SystemState.SystemInfo.Memory.Total)</MudText>
+            <MudText Typo=@Typo.caption>@FormatMegabytes(ViewModel.SystemState.SystemInfo.Memory.Total)</MudText>
         </MudItem>
         <MudItem xs=6>
             <MudText Typo=@Typo.subtitle1>@($"DISK")</MudText>
-            <MudText Typo=@Typo.caption>@FormatMegabytes(_viewModel.SystemState.SystemInfo.Disk.Total)</MudText>
+            <MudText Typo=@Typo.caption>@FormatMegabytes(ViewModel.SystemState.SystemInfo.Disk.Total)</MudText>
         </MudItem>
 
     </MudGrid>

@@ -1,4 +1,4 @@
-﻿using GameServerManager.Features.Lifecycle.Application.Commands;
+﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.CQRS.Commands;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
 using MedihatR;
 using StatePulse.Net;
@@ -15,7 +15,8 @@ public class LifecycleUpdateStartupParameterEffect : IEffect<LifecycleUpdateStar
     }
     public async Task EffectAsync(LifecycleUpdateStartupParameterAction action, IDispatcher dispatcher)
     {
-        var exec = new ExecUpdateStartupParameterCommand() {
+        var exec = new ExecUpdateStartupParameterCommand()
+        {
             Key = action.Key,
             Value = action.Value
         };

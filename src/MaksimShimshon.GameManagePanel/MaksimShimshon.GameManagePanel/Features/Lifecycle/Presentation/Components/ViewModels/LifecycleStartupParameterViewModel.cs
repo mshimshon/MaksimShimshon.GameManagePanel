@@ -1,4 +1,6 @@
-﻿using StatePulse.Net;
+﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Stores;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
+using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Components.ViewModels;
 
@@ -16,7 +18,7 @@ public class LifecycleStartupParameterViewModel
                 _ = SpreadChanges?.Invoke();
         }
     }
-    public Func<Task> SpreadChanges { get; set; } = default!;
+    public event Func<Task>? SpreadChanges;
 
     private readonly IStatePulse _statePulse;
     private readonly IDispatcher _dispatcher;

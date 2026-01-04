@@ -1,4 +1,5 @@
-﻿using StatePulse.Net;
+﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Stores;
+using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Components.ViewModels;
 
@@ -16,18 +17,15 @@ public class LifecycleSystemResourcesStatusViewModel
                 _ = SpreadChanges?.Invoke();
         }
     }
-    public Func<Task> SpreadChanges { get; set; } = default!;
+    public event Func<Task>? SpreadChanges;
 
     private readonly IStatePulse _statePulse;
-    private readonly IDispatcher _dispatcher;
 
 
     public LifecycleSystemState SystemState => _statePulse.StateOf<LifecycleSystemState>(() => this, OnUpdate);
     private async Task OnUpdate() => _ = SpreadChanges?.Invoke();
-    public LifecycleSystemResourcesStatusViewModel(IStatePulse statePulse, IDispatcher dispatcher)
+    public LifecycleSystemResourcesStatusViewModel(IStatePulse statePulse)
     {
         _statePulse = statePulse;
-        _dispatcher = dispatcher;
-
     }
 }

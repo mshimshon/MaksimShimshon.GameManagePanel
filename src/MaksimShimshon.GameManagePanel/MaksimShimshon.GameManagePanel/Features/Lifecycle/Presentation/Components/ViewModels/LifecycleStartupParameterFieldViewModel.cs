@@ -1,4 +1,8 @@
-﻿using StatePulse.Net;
+﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Stores;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Enums;
+using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Components.ViewModels;
 
@@ -16,12 +20,14 @@ public class LifecycleStartupParameterFieldViewModel
                 _ = SpreadChanges?.Invoke();
         }
     }
-    public Func<Task> SpreadChanges { get; set; } = default!;
+
+    public event Func<Task>? SpreadChanges;
+    private async Task OnUpdate() => _ = SpreadChanges?.Invoke();
 
     private readonly IStatePulse _statePulse;
     private readonly IDispatcher _dispatcher;
 
-    public LifecycleGameInfoState GameInfoState => _statePulse.StateOf<LifecycleGameInfoState>(() => this, OnStateChanged);
+    public LifecycleGameInfoState GameInfoState => _statePulse.StateOf<LifecycleGameInfoState>(() => this, OnUpdate);
 
     public GameStartupParameterEntity Parameter { get; set; } = default!;
 

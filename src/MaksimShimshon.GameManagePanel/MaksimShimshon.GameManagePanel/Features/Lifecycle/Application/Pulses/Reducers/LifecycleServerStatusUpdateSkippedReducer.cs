@@ -7,7 +7,8 @@ namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.R
 public class LifecycleServerStatusUpdateSkippedReducer : IReducer<LifecycleServerState, LifecycleServerStatusUpdateSkippedAction>
 {
     public async Task<LifecycleServerState> ReduceAsync(LifecycleServerState state, LifecycleServerStatusUpdateSkippedAction action)
-        => await Task.FromResult(state with { 
-            SkipNextUpdates = state.SkipNextUpdates - 1 <= 0 ? 0 : state.SkipNextUpdates - 1 
+        => await Task.FromResult(state with
+        {
+            SkipNextUpdates = state.SkipNextUpdates - 1 <= 0 ? 0 : state.SkipNextUpdates - 1
         });
 }
