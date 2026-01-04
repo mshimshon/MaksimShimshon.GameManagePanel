@@ -1,0 +1,94 @@
+@page "/MaksimShimshon.GameManagePanel/lifecycle"
+
+<MudGrid Justify=@Justify.FlexStart>
+    <MudItem xs=12 sm=12 md=4>
+        <MudCard>
+            <MudCardMedia Image="scripts/lifecycle/server_banner.cgi" Height="300" Style="background-position: top;background-repeat: no-repeat;" />
+            <MudCardContent Class="justify-space-around mud-width-full py-6 px-6">
+                @if (_viewModel.IsWaiting())
+                {
+                    <MudAlert Severity=@Severity.Warning ContentAlignment=@HorizontalAlignment.Center NoIcon=true>
+                        <MudProgressLinear Color="Color.Warning" Indeterminate="true" Class="my-1" />
+                        <MudText Align=Align.Center>Awaiting for Server Info...</MudText>
+                    </MudAlert>
+                }
+                else if(_viewModel.GameInfoState.GameInfo != default)
+                {
+                    <MudText Typo=@Typo.h6>@_viewModel.GameInfoState.GameInfo.Name</MudText>
+                    <MudDivider Class="my-1" Style="visibility: hidden;" />
+                    @if (_viewModel.GameInfoState.GameInfo.SteamInfo != default)
+                    {
+                        <MudChip T="string" Variant="Variant.Text" Color="Color.Info">@($"Steam: {_viewModel.GameInfoState.GameInfo.SteamInfo.Steamid}")</MudChip>
+                    }
+                    @if (_viewModel.GameInfoState.GameInfo.Modding)
+                    {
+                        @if (_viewModel.GameInfoState.GameInfo.SteamInfo != default && _viewModel.GameInfoState.GameInfo.SteamInfo.HasModdingWorkshop)
+                        {
+                            <MudChip T="string" Icon=@Icons.Material.Filled.Check Variant="Variant.Text" Color="Color.Info">Steam Workshop</MudChip>
+                        }else
+                        {
+                            <MudChip T="string" Icon=@Icons.Material.Filled.Check Variant="Variant.Text" Color="Color.Info">Modding</MudChip>
+                            <MudChip T="string" Icon=@Icons.Material.Filled.Stop Variant="Variant.Text" Color="Color.Error">Steam Workshop</MudChip>
+                        }
+                        @if (_viewModel.GameInfoState.GameInfo.ManualModUpload != default)
+                        {
+                            <MudChip T="string" Icon=@Icons.Material.Filled.Stop Variant="Variant.Text" Color="Color.Warning">@($"Mod Upload Required")</MudChip>
+                        }
+                        else
+                        {
+                            <MudChip T="string" Icon=@Icons.Material.Filled.Check Variant="Variant.Text" Color="Color.Success">@($"Automatic Mod Download")</MudChip>
+                        }
+                    }
+                }
+
+                @if (!_viewModel.IsWaiting())
+                {
+                    <MudDivider Class="my-2" />
+                    @if (_viewModel.ServerState.Transition == ServerTransition.Starting)
+                    {
+                        <MudAlert Severity=@Severity.Success ContentAlignment=@HorizontalAlignment.Center NoIcon=true>
+                            <MudProgressLinear Color="Color.Success" Indeterminate="true" Class="my-1" />
+                            <MudText Align=Align.Center>Starting...</MudText>
+                        </MudAlert>
+                    }
+                    else if (_viewModel.ServerState.Transition == ServerTransition.Stopping)
+                    {
+                        <MudAlert Severity=@Severity.Error ContentAlignment=@HorizontalAlignment.Center NoIcon=true>
+                            <MudProgressLinear Color="Color.Error" Indeterminate="true" Class="my-1" />
+                            <MudText Align=Align.Center>Stopping...</MudText>
+                        </MudAlert>
+                    }
+                    else
+                    {
+                        <MudFab Color="Color.Error" StartIcon="@Icons.Material.Filled.Stop" DropShadow="false" Size=@Size.Small OnClick=@(() => _viewModel.Stop()) Disabled=@(_viewModel.IsStopped() || _viewModel.IsWaiting() || _viewModel.Loading) />
+                        <MudFab Color="Color.Success" StartIcon="@Icons.Material.Filled.PlayArrow" DropShadow="false" OnClick=@(() => _viewModel.Start()) Disabled=@(_viewModel.IsRunning() || _viewModel.IsWaiting() || _viewModel.Loading) />
+                    }
+                }
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem xs=12 sm=12 md=4>
+        <MudPaper Class="justify-space-around mud-width-full py-6 px-6">
+            <LifecycleSystemResourcesStatus />
+        </MudPaper>
+    </MudItem>
+    @if (_viewModel.GameInfoState.GameInfo != default)
+    {
+        <MudItem xs=12 sm=12 md=8>
+            <MudPaper Class="mud-width-full py-6 px-6">
+                @if (_viewModel.GameInfoState.GameInfo.StartupParameters != default)
+                {
+                   <LifecycleStartupParameter  />
+                }
+                else
+                {
+                    <MudAlert Severity=@Severity.Warning ContentAlignment=@HorizontalAlignment.Center NoIcon=true>
+                        <MudProgressLinear Color="Color.Warning" Indeterminate="true" Class="my-1" />
+                        <MudText Align=Align.Center>Loading Parameters...</MudText>
+                    </MudAlert>
+                }
+            </MudPaper>
+        </MudItem>
+    }
+</MudGrid>

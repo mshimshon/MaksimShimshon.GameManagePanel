@@ -1,0 +1,20 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	  <GlobalVersion>0.1.0</GlobalVersion>
+	  <GlobalCompany>Maksim Shimshon</GlobalCompany>
+	  <GlobalAuthors>Maksim Shimshon</GlobalAuthors>
+	  <GlobalCopyright>Maksim Shimshon © 2026</GlobalCopyright>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="LunaticPanel.Core" Version="0.1.3" />
+    <PackageVersion Include="LunaticPanel.Core.Extenstions" Version="0.1.3" />
+    <PackageVersion Include="LunaticPanel.Engine.Core" Version="0.1.3" />
+    <PackageVersion Include="MudBlazor" Version="8.15.0" />
+    <PackageVersion Include="StatePulse.Net" Version="2.0.5" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.1" />
+    <PackageVersion Include="MediHater" Version="1.0.0" />
+    <PackageVersion Include="CoreMap" Version="1.1.0" />
+  </ItemGroup>
+</Project>
