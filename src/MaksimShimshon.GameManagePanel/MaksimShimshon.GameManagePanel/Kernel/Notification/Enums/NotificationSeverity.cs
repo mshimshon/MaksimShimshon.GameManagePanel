@@ -1,9 +1,9 @@
 ﻿namespace MaksimShimshon.GameManagePanel.Kernel.Notification.Enums;
 
-public enum ToastColor
+public enum NotificationSeverity
 {
     Info = 0,
-    Success = 2,
-    Warning = 3,
-    Error = 4,
+    Warning = 1,
+    Error = 2,
+    Success = 3
 }

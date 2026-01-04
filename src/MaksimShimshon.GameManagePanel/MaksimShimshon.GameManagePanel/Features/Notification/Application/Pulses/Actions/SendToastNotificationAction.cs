@@ -6,5 +6,5 @@ namespace MaksimShimshon.GameManagePanel.Features.Notification.Application.Pulse
 public record SendToastNotificationAction : IAction
 {
     public string Message { get; set; } = default!;
-    public ToastColor Color { get; set; } = ToastColor.Info;
+    public NotificationSeverity Color { get; set; } = NotificationSeverity.Info;
 }

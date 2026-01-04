@@ -5,7 +5,7 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Notification.Infrastructure.Services;
 
-internal class ToastNotificationService : IToastNotificationService
+internal class ToastNotificationService : INotificationService
 {
     private readonly IDispatcher _dispatcher;
 
@@ -13,7 +13,7 @@ internal class ToastNotificationService : IToastNotificationService
     {
         _dispatcher = dispatcher;
     }
-    public async Task ToastAsync(string message, ToastColor severity)
+    public async Task NotifyAsync(string message, NotificationSeverity severity)
     {
         await _dispatcher.Prepare<SendToastNotificationAction>()
         .With(p => p.Message, message)

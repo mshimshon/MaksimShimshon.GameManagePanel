@@ -1,6 +1,6 @@
 ﻿using MedihatR;
 
-namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Commands;
+namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.CQRS.Commands;
 
 public record ExecUpdateStartupParameterCommand : IRequest
 {

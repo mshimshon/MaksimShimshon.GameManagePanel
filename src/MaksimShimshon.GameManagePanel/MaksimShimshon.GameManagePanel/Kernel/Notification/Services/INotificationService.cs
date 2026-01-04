@@ -2,7 +2,7 @@
 
 namespace MaksimShimshon.GameManagePanel.Kernel.Notification.Api;
 
-public interface IToastNotificationService
+public interface INotificationService
 {
-    Task ToastAsync(string message, ToastColor severity);
+    Task NotifyAsync(string message, NotificationSeverity severity);
 }

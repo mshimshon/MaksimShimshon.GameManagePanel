@@ -18,9 +18,9 @@ public class SendToastNotificationEffect : IEffect<SendToastNotificationAction>
     {
         Severity selectedSeverity = action.Color switch
         {
-            ToastColor.Error => Severity.Error,
-            ToastColor.Warning => Severity.Warning,
-            ToastColor.Success => Severity.Success,
+            NotificationSeverity.Error => Severity.Error,
+            NotificationSeverity.Warning => Severity.Warning,
+            NotificationSeverity.Success => Severity.Success,
             _ => Severity.Info
         };
         _snackbar.Add((MarkupString)action.Message, selectedSeverity);
