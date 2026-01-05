@@ -22,6 +22,7 @@ public partial class LifecycleSystemResourcesStatus : ComponentBase, IDisposable
     private Task ShouldUpdate() => InvokeAsync(StateHasChanged);
     public void Dispose()
     {
+        ViewModel.SpreadChanges -= ShouldUpdate;
         Dispose(true);
         GC.SuppressFinalize(this);
     }
@@ -31,7 +32,7 @@ public partial class LifecycleSystemResourcesStatus : ComponentBase, IDisposable
         if (!disposing)
             return;
 
-        ViewModel.SpreadChanges -= ShouldUpdate;
+        
     }
     private float CpuUsage => @MathF.Round((ViewModel.SystemState.SystemInfo?.Processor.Current ?? 0f) * 100, 0);
     private float RamUsage => @MathF.Round((ViewModel.SystemState.SystemInfo?.Memory.Percentage ?? 0f) * 100, 0);
