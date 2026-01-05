@@ -30,9 +30,8 @@
     <ProjectReference Include="..\MaksimShimshon.GameManagePanel.Core\MaksimShimshon.GameManagePanel.Core.csproj" />
   </ItemGroup>
 
-
   <ItemGroup>
-    <SupportedPlatform Include="browser" />
+    <Folder Include="Features\SystemInfo\Application\CQRS\Commands\" />
+    <Folder Include="Features\SystemInfo\Infrastructure\Services\" />
   </ItemGroup>
-
 </Project>

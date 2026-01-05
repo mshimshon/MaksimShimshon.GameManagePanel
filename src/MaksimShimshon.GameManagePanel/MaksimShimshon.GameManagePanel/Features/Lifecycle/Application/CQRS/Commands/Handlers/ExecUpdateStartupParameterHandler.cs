@@ -1,5 +1,6 @@
 ﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Services;
-using MaksimShimshon.GameManagePanel.Kernel.Notification.Api;
+using MaksimShimshon.GameManagePanel.Kernel.CQRS;
+using MaksimShimshon.GameManagePanel.Kernel.Notification.Services;
 using MedihatR;
 using Microsoft.Extensions.Logging;
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.CQRS.Commands.Handlers;

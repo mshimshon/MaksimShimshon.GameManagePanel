@@ -11,7 +11,6 @@ public sealed record ServerInfoEntity
     public DateTime LastUpdate { get; init; }
     public string? Pid { get; init; }
     public GameInfoEntity? GameInfo { get; init; }
-    public SystemInfoEntity? SystemInfo { get; init; }
     public ServerInfoEntity(Status status)
     {
         Status = status;

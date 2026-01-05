@@ -1,4 +1,4 @@
-﻿namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Stores.Enums;
+﻿namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States.Enums;
 
 public enum ServerTransition
 {

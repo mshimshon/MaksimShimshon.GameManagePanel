@@ -1,6 +1,6 @@
 ﻿using MaksimShimshon.GameManagePanel.Kernel.Notification.Enums;
 
-namespace MaksimShimshon.GameManagePanel.Kernel.Notification.Api;
+namespace MaksimShimshon.GameManagePanel.Kernel.Notification.Services;
 
 public interface INotificationService
 {

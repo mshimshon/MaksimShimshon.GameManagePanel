@@ -1,5 +1,5 @@
 ﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
-using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Stores;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Enums;
 using StatePulse.Net;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace MaksimShimshon.GameManagePanel.Features.Lifecycle;
+namespace MaksimShimshon.GameManagePanel.Features.Notification;
 
 internal static class NotificationServiceExt
 {

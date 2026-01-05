@@ -1,0 +1,11 @@
+﻿using MaksimShimshon.GameManagePanel.Kernel.Heartbeat.Pulses.Actions;
+using MaksimShimshon.GameManagePanel.Kernel.Heartbeat.Pulses.States;
+using StatePulse.Net;
+
+namespace MaksimShimshon.GameManagePanel.Kernel.Heartbeat.Pulses.Reducers;
+
+internal class HeartbeatRunnerReducer : IReducer<HeartbeatState, HeartbeatRunnerAction>
+{
+    public Task<HeartbeatState> ReduceAsync(HeartbeatState state, HeartbeatRunnerAction action)
+        => Task.FromResult(state with { LastStart = DateTime.UtcNow, IsRunning = true });
+}

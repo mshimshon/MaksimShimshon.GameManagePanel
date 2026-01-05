@@ -1,6 +1,6 @@
 ﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
-using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Stores;
-using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Stores.Enums;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States.Enums;
 using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Reducers;

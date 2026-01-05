@@ -1,6 +1,6 @@
 ﻿using MaksimShimshon.GameManagePanel.Features.Notification.Application.Pulses.Actions;
-using MaksimShimshon.GameManagePanel.Kernel.Notification.Api;
 using MaksimShimshon.GameManagePanel.Kernel.Notification.Enums;
+using MaksimShimshon.GameManagePanel.Kernel.Notification.Services;
 using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Notification.Infrastructure.Services;

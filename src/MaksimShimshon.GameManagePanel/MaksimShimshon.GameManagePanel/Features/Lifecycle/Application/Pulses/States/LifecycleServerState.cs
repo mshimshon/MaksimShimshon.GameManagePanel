@@ -1,8 +1,8 @@
-﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Stores.Enums;
+﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States.Enums;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using StatePulse.Net;
 
-namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Stores;
+namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States;
 
 public record LifecycleServerState : IStateFeatureSingleton
 {
