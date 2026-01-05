@@ -11,7 +11,7 @@ public partial class LifecycleSystemResourcesStatus : ComponentBase, IDisposable
         _pluginService = pluginService;
     }
 
-    [Inject] public LifecycleSystemResourcesStatusViewModel ViewModel { get; set; } = default!;
+    public LifecycleSystemResourcesStatusViewModel ViewModel { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {

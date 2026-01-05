@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="LunaticPanel.Core" PrivateAssets="false" />
-    <PackageReference Include="LunaticPanel.Core.Extenstions" PrivateAssets="false" />
+    <PackageReference Include="LunaticPanel.Core.Extensions" />
     <PackageReference Include="LunaticPanel.Engine.Core" PrivateAssets="false" />
 	  <PackageReference Include="Microsoft.AspNetCore.Components.Web" PrivateAssets="false" />
 	  <PackageReference Include="MudBlazor" PrivateAssets="false" />
@@ -32,6 +32,5 @@
 
   <ItemGroup>
     <Folder Include="Features\SystemInfo\Application\CQRS\Commands\" />
-    <Folder Include="Features\SystemInfo\Infrastructure\Services\" />
   </ItemGroup>
 </Project>

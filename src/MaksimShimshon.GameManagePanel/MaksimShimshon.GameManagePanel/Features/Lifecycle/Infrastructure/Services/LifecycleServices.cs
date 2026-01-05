@@ -6,20 +6,20 @@ namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Servi
 internal class LifecycleServices : ILifecycleServices
 {
     public Task<Dictionary<string, string>> GetServerStartupParametersAsync(CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+        => Task.FromResult(new Dictionary<string, string>());
 
     public Task ServerRestartAsync(CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+        => Task.CompletedTask;
 
     public Task ServerStartAsync(CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+        => Task.CompletedTask;
 
     public Task<ServerInfoEntity?> ServerStatusAsync(CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+        => Task.FromResult(default(ServerInfoEntity));
 
     public Task ServerStopAsync(CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+        => Task.CompletedTask;
 
     public Task UpdateStartupParameterAsync(string key, string value, CancellationToken cancellationToken = default)
-        => throw new NotImplementedException();
+        => Task.CompletedTask;
 }

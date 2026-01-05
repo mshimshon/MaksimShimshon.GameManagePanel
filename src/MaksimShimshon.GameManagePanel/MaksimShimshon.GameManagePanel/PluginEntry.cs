@@ -43,16 +43,18 @@ public class PluginEntry : IPlugin
     {
         var config = new Configuration();
         config.GameInfo = _configuration.GetSection("GameInfo")?.Get<GameInfoConfiguration>();
+        services.AddScoped<HomeViewModel>();
         services.AddScoped<IHeartbeatService, HeartbeatService>();
         services.AddScoped(p => config);
         services.AddLifecycleFeatureServices();
         services.AddNotificationFeatureServices();
         services.AddSystemInfoFeatureServices();
-        services.AddCoreMap(o => o.Scope = CoreMap.Enums.ServiceScope.Transient, [typeof(PluginEntry)]);
+
+        services.AddCoreMap(o => o.Scope = CoreMap.Enums.ServiceScope.Transient);
         services.AddStatePulseServices(c =>
         {
-            c.ScanAssemblies = [typeof(PluginEntry).Assembly];
             c.DispatchOrderBehavior = StatePulse.Net.Configuration.DispatchOrdering.ReducersFirst;
+            c.PulseTrackingPerformance = StatePulse.Net.Configuration.PulseTrackingModel.BlazorServerSafe;
         });
 
         services.AddMedihaterServices(c =>
@@ -60,8 +62,7 @@ public class PluginEntry : IPlugin
             c.Performance = MedihatR.Configuraions.Enums.PipelinePerformance.DynamicMethods;
             c.NotificationFireMode = MedihatR.Configuraions.Enums.PipelineNotificationFireMode.FireAndForget;
             c.CachingMode = MedihatR.Configuraions.Enums.PipelineCachingMode.EagerCaching;
-            c.AssembliesScan = [typeof(PluginEntry)];
         });
-        services.AddScoped<LifecycleViewModel>();
+        services.AddScoped<HomeViewModel>();
     }
 }

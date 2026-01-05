@@ -10,16 +10,18 @@ public partial class LifecycleStartupParameterField : ComponentBase, IDisposable
 {
 
     private readonly IPluginService<PluginEntry> _pluginService;
+    public LifecycleStartupParameterFieldViewModel ViewModel { get; set; }
+
     public LifecycleStartupParameterField(IPluginService<PluginEntry> pluginService)
     {
         _pluginService = pluginService;
+        ViewModel = _pluginService.GetRequired<LifecycleStartupParameterFieldViewModel>();
     }
 
     [Parameter]
     public GameStartupParameterEntity GameStartupParameter { get; set; } = default!;
     [Parameter]
     public string InitialValue { get; set; } = default!;
-    [Inject] public LifecycleStartupParameterFieldViewModel ViewModel { get; set; } = default!;
 
     public MudSelect<string>? MudSelectRef { get; set; }
     public MudNumericField<int>? MudNumericFieldIntRef { get; set; }

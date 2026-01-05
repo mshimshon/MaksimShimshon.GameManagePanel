@@ -11,8 +11,9 @@ public partial class LifecycleStartupParameter : ComponentBase, IDisposable
     public LifecycleStartupParameter(IPluginService<PluginEntry> pluginService)
     {
         _pluginService = pluginService;
+        ViewModel = _pluginService.GetRequired<LifecycleStartupParameterViewModel>();
     }
-    [Inject] public LifecycleStartupParameterViewModel ViewModel { get; set; } = default!;
+    public LifecycleStartupParameterViewModel ViewModel { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

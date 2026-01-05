@@ -1,0 +1,10 @@
+@page "/MaksimShimshon.GameManagePanel"
+@using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States.Enums
+@using MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Hooks.UI.Components
+@using MaksimShimshon.GameManagePanel.Features.SystemInfo.Presentation.Components
+@using MaksimShimshon.GameManagePanel.Features.SystemInfo.Presentation.Hooks.Components
+<MudGrid Justify=@Justify.FlexStart>
+    <WidgetServerControl />
+    <WidgetSystemInfo />
+    <WidgetStartupParameters />
+</MudGrid>

@@ -1,21 +1,20 @@
 ﻿using LunaticPanel.Core;
-using Microsoft.AspNetCore.Components;
 
-namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Pages;
+namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Hooks.UI.Components;
 
-public partial class Lifecycle : ComponentBase, IDisposable
+public partial class WidgetStartupParameters : IDisposable
 {
 
     private readonly IPluginService<PluginEntry> _pluginService;
-    public Lifecycle(IPluginService<PluginEntry> pluginService)
+    public WidgetStartupParameters(IPluginService<PluginEntry> pluginService)
     {
         _pluginService = pluginService;
     }
-    public LifecycleViewModel ViewModel { get; set; } = default!;
+    public WidgetStartupParametersViewModel ViewModel { get; set; } = default!;
 
     protected override void OnInitialized()
     {
-        ViewModel = _pluginService.GetRequired<LifecycleViewModel>();
+        ViewModel = _pluginService.GetRequired<WidgetStartupParametersViewModel>();
         ViewModel.SpreadChanges += ShouldUpdate;
 
     }
@@ -33,5 +32,4 @@ public partial class Lifecycle : ComponentBase, IDisposable
 
         ViewModel.SpreadChanges -= ShouldUpdate;
     }
-
 }
