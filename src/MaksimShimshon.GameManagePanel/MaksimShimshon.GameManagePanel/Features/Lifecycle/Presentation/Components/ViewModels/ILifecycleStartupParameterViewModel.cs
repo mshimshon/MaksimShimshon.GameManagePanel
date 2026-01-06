@@ -1,0 +1,13 @@
+﻿using LunaticPanel.Core.Widgets;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
+
+namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Components.ViewModels;
+
+public interface ILifecycleStartupParameterViewModel : IViewModel
+{
+    public GameInfoEntity? GameInfo { get; }
+    public Dictionary<string, string> StartupParameters { get; }
+    public bool SavedParametersLoaded { get; }
+    Task GroupingParameters();
+    Dictionary<string, List<GameStartupParameterEntity>> Parameters { get; }
+}

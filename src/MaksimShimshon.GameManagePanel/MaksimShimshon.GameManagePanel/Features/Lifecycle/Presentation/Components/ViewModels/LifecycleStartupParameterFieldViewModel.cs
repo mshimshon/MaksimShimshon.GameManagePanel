@@ -6,10 +6,10 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Components.ViewModels;
 
-public class LifecycleStartupParameterFieldViewModel
+public class LifecycleStartupParameterFieldViewModel : ILifecycleStartupParameterFieldViewModel
 {
     private bool _loading = false;
-    public bool Loading
+    public bool IsLoading
     {
         get => _loading;
         private set
@@ -17,7 +17,7 @@ public class LifecycleStartupParameterFieldViewModel
             bool hasChanged = value != _loading;
             _loading = value;
             if (hasChanged)
-                _ = SpreadChanges?.Invoke();
+                _ = OnUpdate();
         }
     }
 
@@ -27,7 +27,7 @@ public class LifecycleStartupParameterFieldViewModel
     private readonly IStatePulse _statePulse;
     private readonly IDispatcher _dispatcher;
 
-    public LifecycleGameInfoState GameInfoState => _statePulse.StateOf<LifecycleGameInfoState>(() => this, OnUpdate);
+    private LifecycleGameInfoState GameInfoState => _statePulse.StateOf<LifecycleGameInfoState>(() => this, OnUpdate);
 
     public GameStartupParameterEntity Parameter { get; set; } = default!;
 
@@ -39,6 +39,9 @@ public class LifecycleStartupParameterFieldViewModel
     public bool IsDecimal => Parameter.Key.StartupParameterType == StartupParameterType.Decimal;
     public bool IsInt => Parameter.Key.StartupParameterType == StartupParameterType.Int;
     public bool IsNumber => IsDecimal || IsInt;
+
+
+
     public LifecycleStartupParameterFieldViewModel(IStatePulse statePulse, IDispatcher dispatcher)
     {
         _statePulse = statePulse;
@@ -55,9 +58,8 @@ public class LifecycleStartupParameterFieldViewModel
 
     public void Reset()
     {
-        Console.WriteLine($"{Value} = {InitialValue}");
         Value = InitialValue;
-        _ = SpreadChanges?.Invoke();
+        _ = OnUpdate();
     }
     public bool Validate()
     {

@@ -1,3 +1,5 @@
+@using MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Hooks.UI.Components.ViewModels
+@inherits WidgetComponentBase<PluginEntry, IWidgetServerControlViewModel>
 <MudItem xs=12 sm=12 md=4>
     <MudCard>
         <MudCardMedia Image=@($"/_plugins/{BaseInfo.AssemblyName}/game_banner.png") Height="300" Style="background-position: top;background-repeat: no-repeat;" />
@@ -9,17 +11,17 @@
                     <MudText Align=Align.Center>Awaiting for Server Info...</MudText>
                 </MudAlert>
             }
-            else if (ViewModel.GameInfoState.GameInfo != default)
+            else if (ViewModel.GameInfo != default)
             {
-                <MudText Typo=@Typo.h6>@ViewModel.GameInfoState.GameInfo.Name</MudText>
+                <MudText Typo=@Typo.h6>@ViewModel.GameInfo.Name</MudText>
                 <MudDivider Class="my-1" Style="visibility: hidden;" />
-                @if (ViewModel.GameInfoState.GameInfo.SteamInfo != default)
+                @if (ViewModel.GameInfo.SteamInfo != default)
                 {
-                    <MudChip T="string" Variant="Variant.Text" Color="Color.Info">@($"Steam: {ViewModel.GameInfoState.GameInfo.SteamInfo.Steamid}")</MudChip>
+                    <MudChip T="string" Variant="Variant.Text" Color="Color.Info">@($"Steam: {ViewModel.GameInfo.SteamInfo.Steamid}")</MudChip>
                 }
-                @if (ViewModel.GameInfoState.GameInfo.Modding)
+                @if (ViewModel.GameInfo.Modding)
                 {
-                    @if (ViewModel.GameInfoState.GameInfo.SteamInfo != default && ViewModel.GameInfoState.GameInfo.SteamInfo.HasModdingWorkshop)
+                    @if (ViewModel.GameInfo.SteamInfo != default && ViewModel.GameInfo.SteamInfo.HasModdingWorkshop)
                     {
                         <MudChip T="string" Icon=@Icons.Material.Filled.Check Variant="Variant.Text" Color="Color.Info">Steam Workshop</MudChip>
                     }
@@ -28,7 +30,7 @@
                         <MudChip T="string" Icon=@Icons.Material.Filled.Check Variant="Variant.Text" Color="Color.Info">Modding</MudChip>
                         <MudChip T="string" Icon=@Icons.Material.Filled.Stop Variant="Variant.Text" Color="Color.Error">Steam Workshop</MudChip>
                     }
-                    @if (ViewModel.GameInfoState.GameInfo.ManualModUpload != default)
+                    @if (ViewModel.GameInfo.ManualModUpload != default)
                     {
                         <MudChip T="string" Icon=@Icons.Material.Filled.Stop Variant="Variant.Text" Color="Color.Warning">@($"Mod Upload Required")</MudChip>
                     }
@@ -42,14 +44,14 @@
             @if (!ViewModel.IsWaiting())
             {
                 <MudDivider Class="my-2" />
-                @if (ViewModel.ServerState.Transition == ServerTransition.Starting)
+                @if (ViewModel.Transition == ServerTransition.Starting)
                 {
                     <MudAlert Severity=@Severity.Success ContentAlignment=@HorizontalAlignment.Center NoIcon=true>
                         <MudProgressLinear Color="Color.Success" Indeterminate="true" Class="my-1" />
                         <MudText Align=Align.Center>Starting...</MudText>
                     </MudAlert>
                 }
-                else if (ViewModel.ServerState.Transition == ServerTransition.Stopping)
+                else if (ViewModel.Transition == ServerTransition.Stopping)
                 {
                     <MudAlert Severity=@Severity.Error ContentAlignment=@HorizontalAlignment.Center NoIcon=true>
                         <MudProgressLinear Color="Color.Error" Indeterminate="true" Class="my-1" />
@@ -58,8 +60,16 @@
                 }
                 else
                 {
-                    <MudFab Color="Color.Error" StartIcon="@Icons.Material.Filled.Stop" DropShadow="false" Size=@Size.Small OnClick=@(() => ViewModel.Stop()) Disabled=@(ViewModel.IsStopped() || ViewModel.IsWaiting() || ViewModel.Loading) />
-                    <MudFab Color="Color.Success" StartIcon="@Icons.Material.Filled.PlayArrow" DropShadow="false" OnClick=@(() => ViewModel.Start()) Disabled=@(ViewModel.IsRunning() || ViewModel.IsWaiting() || ViewModel.Loading) />
+                    <MudFab Color="Color.Error" 
+                        StartIcon="@Icons.Material.Filled.Stop"
+                        DropShadow="false" Size=@Size.Small 
+                        OnClick=@(() => ViewModel.Stop()) 
+                        Disabled=@(ViewModel.IsStopped() || ViewModel.IsWaiting() || ViewModel.IsLoading) />
+
+                    <MudFab Color="Color.Success" 
+                        StartIcon="@Icons.Material.Filled.PlayArrow" 
+                        DropShadow="false" OnClick=@(() => ViewModel.Start()) 
+                        Disabled=@(ViewModel.IsRunning() || ViewModel.IsWaiting() || ViewModel.IsLoading) />
                 }
             }
 

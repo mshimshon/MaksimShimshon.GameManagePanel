@@ -1,13 +1,14 @@
 ﻿using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Pulses.States;
+using MaksimShimshon.GameManagePanel.Features.SystemInfo.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
 using StatePulse.Net;
 
-namespace MaksimShimshon.GameManagePanel.Features.SystemInfo.Presentation.Components;
+namespace MaksimShimshon.GameManagePanel.Features.SystemInfo.Presentation.Components.ViewModels;
 
-public class LifecycleSystemResourcesStatusViewModel
+public class SystemResourcesStatusViewModel : ISystemResourcesStatusViewModel
 {
     private bool _loading = false;
-    public bool Loading
+    public bool IsLoading
     {
         get => _loading;
         private set
@@ -24,11 +25,14 @@ public class LifecycleSystemResourcesStatusViewModel
 
 
     public SystemInfoState SystemState => _statePulse.StateOf<SystemInfoState>(() => this, OnUpdate);
-
     public Configuration Configuration { get; }
 
+    public SystemInfoEntity? SystemInfo => SystemState.SystemInfo;
+    public DateTime LastUpdate => SystemState.LastUpdate;
+    public int Delay => SystemState.Delay;
+
     private async Task OnUpdate() => _ = SpreadChanges?.Invoke();
-    public LifecycleSystemResourcesStatusViewModel(IStatePulse statePulse, Configuration configuration)
+    public SystemResourcesStatusViewModel(IStatePulse statePulse, Configuration configuration)
     {
         _statePulse = statePulse;
         Configuration = configuration;

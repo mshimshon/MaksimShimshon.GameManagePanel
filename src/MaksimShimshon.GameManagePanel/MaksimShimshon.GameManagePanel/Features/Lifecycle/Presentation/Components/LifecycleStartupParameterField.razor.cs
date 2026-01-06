@@ -1,25 +1,14 @@
-﻿using LunaticPanel.Core;
-using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
-using MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Components.ViewModels;
+﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Components;
 
-public partial class LifecycleStartupParameterField : ComponentBase, IDisposable
+public partial class LifecycleStartupParameterField
 {
-
-    private readonly IPluginService<PluginEntry> _pluginService;
-    public LifecycleStartupParameterFieldViewModel ViewModel { get; set; }
-
-    public LifecycleStartupParameterField(IPluginService<PluginEntry> pluginService)
-    {
-        _pluginService = pluginService;
-        ViewModel = _pluginService.GetRequired<LifecycleStartupParameterFieldViewModel>();
-    }
-
     [Parameter]
     public GameStartupParameterEntity GameStartupParameter { get; set; } = default!;
+
     [Parameter]
     public string InitialValue { get; set; } = default!;
 
@@ -31,27 +20,11 @@ public partial class LifecycleStartupParameterField : ComponentBase, IDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        ViewModel = _pluginService.GetRequired<LifecycleStartupParameterFieldViewModel>();
         ViewModel.Parameter = GameStartupParameter;
         ViewModel.InitialValue = InitialValue;
         ViewModel.Value = InitialValue;
-        ViewModel.SpreadChanges += ShouldUpdate;
     }
 
-    private Task ShouldUpdate() => InvokeAsync(StateHasChanged);
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!disposing)
-            return;
-
-        ViewModel.SpreadChanges -= ShouldUpdate;
-    }
     private int GetMaxLength() => ViewModel.Parameter.Validation?.MaxLength ?? 524288;
 
 

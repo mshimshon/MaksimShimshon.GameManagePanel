@@ -4,10 +4,17 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Components.ViewModels;
 
-public class LifecycleStartupParameterViewModel
+public class LifecycleStartupParameterViewModel : ILifecycleStartupParameterViewModel
 {
+    private readonly IStatePulse _statePulse;
+    public LifecycleStartupParameterViewModel(IStatePulse statePulse)
+    {
+        _statePulse = statePulse;
+        _ = GroupingParameters();
+    }
+
     private bool _loading = false;
-    public bool Loading
+    public bool IsLoading
     {
         get => _loading;
         private set
@@ -15,28 +22,28 @@ public class LifecycleStartupParameterViewModel
             bool hasChanged = value != _loading;
             _loading = value;
             if (hasChanged)
-                _ = SpreadChanges?.Invoke();
+                _ = OnUpdate();
         }
     }
     public event Func<Task>? SpreadChanges;
 
-    private readonly IStatePulse _statePulse;
-    private readonly IDispatcher _dispatcher;
 
     public LifecycleGameInfoState GameInfoState => _statePulse.StateOf<LifecycleGameInfoState>(() => this, OnUpdate);
     public Dictionary<string, List<GameStartupParameterEntity>> Parameters { get; private set; } = new();
+
+    public GameInfoEntity? GameInfo => GameInfoState.GameInfo;
+
+    public Dictionary<string, string> StartupParameters => GameInfoState.StartupParameters;
+
+    public bool SavedParametersLoaded => GameInfoState.SavedParametersLoaded;
+
 
     private async Task OnUpdate()
     {
         await GroupingParameters();
         _ = SpreadChanges?.Invoke();
     }
-    public LifecycleStartupParameterViewModel(IStatePulse statePulse, IDispatcher dispatcher)
-    {
-        _statePulse = statePulse;
-        _dispatcher = dispatcher;
-        _ = GroupingParameters();
-    }
+
     public Task GroupingParameters()
     {
         Parameters = GameInfoState.GameInfo?.StartupParameters != default ? GameInfoState.GameInfo.StartupParameters

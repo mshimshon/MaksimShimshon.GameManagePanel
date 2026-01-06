@@ -1,12 +1,13 @@
 ﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using StatePulse.Net;
 
-namespace MaksimShimshon.GameManagePanel.Features.SystemInfo.Presentation.Hooks.Components;
+namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Hooks.UI.Components.ViewModels;
 
-public class WidgetSystemInfoViewModel
+public class WidgetStartupParametersViewModel : IWidgetStartupParametersViewModel
 {
     private bool _loading = false;
-    public bool Loading
+    public bool IsLoading
     {
         get => _loading;
         private set
@@ -23,11 +24,16 @@ public class WidgetSystemInfoViewModel
     private readonly IStatePulse _statePulse;
     private readonly IDispatcher _dispatcher;
 
-    public LifecycleGameInfoState GameInfoState => _statePulse.StateOf<LifecycleGameInfoState>(() => this, OnUpdate);
+    private LifecycleGameInfoState GameInfoState => _statePulse.StateOf<LifecycleGameInfoState>(() => this, OnUpdate);
+
+    public GameInfoEntity? GameInfo => GameInfoState.GameInfo;
+
+
     private async Task OnUpdate() => _ = SpreadChanges?.Invoke();
-    public WidgetSystemInfoViewModel(IStatePulse statePulse, IDispatcher dispatcher)
+    public WidgetStartupParametersViewModel(IStatePulse statePulse, IDispatcher dispatcher)
     {
         _statePulse = statePulse;
         _dispatcher = dispatcher;
     }
+
 }

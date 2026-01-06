@@ -1,4 +1,8 @@
-﻿@if (ViewModel.Loading || ViewModel.SystemState.SystemInfo == default)
+﻿@using MaksimShimshon.GameManagePanel.Features.SystemInfo.Presentation.Components.ViewModels
+
+@inherits WidgetComponentBase<PluginEntry, ISystemResourcesStatusViewModel>
+
+@if (ViewModel!.IsLoading || ViewModel.SystemInfo == default)
 {
     <MudGrid>
         <MudItem xs=12>
@@ -47,16 +51,16 @@ else {
         </MudItem>
         <MudItem xs=6>
             <MudText Typo=@Typo.subtitle1>@($"CPU")</MudText>
-            <MudText Typo=@Typo.caption>@($"{ViewModel.SystemState.SystemInfo.Processor.Cores} Cores")</MudText><br />
-            <MudText Typo=@Typo.caption>@($"{ViewModel.SystemState.SystemInfo.Processor.Model}")</MudText>
+            <MudText Typo=@Typo.caption>@($"{ViewModel.SystemInfo.Processor.Cores} Cores")</MudText><br />
+            <MudText Typo=@Typo.caption>@($"{ViewModel.SystemInfo.Processor.Model}")</MudText>
         </MudItem >
         <MudItem xs=6>
             <MudText Typo=@Typo.subtitle1>@($"RAM")</MudText>
-            <MudText Typo=@Typo.caption>@FormatMegabytes(ViewModel.SystemState.SystemInfo.Memory.Total)</MudText>
+            <MudText Typo=@Typo.caption>@FormatMegabytes(ViewModel.SystemInfo.Memory.Total)</MudText>
         </MudItem>
         <MudItem xs=6>
             <MudText Typo=@Typo.subtitle1>@($"DISK")</MudText>
-            <MudText Typo=@Typo.caption>@FormatMegabytes(ViewModel.SystemState.SystemInfo.Disk.Total)</MudText>
+            <MudText Typo=@Typo.caption>@FormatMegabytes(ViewModel.SystemInfo.Disk.Total)</MudText>
         </MudItem>
 
     </MudGrid>

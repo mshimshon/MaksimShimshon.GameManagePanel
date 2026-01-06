@@ -7,9 +7,9 @@
     <GlobalCopyright>Maksim Shimshon © 2026</GlobalCopyright>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="LunaticPanel.Core" Version="0.1.700" />
-    <PackageVersion Include="LunaticPanel.Core.Extensions" Version="0.1.700" />
-    <PackageVersion Include="LunaticPanel.Engine.Core" Version="0.1.700" />
+    <PackageVersion Include="LunaticPanel.Core" Version="0.1.707" />
+    <PackageVersion Include="LunaticPanel.Core.Extensions" Version="0.1.704" />
+    <PackageVersion Include="LunaticPanel.Engine.Core" Version="0.1.704" />
     <PackageVersion Include="MudBlazor" Version="8.15.0" />
     <PackageVersion Include="StatePulse.Net" Version="2.0.52" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="10.0.1" />

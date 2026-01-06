@@ -1,14 +1,16 @@
 ﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States.Enums;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Enums;
 using StatePulse.Net;
 
-namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Hooks.UI.Components;
+namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Hooks.UI.Components.ViewModels;
 
-public class WidgetServerControlViewModel
+public class WidgetServerControlViewModel : IWidgetServerControlViewModel
 {
     private bool _loading = false;
-    public bool Loading
+    public bool IsLoading
     {
         get => _loading;
         private set
@@ -27,6 +29,12 @@ public class WidgetServerControlViewModel
 
     public LifecycleServerState ServerState => _statePulse.StateOf<LifecycleServerState>(() => this, OnUpdate);
     public LifecycleGameInfoState GameInfoState => _statePulse.StateOf<LifecycleGameInfoState>(() => this, OnUpdate);
+
+    public ServerInfoEntity? ServerInfo => ServerState.ServerInfo;
+    public ServerTransition Transition => ServerState.Transition;
+
+    public GameInfoEntity? GameInfo => GameInfoState.GameInfo;
+
     private async Task OnUpdate() => _ = SpreadChanges?.Invoke();
     public WidgetServerControlViewModel(IStatePulse statePulse, IDispatcher dispatcher)
     {
@@ -36,16 +44,16 @@ public class WidgetServerControlViewModel
 
     public async Task Start()
     {
-        Loading = true;
+        IsLoading = true;
         await _dispatcher.Prepare<LifecycleServerStartAction>().DispatchAsync();
-        Loading = false;
+        IsLoading = false;
     }
 
     public async Task Stop()
     {
-        Loading = true;
+        IsLoading = true;
         await _dispatcher.Prepare<LifecycleServerStopAction>().DispatchAsync();
-        Loading = false;
+        IsLoading = false;
     }
     public bool IsRunning() => ServerState.ServerInfo != default && ServerState.ServerInfo.Status == Status.Running;
     public bool IsStopped() => ServerState.ServerInfo != default && ServerState.ServerInfo.Status == Status.Stopped;

@@ -1,0 +1,9 @@
+﻿using LunaticPanel.Core.Widgets;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
+
+namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Hooks.UI.Components.ViewModels;
+
+public interface IWidgetStartupParametersViewModel : IViewModel
+{
+    public GameInfoEntity? GameInfo { get; }
+}

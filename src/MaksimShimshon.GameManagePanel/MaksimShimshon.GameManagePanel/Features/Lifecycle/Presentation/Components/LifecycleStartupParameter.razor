@@ -1,4 +1,6 @@
-﻿@if (ViewModel.Loading || ViewModel.GameInfoState.GameInfo == default)
+﻿@using MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Components.ViewModels
+@inherits WidgetComponentBase<PluginEntry, ILifecycleStartupParameterViewModel>
+@if (ViewModel.IsLoading || ViewModel.GameInfo == default)
 {
     <MudGrid>
         <MudItem xs=12>
@@ -20,7 +22,7 @@ else
             <MudDivider Class="my-2" />
         </MudItem>
         <MudItem xs=12 Class="d-flex flex-row  flex-wrap justify-space-evenly">
-            @if (!ViewModel.GameInfoState.SavedParametersLoaded)
+            @if (!ViewModel.SavedParametersLoaded)
             {
                 <MudAlert Severity=@Severity.Info ContentAlignment=@HorizontalAlignment.Center NoIcon=true>
                     <MudProgressLinear Color="Color.Info" Indeterminate="true" Class="my-1" />

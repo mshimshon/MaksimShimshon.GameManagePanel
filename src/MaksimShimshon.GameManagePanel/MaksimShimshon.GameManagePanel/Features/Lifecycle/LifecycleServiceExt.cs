@@ -11,7 +11,7 @@ using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Providers.Linux;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Components.ViewModels;
-using MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Hooks.UI.Components;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Hooks.UI.Components.ViewModels;
 using MedihatR;
 using Microsoft.Extensions.DependencyInjection;
 using StatePulse.Net;
@@ -22,10 +22,11 @@ public static class LifecycleServiceExt
 {
     public static void AddLifecycleFeatureServices(this IServiceCollection services)
     {
-        services.AddScoped<WidgetServerControlViewModel>();
-        services.AddScoped<WidgetStartupParametersViewModel>();
-        services.AddScoped<LifecycleStartupParameterViewModel>();
-        services.AddTransient<LifecycleStartupParameterFieldViewModel>();
+        services.AddScoped<IWidgetServerControlViewModel, WidgetServerControlViewModel>();
+        services.AddScoped<IWidgetStartupParametersViewModel, WidgetStartupParametersViewModel>();
+        services.AddScoped<ILifecycleStartupParameterViewModel, LifecycleStartupParameterViewModel>();
+
+        services.AddTransient<ILifecycleStartupParameterFieldViewModel, LifecycleStartupParameterFieldViewModel>();
         services.AddScoped<CommandRunner>();
         services.AddTransient<ILifecycleServices, LifecycleServices>();
         services.AddStatePulseAction<LifecycleFetchStartupParametersAction>();
