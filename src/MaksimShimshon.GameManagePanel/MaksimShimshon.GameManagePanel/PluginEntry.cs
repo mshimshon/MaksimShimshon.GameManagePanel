@@ -46,9 +46,7 @@ public class PluginEntry : IPlugin
         services.AddScoped<HomeViewModel>();
         services.AddScoped<IHeartbeatService, HeartbeatService>();
         services.AddScoped(p => config);
-        services.AddLifecycleFeatureServices();
-        services.AddNotificationFeatureServices();
-        services.AddSystemInfoFeatureServices();
+
 
         services.AddCoreMap(o => o.Scope = CoreMap.Enums.ServiceScope.Transient);
         services.AddStatePulseServices(c =>
@@ -64,5 +62,9 @@ public class PluginEntry : IPlugin
             c.CachingMode = MedihatR.Configuraions.Enums.PipelineCachingMode.EagerCaching;
         });
         services.AddScoped<HomeViewModel>();
+
+        services.AddLifecycleFeatureServices();
+        services.AddNotificationFeatureServices();
+        services.AddSystemInfoFeatureServices();
     }
 }

@@ -13,17 +13,20 @@
 	<Description>Core Package for Lunatic Panel's PLugin</Description>
 	<PackageProjectUrl>https://github.com/mshimshon/LunaticPanel</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/mshimshon/LunaticPanel</RepositoryUrl>
+	  <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="LunaticPanel.Core" PrivateAssets="false" />
     <PackageReference Include="LunaticPanel.Core.Extensions" />
     <PackageReference Include="LunaticPanel.Engine.Core" PrivateAssets="false" />
-	  <PackageReference Include="Microsoft.AspNetCore.Components.Web" PrivateAssets="false" />
-	  <PackageReference Include="MudBlazor" PrivateAssets="false" />
-	  <PackageReference Include="StatePulse.Net" PrivateAssets="false" />
-	  <PackageReference Include="CoreMap" PrivateAssets="false" />
-	  <PackageReference Include="MediHater" PrivateAssets="false" />
+	<PackageReference Include="Microsoft.AspNetCore.Components.Web" PrivateAssets="false" />
+	<PackageReference Include="MudBlazor" PrivateAssets="false" />
+	  
+	<PackageReference Include="StatePulse.Net" GeneratePathProperty="true"  />
+	<PackageReference Include="CoreMap" GeneratePathProperty="true" />
+	<PackageReference Include="MediHater" GeneratePathProperty="true"   />
+
   </ItemGroup>
 
   <ItemGroup>
@@ -33,4 +36,28 @@
   <ItemGroup>
     <Folder Include="Features\SystemInfo\Application\CQRS\Commands\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\game_banner.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+
+	<Target Name="RemoveHostOwnedAssembliesAfterBuild"
+			AfterTargets="Build"
+			Condition="'$(IsPublish)' != 'true'">
+
+		<ItemGroup>
+			<_DeleteDlls Include="
+			  $(OutputPath)**\Microsoft.*.dll;
+			  $(OutputPath)LunaticPanel.Core.dll;
+			  $(OutputPath)LunaticPanel.Core.Extensions.dll;
+			  $(OutputPath)LunaticPanel.Engine.Core.dll;
+			  $(OutputPath)MudBlazor.dll
+			" />
+		</ItemGroup>
+
+		<Delete Files="@(_DeleteDlls)" />
+	</Target>
 </Project>

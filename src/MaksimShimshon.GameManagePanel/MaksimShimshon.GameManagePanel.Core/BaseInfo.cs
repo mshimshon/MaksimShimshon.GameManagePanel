@@ -1,6 +1,6 @@
 ﻿namespace MaksimShimshon.GameManagePanel.Core;
 
-internal static class BaseInfo
+public static class BaseInfo
 {
     public const string AssemblyName = "MaksimShimshon.GameManagePanel";
 }
