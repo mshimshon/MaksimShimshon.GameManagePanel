@@ -47,7 +47,12 @@
 	<Target Name="RemoveHostOwnedAssembliesAfterBuild" AfterTargets="Build" Condition="'$(IsPublish)' != 'true'">
 
 		<ItemGroup>
-			<_DeleteDlls Include="&#xD;&#xA;			  $(OutputPath)**\Microsoft.*.dll;&#xD;&#xA;			  $(OutputPath)LunaticPanel.Core.dll;&#xD;&#xA;			  $(OutputPath)LunaticPanel.Core.Extensions.dll;&#xD;&#xA;			  $(OutputPath)LunaticPanel.Engine.Core.dll;&#xD;&#xA;			  $(OutputPath)MudBlazor.dll&#xD;&#xA;			" />
+			<_DeleteDlls Include="
+				$(OutputPath)**\Microsoft.*.dll;
+				$(OutputPath)**\LunaticPanel.*.dll;
+				$(OutputPath)**\LunaticPanel.*.*.dll;
+				$(OutputPath)MudBlazor.dll
+			" />
 		</ItemGroup>
 
 		<Delete Files="@(_DeleteDlls)" />

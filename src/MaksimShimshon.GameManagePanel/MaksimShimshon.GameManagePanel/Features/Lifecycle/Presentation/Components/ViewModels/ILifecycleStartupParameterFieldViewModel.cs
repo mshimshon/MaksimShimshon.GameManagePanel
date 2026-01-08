@@ -1,9 +1,9 @@
-﻿using LunaticPanel.Core.Widgets;
+﻿using LunaticPanel.Core.Abstraction.Widgets;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Components.ViewModels;
 
-public interface ILifecycleStartupParameterFieldViewModel : IViewModel
+public interface ILifecycleStartupParameterFieldViewModel : IWidgetViewModel
 {
     public GameStartupParameterEntity Parameter { get; set; }
     public string Value { get; set; }

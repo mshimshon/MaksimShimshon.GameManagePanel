@@ -1,10 +1,11 @@
-﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States;
+﻿using LunaticPanel.Core.Abstraction.Widgets;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Components.ViewModels;
 
-public class LifecycleStartupParameterViewModel : ILifecycleStartupParameterViewModel
+public class LifecycleStartupParameterViewModel : WidgetViewModelBase, ILifecycleStartupParameterViewModel
 {
     private readonly IStatePulse _statePulse;
     public LifecycleStartupParameterViewModel(IStatePulse statePulse)
@@ -12,20 +13,6 @@ public class LifecycleStartupParameterViewModel : ILifecycleStartupParameterView
         _statePulse = statePulse;
         _ = GroupingParameters();
     }
-
-    private bool _loading = false;
-    public bool IsLoading
-    {
-        get => _loading;
-        private set
-        {
-            bool hasChanged = value != _loading;
-            _loading = value;
-            if (hasChanged)
-                _ = OnUpdate();
-        }
-    }
-    public event Func<Task>? SpreadChanges;
 
 
     public LifecycleGameInfoState GameInfoState => _statePulse.StateOf<LifecycleGameInfoState>(() => this, OnUpdate);
@@ -41,7 +28,7 @@ public class LifecycleStartupParameterViewModel : ILifecycleStartupParameterView
     private async Task OnUpdate()
     {
         await GroupingParameters();
-        _ = SpreadChanges?.Invoke();
+        _ = UpdateChanges();
     }
 
     public Task GroupingParameters()

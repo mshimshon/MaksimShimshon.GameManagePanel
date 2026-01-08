@@ -1,10 +1,10 @@
-﻿using LunaticPanel.Core.Widgets;
+﻿using LunaticPanel.Core.Abstraction.Widgets;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States.Enums;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Hooks.UI.Components.ViewModels;
 
-public interface IWidgetServerControlViewModel : IViewModel
+public interface IWidgetServerControlViewModel : IWidgetViewModel
 {
     public ServerInfoEntity? ServerInfo { get; }
     public ServerTransition Transition { get; }

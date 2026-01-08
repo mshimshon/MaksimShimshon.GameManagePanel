@@ -1,12 +1,13 @@
 ﻿using CoreMap;
 using LunaticPanel.Core;
+using LunaticPanel.Core.Abstraction.Circuit;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle;
-using MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Pages;
 using MaksimShimshon.GameManagePanel.Features.Notification;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
 using MaksimShimshon.GameManagePanel.Kernel.Heartbeat;
 using MaksimShimshon.GameManagePanel.Services;
+using MaksimShimshon.GameManagePanel.Web.Pages;
 using MedihatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,31 +16,14 @@ using StatePulse.Net;
 namespace MaksimShimshon.GameManagePanel;
 
 
-public class PluginEntry : IPlugin
+public class PluginEntry : PluginBase
 {
-    private IConfiguration _configuration;
-
-    public void Configure(IConfiguration configuration)
+    private IConfiguration _configuration = default!;
+    protected override void LoadConfiguration(IConfiguration configuration)
     {
         _configuration = configuration;
     }
-
-    public void Disable()
-    {
-
-    }
-
-    public void Enable()
-    {
-
-    }
-
-    public void Initialize()
-    {
-
-    }
-
-    public void RegisterServices(IServiceCollection services)
+    protected override void RegisterPluginServices(IServiceCollection services, CircuitIdentity circuit)
     {
         var config = new Configuration();
         config.GameInfo = _configuration.GetSection("GameInfo")?.Get<GameInfoConfiguration>();

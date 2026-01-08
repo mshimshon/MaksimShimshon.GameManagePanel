@@ -1,5 +1,5 @@
-﻿using LunaticPanel.Core.Extensions;
-using LunaticPanel.Core.Messaging.EngineBus;
+﻿using LunaticPanel.Core.Abstraction.Messaging.EngineBus;
+using LunaticPanel.Core.Extensions;
 using LunaticPanel.Engine.Core.UI;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Hooks.UI.Components;
 

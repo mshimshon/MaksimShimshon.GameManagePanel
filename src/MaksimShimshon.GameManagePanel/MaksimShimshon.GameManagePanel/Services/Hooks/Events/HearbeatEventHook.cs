@@ -1,4 +1,4 @@
-﻿using LunaticPanel.Core.Messaging.EventBus;
+﻿using LunaticPanel.Core.Abstraction.Messaging.EventBus;
 using LunaticPanel.Engine.Keys.System;
 using MaksimShimshon.GameManagePanel.Kernel.Heartbeat.Pulses.Actions;
 using StatePulse.Net;

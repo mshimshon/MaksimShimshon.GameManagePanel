@@ -1,4 +1,5 @@
-﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
+﻿using LunaticPanel.Core.Abstraction.Widgets;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Enums;
@@ -6,28 +7,15 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Presentation.Components.ViewModels;
 
-public class LifecycleStartupParameterFieldViewModel : ILifecycleStartupParameterFieldViewModel
+public class LifecycleStartupParameterFieldViewModel : WidgetViewModelBase, ILifecycleStartupParameterFieldViewModel
 {
-    private bool _loading = false;
-    public bool IsLoading
-    {
-        get => _loading;
-        private set
-        {
-            bool hasChanged = value != _loading;
-            _loading = value;
-            if (hasChanged)
-                _ = OnUpdate();
-        }
-    }
 
-    public event Func<Task>? SpreadChanges;
-    private async Task OnUpdate() => _ = SpreadChanges?.Invoke();
+
 
     private readonly IStatePulse _statePulse;
     private readonly IDispatcher _dispatcher;
 
-    private LifecycleGameInfoState GameInfoState => _statePulse.StateOf<LifecycleGameInfoState>(() => this, OnUpdate);
+    private LifecycleGameInfoState GameInfoState => _statePulse.StateOf<LifecycleGameInfoState>(() => this, UpdateChanges);
 
     public GameStartupParameterEntity Parameter { get; set; } = default!;
 
@@ -59,7 +47,7 @@ public class LifecycleStartupParameterFieldViewModel : ILifecycleStartupParamete
     public void Reset()
     {
         Value = InitialValue;
-        _ = OnUpdate();
+        _ = UpdateChanges();
     }
     public bool Validate()
     {
