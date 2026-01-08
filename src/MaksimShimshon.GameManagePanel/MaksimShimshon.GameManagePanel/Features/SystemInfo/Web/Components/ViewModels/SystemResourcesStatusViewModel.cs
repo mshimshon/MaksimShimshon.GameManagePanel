@@ -31,8 +31,11 @@ public class SystemResourcesStatusViewModel : WidgetViewModelBase, ISystemResour
     private DateTime LastLaunch { get; set; }
     public async Task UpdateState()
     {
-        if (SystemState.LastUpdate > LastLaunch)
+        Console.WriteLine("State is Updated");
+
+        if (SystemState.LastUpdate >= LastLaunch)
             IsUpdating = false;
+        Console.WriteLine($"State is Updated ({IsUpdating})");
 
         await UpdateChanges();
     }
@@ -45,7 +48,8 @@ public class SystemResourcesStatusViewModel : WidgetViewModelBase, ISystemResour
         {
             if (IsUpdating) continue;
             await FetchUpdatedSystemInfo();
-            await Task.Delay(SystemState.Delay);
+            TimeSpan delay = new(0, 0, SystemState.Delay);
+            await Task.Delay(delay);
         } while (AutoUpdateActivated);
     }
 
@@ -53,6 +57,6 @@ public class SystemResourcesStatusViewModel : WidgetViewModelBase, ISystemResour
     {
         LastLaunch = DateTime.UtcNow;
         IsUpdating = true;
-        await _dispatcher.Prepare<SystemInfoUpdateAction>().Await().DispatchAsync();
+        await _dispatcher.Prepare<SystemInfoUpdateAction>().DispatchAsync();
     }
 }

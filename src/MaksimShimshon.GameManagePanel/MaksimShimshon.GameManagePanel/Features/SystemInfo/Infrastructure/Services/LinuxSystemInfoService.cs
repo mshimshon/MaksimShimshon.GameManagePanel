@@ -3,7 +3,7 @@ using MaksimShimshon.GameManagePanel.Features.SystemInfo.Domain.Entites;
 
 namespace MaksimShimshon.GameManagePanel.Features.SystemInfo.Infrastructure.Services;
 
-internal class SystemInfoService : ISystemInfoService
+internal class LinuxSystemInfoService : ISystemInfoService
 {
     public Task<SystemInfoEntity?> GetSystemInfoAsync(CancellationToken ct = default)
         => Task.FromResult(

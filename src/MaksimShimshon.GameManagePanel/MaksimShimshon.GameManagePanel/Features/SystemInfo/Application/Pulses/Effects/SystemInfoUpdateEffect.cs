@@ -21,7 +21,6 @@ internal class SystemInfoUpdateEffect : IEffect<SystemInfoUpdateAction>
 
     public async Task EffectAsync(SystemInfoUpdateAction action, IDispatcher dispatcher)
     {
-        Console.WriteLine("Running SystemInfo Update Effect");
         DateTime nextUpdated = _stateAccessor.State.LastUpdate.AddSeconds(_stateAccessor.State.Delay);
         if (nextUpdated > DateTime.UtcNow)
             return;

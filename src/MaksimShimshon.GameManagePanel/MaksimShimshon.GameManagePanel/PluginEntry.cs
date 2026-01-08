@@ -28,8 +28,14 @@ public class PluginEntry : PluginBase
     {
 
 
-        var config = new Configuration();
-        config.GameInfo = _configuration.GetSection("GameInfo")?.Get<GameInfoConfiguration>();
+        var config = new Configuration()
+        {
+            GameInfo = _configuration.GetSection("GameInfo")?.Get<GameInfoConfiguration>(),
+            Heartbeat = _configuration.GetSection("Heartbeat")?.Get<HeartbeatConfiguration>(),
+
+        };
+
+        services.AddScoped((sp) => config);
 
         JObject jsonD = new();
         services.AddScoped<HomeViewModel>();
@@ -54,6 +60,6 @@ public class PluginEntry : PluginBase
 
         services.AddLifecycleFeatureServices();
         services.AddNotificationFeatureServices();
-        services.AddSystemInfoFeatureServices();
+        services.AddSystemInfoFeatureServices(_configuration);
     }
 }

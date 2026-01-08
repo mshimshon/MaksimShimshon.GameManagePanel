@@ -7,5 +7,5 @@ namespace MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Pulses.
 public class ServerSystemInfoUpdatedReducer : IReducer<SystemInfoState, SystemInfoUpdatedAction>
 {
     public async Task<SystemInfoState> ReduceAsync(SystemInfoState state, SystemInfoUpdatedAction action)
-        => await Task.FromResult(state with { SystemInfo = action.SystemInfo });
+        => await Task.FromResult(state with { SystemInfo = action.SystemInfo, LastUpdate = DateTime.UtcNow });
 }
