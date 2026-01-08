@@ -3,7 +3,7 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Pulses.States;
 
-public record SystemInfoState : IStateFeature
+public record SystemInfoState : IStateFeatureSingleton
 {
     public SystemInfoEntity? SystemInfo { get; init; }
     public DateTime LastUpdate { get; init; }

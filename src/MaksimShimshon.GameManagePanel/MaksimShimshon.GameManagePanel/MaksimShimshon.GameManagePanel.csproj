@@ -21,7 +21,9 @@
     <PackageReference Include="LunaticPanel.Core.Extensions" />
     <PackageReference Include="LunaticPanel.Engine.Core" PrivateAssets="false" />
 	<PackageReference Include="Microsoft.AspNetCore.Components.Web" PrivateAssets="false" />
+	<PackageReference Include="Microsoft.Extensions.Logging" />
 	<PackageReference Include="MudBlazor" PrivateAssets="false" />
+	<PackageReference Include="Newtonsoft.Json" />
 	  
 	<PackageReference Include="StatePulse.Net" GeneratePathProperty="true" />
 	<PackageReference Include="CoreMap" GeneratePathProperty="true" />
@@ -47,12 +49,7 @@
 	<Target Name="RemoveHostOwnedAssembliesAfterBuild" AfterTargets="Build" Condition="'$(IsPublish)' != 'true'">
 
 		<ItemGroup>
-			<_DeleteDlls Include="
-				$(OutputPath)**\Microsoft.*.dll;
-				$(OutputPath)**\LunaticPanel.*.dll;
-				$(OutputPath)**\LunaticPanel.*.*.dll;
-				$(OutputPath)MudBlazor.dll
-			" />
+			<_DeleteDlls Include="&#xD;&#xA;				$(OutputPath)**\Microsoft.*.dll;&#xD;&#xA;				$(OutputPath)**\LunaticPanel.*.dll;&#xD;&#xA;				$(OutputPath)**\LunaticPanel.*.*.dll;&#xD;&#xA;				$(OutputPath)MudBlazor.dll&#xD;&#xA;			" />
 		</ItemGroup>
 
 		<Delete Files="@(_DeleteDlls)" />

@@ -8,8 +8,8 @@ using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Pulses.Stat
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Infrastructure.Services;
-using MaksimShimshon.GameManagePanel.Features.SystemInfo.Presentation.Components.ViewModels;
-using MaksimShimshon.GameManagePanel.Features.SystemInfo.Presentation.Hooks.Components.ViewModels;
+using MaksimShimshon.GameManagePanel.Features.SystemInfo.Web.Components.ViewModels;
+using MaksimShimshon.GameManagePanel.Features.SystemInfo.Web.Hooks.Components.ViewModels;
 using MedihatR;
 using Microsoft.Extensions.DependencyInjection;
 using StatePulse.Net;
@@ -24,6 +24,7 @@ public static class SystemInfoServiceExt
         services.AddScoped<IWidgetSystemInfoViewModel, WidgetSystemInfoViewModel>();
         services.AddScoped<CommandRunner>();
         services.AddTransient<ISystemInfoService, SystemInfoService>();
+        services.AddStatePulseAction<SystemInfoUpdateAction>();
         services.AddStatePulseAction<SystemInfoUpdatedAction>();
         services.AddStatePulseEffect<SystemInfoUpdateEffect>();
         services.AddStatePulseReducer<ServerSystemInfoUpdatedReducer>();

@@ -7,10 +7,11 @@ using MaksimShimshon.GameManagePanel.Features.SystemInfo;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
 using MaksimShimshon.GameManagePanel.Kernel.Heartbeat;
 using MaksimShimshon.GameManagePanel.Services;
-using MaksimShimshon.GameManagePanel.Web.Pages;
+using MaksimShimshon.GameManagePanel.Web.Pages.ViewModels;
 using MedihatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Linq;
 using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel;
@@ -25,13 +26,17 @@ public class PluginEntry : PluginBase
     }
     protected override void RegisterPluginServices(IServiceCollection services, CircuitIdentity circuit)
     {
+
+
         var config = new Configuration();
         config.GameInfo = _configuration.GetSection("GameInfo")?.Get<GameInfoConfiguration>();
+
+        JObject jsonD = new();
         services.AddScoped<HomeViewModel>();
         services.AddScoped<IHeartbeatService, HeartbeatService>();
         services.AddScoped(p => config);
 
-
+        services.AddLogging();
         services.AddCoreMap(o => o.Scope = CoreMap.Enums.ServiceScope.Transient);
         services.AddStatePulseServices(c =>
         {

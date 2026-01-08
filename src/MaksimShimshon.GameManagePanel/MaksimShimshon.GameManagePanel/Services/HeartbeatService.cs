@@ -21,6 +21,7 @@ internal class HeartbeatService : IHeartbeatService
 
     public async Task StartBeatingAsync(CancellationToken ct = default)
     {
+
         do
         {
 
