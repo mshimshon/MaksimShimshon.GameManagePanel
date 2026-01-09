@@ -36,10 +36,28 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\SystemInfo\Application\CQRS\Commands\" />
+	  <Folder Include="Features\LinuxGameServer\Application\Bash\" />
+	  <Folder Include="Features\LinuxGameServer\Domain\ValueObjects\" />
+	  <Folder Include="Features\LinuxGameServer\Web\Components\" />
+	  <Folder Include="Features\LinuxGameServer\Web\Hooks\" />
+	  <Folder Include="Features\SystemInfo\Application\CQRS\Commands\" />
+	  <Folder Include="Features\SystemInfo\Application\Bash\" />
   </ItemGroup>
+	<ItemGroup>
+		<Content Include="Features\LinuxGameServer\Application\Bash\**\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>$([System.String]::Copy('bash\linuxgamesserver\%(RecursiveDir)%(Filename)%(Extension)').ToLower())</Link>
+		</Content>
+	</ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
+		<Content Include="Features\SystemInfo\Application\Bash\**\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>$([System.String]::Copy('bash\systeminfo\%(RecursiveDir)%(Filename)%(Extension)').ToLower())</Link>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
     <Content Update="wwwroot\game_banner.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

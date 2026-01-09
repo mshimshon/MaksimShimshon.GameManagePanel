@@ -22,20 +22,12 @@ public static class SystemInfoServiceExt
 {
     public static void AddSystemInfoFeatureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var windowsSysInfoConfig =
-            configuration.GetSection("SystemInfo").GetSection("Windows")?.Get<WindowsSystemInfoConfiguration>() ??
-            new WindowsSystemInfoConfiguration();
-
         var linuxSysInfoConfig =
         configuration.GetSection("SystemInfo").GetSection("Linux")?.Get<LinuxSystemInfoConfiguration>() ??
         new LinuxSystemInfoConfiguration();
 
-        if (OperatingSystem.IsWindows())
-            services.AddScoped<ISystemInfoService, WindowsSystemInfoService>();
-        else if (OperatingSystem.IsLinux())
-            services.AddScoped<ISystemInfoService, LinuxSystemInfoService>();
+        services.AddScoped<ISystemInfoService, LinuxSystemInfoService>();
 
-        services.AddScoped((sp) => windowsSysInfoConfig);
         services.AddScoped((sp) => linuxSysInfoConfig);
 
         services.AddScoped<ISystemResourcesStatusViewModel, SystemResourcesStatusViewModel>();

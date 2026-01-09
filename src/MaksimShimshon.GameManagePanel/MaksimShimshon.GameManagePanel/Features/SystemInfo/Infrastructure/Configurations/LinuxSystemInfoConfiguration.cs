@@ -2,5 +2,5 @@
 
 public record LinuxSystemInfoConfiguration
 {
-    public string WorkingDisk { get; init; } = "~/";
+    public string WorkingDisk { get; init; } = "$HOME";
 }
