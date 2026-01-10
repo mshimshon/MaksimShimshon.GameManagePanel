@@ -2,6 +2,8 @@
 
 public record GameServerInfoEntity
 {
-    public string Id { get; init; }
+    public string Id { get; init; } = default!;
+    public DateTime InstallDate { get; init; }
+
 
 }

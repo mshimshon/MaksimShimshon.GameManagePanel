@@ -37,9 +37,10 @@
 
   <ItemGroup>
 	  <Folder Include="Features\LinuxGameServer\Application\Bash\" />
+	  <Folder Include="Features\LinuxGameServer\Application\Pulses\Effects\" />
+	  <Folder Include="Features\LinuxGameServer\Application\Pulses\Reducers\" />
 	  <Folder Include="Features\LinuxGameServer\Domain\ValueObjects\" />
-	  <Folder Include="Features\LinuxGameServer\Web\Components\" />
-	  <Folder Include="Features\LinuxGameServer\Web\Hooks\" />
+	  <Folder Include="Features\LinuxGameServer\Infrastructure\Hooks\" />
 	  <Folder Include="Features\SystemInfo\Application\CQRS\Commands\" />
 	  <Folder Include="Features\SystemInfo\Application\Bash\" />
   </ItemGroup>
