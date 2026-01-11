@@ -13,4 +13,5 @@ public class WidgetServerSetupViewModel : WidgetViewModelBase, IWidgetServerSetu
     {
         _statePulse = statePulse;
     }
+
 }

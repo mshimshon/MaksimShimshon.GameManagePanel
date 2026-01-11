@@ -26,18 +26,18 @@ public class PluginEntry : PluginBase
     }
     protected override void RegisterPluginServices(IServiceCollection services, CircuitIdentity circuit)
     {
-
-
         var config = new Configuration()
         {
             GameInfo = _configuration.GetSection("GameInfo")?.Get<GameInfoConfiguration>(),
             Heartbeat = _configuration.GetSection("Heartbeat")?.Get<HeartbeatConfiguration>(),
-
         };
 
         services.AddScoped((sp) => config);
 
         JObject jsonD = new();
+
+        services.AddScoped<PluginConfiguration>();
+
         services.AddScoped<HomeViewModel>();
         services.AddScoped<IHeartbeatService, HeartbeatService>();
         services.AddScoped(p => config);

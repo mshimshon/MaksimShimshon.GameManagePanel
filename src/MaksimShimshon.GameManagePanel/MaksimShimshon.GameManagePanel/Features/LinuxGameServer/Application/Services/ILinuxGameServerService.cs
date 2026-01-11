@@ -2,5 +2,5 @@
 
 public interface ILinuxGameServerService
 {
-    Task<IReadOnlyCollection<string>> GetAvailableGames(CancellationToken cancellation = default);
+    Task<Dictionary<string, string>> GetAvailableGames(CancellationToken cancellation = default);
 }

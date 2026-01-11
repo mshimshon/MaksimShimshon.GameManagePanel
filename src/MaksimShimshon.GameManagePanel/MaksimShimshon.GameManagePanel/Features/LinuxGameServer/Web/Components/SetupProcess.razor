@@ -1,2 +1,16 @@
 @using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Components.ViewModels
 @inherits WidgetComponentBase<PluginEntry, ISetupProrcessViewModel>
+<MudGrid>
+    <MudItem>
+        <MudSelect @bind-Value=@ViewModel.KeyGame
+                   Dense FitContent ReadOnly
+                   Variant=@Variant.Text
+                   Label="Select Game Server"
+                   Disabled=@ViewModel.IsLoading >
+            @foreach (var state in ViewModel.AvailableInstallGames)
+            {
+                <MudSelectItem Value="state.Key">@state.Value</MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>
+</MudGrid>

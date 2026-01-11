@@ -2,6 +2,4 @@
 
 public class LinuxGameServerConfiguration
 {
-    public string? AutoInstall { get; init; }
-
 }

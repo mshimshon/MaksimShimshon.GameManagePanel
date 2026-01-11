@@ -4,4 +4,6 @@ namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Components
 
 public interface ISetupProrcessViewModel : IWidgetViewModel
 {
+    public string KeyGame { get; set; }
+    public IReadOnlyDictionary<string, string> AvailableInstallGames { get; }
 }

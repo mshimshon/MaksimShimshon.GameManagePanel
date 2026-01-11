@@ -1,9 +1,9 @@
-﻿using MaksimShimshon.GameManagePanel.Core;
-using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Providers.Linux;
+﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Providers.Linux;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Domain.ValueObjects;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Infrastructure.Configurations;
+using MaksimShimshon.GameManagePanel.Services;
 
 namespace MaksimShimshon.GameManagePanel.Features.SystemInfo.Infrastructure.Services;
 
@@ -11,13 +11,16 @@ internal class LinuxSystemInfoService : ISystemInfoService
 {
     private readonly CommandRunner _commandRunner;
     private readonly LinuxSystemInfoConfiguration _linuxSystemInfoConfiguration;
+    private readonly PluginConfiguration _pluginConfiguration;
     private readonly string _bashFolder;
-    public LinuxSystemInfoService(CommandRunner commandRunner, LinuxSystemInfoConfiguration linuxSystemInfoConfiguration)
+    public LinuxSystemInfoService(CommandRunner commandRunner, LinuxSystemInfoConfiguration linuxSystemInfoConfiguration, PluginConfiguration pluginConfiguration)
     {
         _commandRunner = commandRunner;
         _linuxSystemInfoConfiguration = linuxSystemInfoConfiguration;
-        _bashFolder = Path.Combine("/", "usr", "lib", "lunaticpanel", "plugins", BaseInfo.AssemblyName, "bash", "systeminfo");
+        _pluginConfiguration = pluginConfiguration;
+        _bashFolder = pluginConfiguration.GetBashBase("systeminfo");
     }
+
     public async Task<SystemInfoEntity?> GetSystemInfoAsync(CancellationToken ct = default)
     {
         var ramScript = Path.Combine(_bashFolder, "getraminfo.sh");
