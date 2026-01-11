@@ -1,5 +1,9 @@
-﻿using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
+﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Providers.Linux;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Domain.Entities;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Configuration;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Services.Dto;
+using MaksimShimshon.GameManagePanel.Kernel.Exceptions;
 using MaksimShimshon.GameManagePanel.Services;
 using System.Text.Json;
 
@@ -7,19 +11,50 @@ namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure
 
 internal class LinuxGameServerService : ILinuxGameServerService
 {
-    private readonly LGSMSetupConfiguration _lGSMSetupConfiguration = new();
+    private readonly LgsmSetupConfiguration _lGSMSetupConfiguration = new();
+    private readonly PluginConfiguration _pluginConfiguration;
+    private readonly CommandRunner _commandRunner;
 
-    public Task<Dictionary<string, string>> GetAvailableGames(CancellationToken cancellation = default)
-        => Task.FromResult(_lGSMSetupConfiguration.AvailableGameServers);
-
-    public LinuxGameServerService(PluginConfiguration pluginConfiguration)
+    public LinuxGameServerService(PluginConfiguration pluginConfiguration, CommandRunner commandRunner)
     {
-        var configFileName = $"{nameof(LGSMSetupConfiguration).ToLower()}.json";
+        var configFileName = $"{nameof(LgsmSetupConfiguration).ToLower()}.json";
         var configForInstallPath = Path.Combine(pluginConfiguration.GetConfigBase("linuxgameserver"), configFileName);
         if (File.Exists(configForInstallPath))
         {
             var configForInstallPathJson = File.ReadAllText(configForInstallPath);
-            _lGSMSetupConfiguration = JsonSerializer.Deserialize<LGSMSetupConfiguration>(configForInstallPathJson)!;
+            _lGSMSetupConfiguration = JsonSerializer.Deserialize<LgsmSetupConfiguration>(configForInstallPathJson)!;
+        }
+
+        _pluginConfiguration = pluginConfiguration;
+        _commandRunner = commandRunner;
+    }
+    public Task<Dictionary<string, string>> GetAvailableGames(CancellationToken cancellation = default)
+        => Task.FromResult(_lGSMSetupConfiguration.AvailableGameServers);
+    public async Task<GameServerInfoEntity?> PerformServerInstallation(CancellationToken cancellation = default)
+    {
+        string pathToLockFile = _pluginConfiguration.GetConfigFor(LinuxGameServerModule.ModuleName, ".install_lock");
+        if (File.Exists(pathToLockFile))
+            throw new WebServiceException("Installation is already in process.");
+
+        try
+        {
+            string scriptSetLocalCulture = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "setlocalculture.sh");
+            var localeResponse = await _commandRunner.RunLinuxScriptWithReplyAs<ScriptResponse>(scriptSetLocalCulture);
+            if (!localeResponse.Completed)
+                throw new WebServiceException(localeResponse.Failure);
+
+            string scriptInstallGameServer = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "installgameserver.sh");
+            var installGameServer = await _commandRunner.RunLinuxScriptWithReplyAs<ScriptResponse>(scriptInstallGameServer);
+            if (!installGameServer.Completed)
+                throw new WebServiceException(localeResponse.Failure);
+
+
+        }
+        catch (Exception ex)
+        {
+            File.Delete(pathToLockFile);
+            throw new WebServiceException(ex.Message);
         }
     }
+
 }

@@ -1,5 +1,7 @@
-﻿namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
+﻿using StatePulse.Net;
 
-public record GameServerInstalledAction
+namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
+
+public record GameServerInstalledAction : IAction
 {
 }

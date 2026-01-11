@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using System.Text.Json;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Providers.Linux;
 
@@ -15,6 +16,11 @@ public class CommandRunner
 
         _bash = Path.Combine("/", "bin", "bash");
 
+    }
+    public async Task<TResponse> RunLinuxScriptWithReplyAs<TResponse>(string file)
+    {
+        string response = await RunLinuxScript(file);
+        return JsonSerializer.Deserialize<TResponse>(response)!;
     }
 
     public async Task<string> RunLinuxScript(string file)

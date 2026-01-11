@@ -13,6 +13,10 @@ public static class LinuxGameServerKeys
     public static class Engine { }
     public static class Events
     {
+        public const string OnGameServerInstallStateChanged = $"{BaseInfo.AssemblyName}.{nameof(LinuxGameServerKeys)}.{nameof(Events)}.{nameof(OnGameServerInstallStateChanged)}";
+        public const string OnGameServerInstall = $"{BaseInfo.AssemblyName}.{nameof(LinuxGameServerKeys)}.{nameof(Events)}.{nameof(OnGameServerInstall)}";
+        public const string OnGameServerInstalled = $"{BaseInfo.AssemblyName}.{nameof(LinuxGameServerKeys)}.{nameof(Events)}.{nameof(OnGameServerInstalled)}";
+        public const string OnGameServerInstallFailed = $"{BaseInfo.AssemblyName}.{nameof(LinuxGameServerKeys)}.{nameof(Events)}.{nameof(OnGameServerInstallFailed)}";
 
     }
 }

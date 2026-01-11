@@ -19,4 +19,10 @@ public record PluginConfiguration
 
     public string GetBashBase(string moduleName)
         => Path.Combine(BashFolder, moduleName);
+
+    public string GetConfigFor(string moduleName, string filename)
+    => Path.Combine(GetConfigBase(moduleName), filename);
+
+    public string GetBashFor(string moduleName, string filename)
+        => Path.Combine(GetBashBase(moduleName), filename);
 }
