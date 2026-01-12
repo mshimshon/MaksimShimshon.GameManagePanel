@@ -6,5 +6,5 @@ public interface ILinuxGameServerService
 {
     Task<Dictionary<string, string>> GetAvailableGames(CancellationToken cancellation = default);
 
-    Task<GameServerInfoEntity?> PerformServerInstallation(CancellationToken cancellation = default);
+    Task<GameServerInfoEntity?> PerformServerInstallation(string gameServer, CancellationToken cancellation = default);
 }

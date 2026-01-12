@@ -17,18 +17,19 @@ public class CommandRunner
         _bash = Path.Combine("/", "bin", "bash");
 
     }
-    public async Task<TResponse> RunLinuxScriptWithReplyAs<TResponse>(string file)
+    public async Task<TResponse> RunLinuxScriptWithReplyAs<TResponse>(string file, bool sudo = true)
     {
-        string response = await RunLinuxScript(file);
+        string response = await RunLinuxScript(file, sudo);
         return JsonSerializer.Deserialize<TResponse>(response)!;
     }
 
-    public async Task<string> RunLinuxScript(string file)
+    public async Task<string> RunLinuxScript(string file, bool sudo = true)
     {
-
+        var command = _bash;
+        if (sudo) command = "sudo " + _bash;
         var psi = new ProcessStartInfo
         {
-            FileName = _bash,
+            FileName = command,
             Arguments = $"-c \"{file}\"",
             RedirectStandardOutput = true,
             RedirectStandardError = true,
@@ -54,11 +55,20 @@ public class CommandRunner
         return output + error;
     }
 
-    public async Task<string> RunLinuxCommand(string command)
+    /// <summary>
+    /// DO NOT USE FOR REGULARLY CALL COMMANDS, USE RunLinuxScript Instead. <br/>
+    /// This Command is to run a single command ie: low frequency user command 
+    /// </summary>
+    /// <param name="command"></param>
+    /// <param name="sudo"></param>
+    /// <returns></returns>
+    public async Task<string> RunLinuxCommand(string command, bool sudo = true)
     {
+        var commandTorite = command;
+        if (sudo) commandTorite = "sudo " + command;
         var script = Path.Combine(_tmpPath, Path.GetRandomFileName()) + ".sh";
-        await File.WriteAllTextAsync(script, command);
-        Console.WriteLine(script);
+        await File.WriteAllTextAsync(script, commandTorite);
+
         var psi = new ProcessStartInfo
         {
             FileName = _bash,

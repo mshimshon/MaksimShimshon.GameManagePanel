@@ -5,7 +5,7 @@ using MaksimShimshon.GameManagePanel.Kernel.Notification.Services;
 using MedihatR;
 using Microsoft.Extensions.Logging;
 
-namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands;
+namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands.Handlers;
 
 internal class InstallGameServerHandler : HandlerBase, IRequestHandler<InstallGameServerCommand, GameServerInfoEntity?>
 {
@@ -18,7 +18,7 @@ internal class InstallGameServerHandler : HandlerBase, IRequestHandler<InstallGa
 
     public async Task<GameServerInfoEntity?> Handle(InstallGameServerCommand request, CancellationToken cancellationToken)
     => await ExecAndHandleExceptions(
-        () => _linuxGameServerService.PerformServerInstallation(cancellationToken),
+        () => _linuxGameServerService.PerformServerInstallation(request.Id, cancellationToken),
         () => default
         );
 }

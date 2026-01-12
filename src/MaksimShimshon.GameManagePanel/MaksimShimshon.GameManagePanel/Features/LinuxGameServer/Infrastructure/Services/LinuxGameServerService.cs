@@ -30,7 +30,7 @@ internal class LinuxGameServerService : ILinuxGameServerService
     }
     public Task<Dictionary<string, string>> GetAvailableGames(CancellationToken cancellation = default)
         => Task.FromResult(_lGSMSetupConfiguration.AvailableGameServers);
-    public async Task<GameServerInfoEntity?> PerformServerInstallation(CancellationToken cancellation = default)
+    public async Task<GameServerInfoEntity?> PerformServerInstallation(string gameServer, CancellationToken cancellation = default)
     {
         string pathToLockFile = _pluginConfiguration.GetConfigFor(LinuxGameServerModule.ModuleName, ".install_lock");
         if (File.Exists(pathToLockFile))
@@ -43,17 +43,24 @@ internal class LinuxGameServerService : ILinuxGameServerService
             if (!localeResponse.Completed)
                 throw new WebServiceException(localeResponse.Failure);
 
-            string scriptInstallGameServer = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "installgameserver.sh");
+            string scriptInstallGameServer = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "installgameserver.sh" + " " + gameServer);
             var installGameServer = await _commandRunner.RunLinuxScriptWithReplyAs<ScriptResponse>(scriptInstallGameServer);
             if (!installGameServer.Completed)
                 throw new WebServiceException(localeResponse.Failure);
 
-
+            return new GameServerInfoEntity()
+            {
+                Id = gameServer,
+                InstallDate = DateTime.UtcNow
+            };
         }
         catch (Exception ex)
         {
-            File.Delete(pathToLockFile);
             throw new WebServiceException(ex.Message);
+        }
+        finally
+        {
+            File.Delete(pathToLockFile);
         }
     }
 
