@@ -29,39 +29,39 @@ public static class LifecycleServiceExt
         services.AddTransient<ILifecycleStartupParameterFieldViewModel, LifecycleStartupParameterFieldViewModel>();
         services.AddScoped<CommandRunner>();
         services.AddTransient<ILifecycleServices, LifecycleServices>();
-        services.AddStatePulseAction<LifecycleFetchStartupParametersAction>();
-        services.AddStatePulseAction<LifecycleFetchStartupParametersDoneAction>();
-        services.AddStatePulseAction<LifecycleServerGameInfoUpdatedAction>();
-        services.AddStatePulseAction<LifecycleServerStartAction>();
-        services.AddStatePulseAction<LifecycleServerStartDoneAction>();
-        services.AddStatePulseAction<LifecycleServerStatusTransitionDoneAction>();
-        services.AddStatePulseAction<LifecycleServerStatusTransitionTickedAction>();
-        services.AddStatePulseAction<LifecycleServerStatusUpdateDoneAction>();
-        services.AddStatePulseAction<LifecycleServerStatusUpdateSkippedAction>();
-        services.AddStatePulseAction<LifecycleServerStopAction>();
-        services.AddStatePulseAction<LifecycleServerStopDoneAction>();
-        services.AddStatePulseAction<LifecycleUpdateStartupParameterAction>();
-        services.AddStatePulseAction<LifecycleUpdateStartupParameterDoneAction>();
+        services.AddStatePulseService<LifecycleFetchStartupParametersAction>();
+        services.AddStatePulseService<LifecycleFetchStartupParametersDoneAction>();
+        services.AddStatePulseService<LifecycleServerGameInfoUpdatedAction>();
+        services.AddStatePulseService<LifecycleServerStartAction>();
+        services.AddStatePulseService<LifecycleServerStartDoneAction>();
+        services.AddStatePulseService<LifecycleServerStatusTransitionDoneAction>();
+        services.AddStatePulseService<LifecycleServerStatusTransitionTickedAction>();
+        services.AddStatePulseService<LifecycleServerStatusUpdateDoneAction>();
+        services.AddStatePulseService<LifecycleServerStatusUpdateSkippedAction>();
+        services.AddStatePulseService<LifecycleServerStopAction>();
+        services.AddStatePulseService<LifecycleServerStopDoneAction>();
+        services.AddStatePulseService<LifecycleUpdateStartupParameterAction>();
+        services.AddStatePulseService<LifecycleUpdateStartupParameterDoneAction>();
 
-        services.AddStatePulseEffect<LifecycleFetchStartupParametersEffect>();
-        services.AddStatePulseEffect<LifecycleServerStartEffect>();
-        services.AddStatePulseEffect<LifecycleServerStatusPeriodicUpdateEffect>();
-        services.AddStatePulseEffect<LifecycleServerStatusTransitionEffect>();
-        services.AddStatePulseEffect<LifecycleServerStopEffect>();
-        services.AddStatePulseEffect<LifecycleUpdateStartupParameterEffect>();
+        services.AddStatePulseService<LifecycleFetchStartupParametersEffect>();
+        services.AddStatePulseService<LifecycleServerStartEffect>();
+        services.AddStatePulseService<LifecycleServerStatusPeriodicUpdateEffect>();
+        services.AddStatePulseService<LifecycleServerStatusTransitionEffect>();
+        services.AddStatePulseService<LifecycleServerStopEffect>();
+        services.AddStatePulseService<LifecycleUpdateStartupParameterEffect>();
 
 
-        services.AddStatePulseReducer<LifecycleFetchStartupParametersDoneReducer>();
-        services.AddStatePulseReducer<LifecycleServerGameInfoUpdatedReducer>();
-        services.AddStatePulseReducer<LifecycleServerStatusTransitionDoneReducer>();
-        services.AddStatePulseReducer<LifecycleServerStartDoneReducer>();
-        services.AddStatePulseReducer<LifecycleServerStatusTransitionTickedReducer>();
-        services.AddStatePulseReducer<LifecycleServerStatusUpdateDoneReducer>();
-        services.AddStatePulseReducer<LifecycleServerStatusUpdateSkippedReducer>();
-        services.AddStatePulseReducer<LifecycleServerStopDoneReducer>();
+        services.AddStatePulseService<LifecycleFetchStartupParametersDoneReducer>();
+        services.AddStatePulseService<LifecycleServerGameInfoUpdatedReducer>();
+        services.AddStatePulseService<LifecycleServerStatusTransitionDoneReducer>();
+        services.AddStatePulseService<LifecycleServerStartDoneReducer>();
+        services.AddStatePulseService<LifecycleServerStatusTransitionTickedReducer>();
+        services.AddStatePulseService<LifecycleServerStatusUpdateDoneReducer>();
+        services.AddStatePulseService<LifecycleServerStatusUpdateSkippedReducer>();
+        services.AddStatePulseService<LifecycleServerStopDoneReducer>();
 
-        services.AddStatePulseStateFeature<LifecycleGameInfoState>();
-        services.AddStatePulseStateFeature<LifecycleServerState>();
+        services.AddStatePulseService<LifecycleGameInfoState>();
+        services.AddStatePulseService<LifecycleServerState>();
 
         services.AddMedihaterRequestHandler<GetServerStatusQuery, GetServerStatusHandler, ServerInfoEntity?>();
         services.AddMedihaterRequestHandler<GetStartupParametersQuery, GetStartupParametersHandler, Dictionary<string, string>>();

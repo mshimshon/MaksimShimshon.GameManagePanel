@@ -7,13 +7,13 @@ namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pu
 internal class InstallGameServerActionReducer : IReducer<InstallationState, InstallGameServerAction>
 {
 
-    public Task<InstallationState> ReduceAsync(InstallationState state, InstallGameServerAction action)
-     => Task.FromResult(state with
+    public InstallationState Reduce(InstallationState state, InstallGameServerAction action)
+     => state with
      {
          InProgressInstallation = new()
          {
              CurrentStep = $"Installing ${action.DisplayName}...",
              IsInstalling = true
          }
-     });
+     };
 }

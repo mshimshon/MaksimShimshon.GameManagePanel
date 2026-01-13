@@ -6,6 +6,10 @@ namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.R
 
 public class LifecycleFetchStartupParametersDoneReducer : IReducer<LifecycleGameInfoState, LifecycleFetchStartupParametersDoneAction>
 {
-    public async Task<LifecycleGameInfoState> ReduceAsync(LifecycleGameInfoState state, LifecycleFetchStartupParametersDoneAction action)
-        => await Task.FromResult(state with { StartupParameters = action.StartupParameters, SavedParametersLoaded = true });
+    public LifecycleGameInfoState Reduce(LifecycleGameInfoState state, LifecycleFetchStartupParametersDoneAction action)
+        => state with
+        {
+            StartupParameters = action.StartupParameters,
+            SavedParametersLoaded = true
+        };
 }

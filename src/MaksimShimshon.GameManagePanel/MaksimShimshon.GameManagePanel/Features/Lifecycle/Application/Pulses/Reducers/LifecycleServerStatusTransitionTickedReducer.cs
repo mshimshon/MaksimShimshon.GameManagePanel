@@ -6,6 +6,9 @@ namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.R
 
 public class LifecycleServerStatusTransitionTickedReducer : IReducer<LifecycleServerState, LifecycleServerStatusTransitionTickedAction>
 {
-    public async Task<LifecycleServerState> ReduceAsync(LifecycleServerState state, LifecycleServerStatusTransitionTickedAction action)
-        => await Task.FromResult(state with { TransitionTicks = state.TransitionTicks + 1 });
+    public LifecycleServerState Reduce(LifecycleServerState state, LifecycleServerStatusTransitionTickedAction action)
+        => state with
+        {
+            TransitionTicks = state.TransitionTicks + 1
+        };
 }

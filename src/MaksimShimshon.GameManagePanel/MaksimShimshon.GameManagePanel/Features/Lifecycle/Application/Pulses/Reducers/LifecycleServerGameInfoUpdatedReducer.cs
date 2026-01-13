@@ -7,8 +7,9 @@ namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.R
 public class LifecycleServerGameInfoUpdatedReducer : IReducer<LifecycleGameInfoState, LifecycleServerGameInfoUpdatedAction>
 {
 
-    public LifecycleServerGameInfoUpdatedReducer()
-    {
-    }
-    public Task<LifecycleGameInfoState> ReduceAsync(LifecycleGameInfoState state, LifecycleServerGameInfoUpdatedAction action) => Task.FromResult(state with { GameInfo = action.GameInfo });
+    public LifecycleGameInfoState Reduce(LifecycleGameInfoState state, LifecycleServerGameInfoUpdatedAction action)
+        => state with
+        {
+            GameInfo = action.GameInfo
+        };
 }

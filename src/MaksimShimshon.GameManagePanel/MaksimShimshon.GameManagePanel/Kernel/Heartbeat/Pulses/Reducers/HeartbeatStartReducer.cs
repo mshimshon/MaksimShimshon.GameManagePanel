@@ -6,6 +6,9 @@ namespace MaksimShimshon.GameManagePanel.Kernel.Heartbeat.Pulses.Reducers;
 
 internal class HeartbeatStartReducer : IReducer<HeartbeatState, HeartbeatStartAction>
 {
-    public Task<HeartbeatState> ReduceAsync(HeartbeatState state, HeartbeatStartAction action)
-        => Task.FromResult(state with { IsBeating = true });
+    public HeartbeatState Reduce(HeartbeatState state, HeartbeatStartAction action)
+        => state with
+        {
+            IsBeating = true
+        };
 }

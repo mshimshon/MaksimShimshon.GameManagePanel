@@ -1,9 +1,9 @@
-﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Providers.Linux;
-using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.CQRS.Queries;
+﻿using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.CQRS.Queries;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.CQRS.Queries.Handlers;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Pulses.Effects;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Pulses.Reducers;
+using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Pulses.Reducers.Middlewares;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Domain.Entites;
@@ -32,12 +32,12 @@ public static class SystemInfoServiceExt
 
         services.AddScoped<ISystemResourcesStatusViewModel, SystemResourcesStatusViewModel>();
         services.AddScoped<IWidgetSystemInfoViewModel, WidgetSystemInfoViewModel>();
-        services.AddScoped<CommandRunner>();
-        services.AddStatePulseAction<SystemInfoUpdateAction>();
-        services.AddStatePulseAction<SystemInfoUpdatedAction>();
-        services.AddStatePulseEffect<SystemInfoUpdateEffect>();
-        services.AddStatePulseReducer<ServerSystemInfoUpdatedReducer>();
-        services.AddStatePulseStateFeature<SystemInfoState>();
+        services.AddStatePulseService<SystemInfoUpdateAction>();
+        services.AddStatePulseService<SystemInfoUpdatedAction>();
+        services.AddStatePulseService<SystemInfoUpdateEffect>();
+        services.AddStatePulseService<ServerSystemInfoUpdatedReducer>();
+        services.AddStatePulseService<SystemInfoState>();
+        services.AddStatePulseService<OnServerInfoUpdateMiddleware>();
         services.AddMedihaterRequestHandler<GetSystemInfoQuery, GetSystemInfoHandler, SystemInfoEntity?>();
     }
 }

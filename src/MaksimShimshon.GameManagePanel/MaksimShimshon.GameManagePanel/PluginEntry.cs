@@ -2,9 +2,11 @@
 using LunaticPanel.Core;
 using LunaticPanel.Core.Abstraction.Circuit;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Providers.Linux;
 using MaksimShimshon.GameManagePanel.Features.Notification;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
+using MaksimShimshon.GameManagePanel.Kernel.CQRS.Notifications;
 using MaksimShimshon.GameManagePanel.Kernel.Heartbeat;
 using MaksimShimshon.GameManagePanel.Services;
 using MaksimShimshon.GameManagePanel.Web.Pages.ViewModels;
@@ -37,6 +39,7 @@ public class PluginEntry : PluginBase
         JObject jsonD = new();
 
         services.AddScoped<PluginConfiguration>();
+        services.AddScoped<CommandRunner>();
 
         services.AddScoped<HomeViewModel>();
         services.AddScoped<IHeartbeatService, HeartbeatService>();
@@ -61,5 +64,11 @@ public class PluginEntry : PluginBase
         services.AddLifecycleFeatureServices();
         services.AddNotificationFeatureServices();
         services.AddSystemInfoFeatureServices(_configuration);
+    }
+
+    protected override async Task BeforeRuntimeStart(IServiceProvider serviceProvider)
+    {
+        var medihater = serviceProvider.GetRequiredService<IMedihater>();
+        await medihater.Publish<BeforeRuntimeInitNotification>(new());
     }
 }

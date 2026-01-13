@@ -6,6 +6,10 @@ namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.R
 
 public class LifecycleServerStatusUpdateDoneReducer : IReducer<LifecycleServerState, LifecycleServerStatusUpdateDoneAction>
 {
-    public async Task<LifecycleServerState> ReduceAsync(LifecycleServerState state, LifecycleServerStatusUpdateDoneAction action)
-        => await Task.FromResult(state with { ServerInfoLastUpdate = DateTime.UtcNow, ServerInfo = action.ServerInfo });
+    public LifecycleServerState Reduce(LifecycleServerState state, LifecycleServerStatusUpdateDoneAction action)
+        => state with
+        {
+            ServerInfoLastUpdate = DateTime.UtcNow,
+            ServerInfo = action.ServerInfo
+        };
 }

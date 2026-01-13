@@ -7,7 +7,7 @@ namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.R
 
 public class LifecycleServerStatusTransitionDoneReducer : IReducer<LifecycleServerState, LifecycleServerStatusTransitionDoneAction>
 {
-    public async Task<LifecycleServerState> ReduceAsync(LifecycleServerState state, LifecycleServerStatusTransitionDoneAction action)
+    public LifecycleServerState Reduce(LifecycleServerState state, LifecycleServerStatusTransitionDoneAction action)
     {
 
         var nstate = state with { Delay = 8, Transition = ServerTransition.Idle, TransitionTicks = 0 };

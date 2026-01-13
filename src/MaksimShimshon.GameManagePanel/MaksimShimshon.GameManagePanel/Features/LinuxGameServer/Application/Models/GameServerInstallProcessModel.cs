@@ -2,10 +2,11 @@
 
 public record GameServerInstallProcessModel
 {
-    public bool Failed => ErrorMessage != default;
+    public bool Failed { get; set; }
     public bool IsInstalling { get; init; }
     public string CurrentStep { get; init; } = default!;
-    public string? ErrorMessage { get; init; }
+    public string Id { get; init; } = default!;
+    public string DisplayName { get; init; } = default!;
 
 
 

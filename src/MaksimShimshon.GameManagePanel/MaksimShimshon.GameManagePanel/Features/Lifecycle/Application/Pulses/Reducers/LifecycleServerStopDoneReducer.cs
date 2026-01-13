@@ -7,13 +7,13 @@ namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.R
 
 public class LifecycleServerStopDoneReducer : IReducer<LifecycleServerState, LifecycleServerStopDoneAction>
 {
-    public async Task<LifecycleServerState> ReduceAsync(LifecycleServerState state, LifecycleServerStopDoneAction action)
+    public LifecycleServerState Reduce(LifecycleServerState state, LifecycleServerStopDoneAction action)
     {
-        return await Task.FromResult(state with
+        return state with
         {
             //SkipNextUpdates = 4
             Transition = ServerTransition.Stopping,
             Delay = 2
-        });
+        };
     }
 }

@@ -4,7 +4,7 @@ using MaksimShimshon.GameManagePanel.Core.Features;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 using StatePulse.Net;
 
-namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Middlewares;
+namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Reducers.Middlewares;
 
 internal class GameServerInstallEventMiddlware : IReducerMiddleware
 {
