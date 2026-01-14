@@ -4,5 +4,5 @@ namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.A
 
 public record LifecycleFetchStartupParametersDoneAction : IAction
 {
-    public Dictionary<string, string> StartupParameters { get; init; } = default!;
+    public Dictionary<string, string> StartupParameters { get; set; } = default!;
 }

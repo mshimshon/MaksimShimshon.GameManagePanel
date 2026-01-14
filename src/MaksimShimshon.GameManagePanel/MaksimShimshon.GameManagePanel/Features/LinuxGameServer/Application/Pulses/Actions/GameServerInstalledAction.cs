@@ -5,5 +5,5 @@ namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pu
 
 public record GameServerInstalledAction : IAction
 {
-    public GameServerInfoEntity GameServerInstalled { get; init; }
+    public GameServerInfoEntity GameServerInstalled { get; set; } = default!;
 }

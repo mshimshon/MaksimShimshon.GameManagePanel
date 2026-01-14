@@ -17,7 +17,10 @@ public record InstallGameServerActionEffect : IEffect<InstallGameServerAction>
     {
         var result = await _medihater.Send(new InstallGameServerCommand(action.Id));
         if (result == default)
-            await dispatcher.Prepare<GameServerInstallFailedAction>().With(p => p.Id, action.Id).DispatchAsync();
+            await dispatcher.Prepare<GameServerInstallFailedAction>()
+                .With(p => p.Id, action.Id)
+                .With(p => p.DisplayName, action.DisplayName)
+                .DispatchAsync();
         else
             await dispatcher.Prepare<GameServerInstalledAction>().With(p => p.GameServerInstalled, result).DispatchAsync();
 

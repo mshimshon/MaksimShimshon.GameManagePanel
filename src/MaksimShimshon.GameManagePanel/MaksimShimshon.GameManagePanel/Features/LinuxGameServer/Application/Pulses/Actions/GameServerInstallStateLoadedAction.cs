@@ -3,7 +3,6 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 
-public record GameServerInstallStateLoadedAction : IAction
+public record GameServerInstallStateLoadedAction(GameServerInfoEntity Info) : IAction
 {
-    public GameServerInfoEntity Info { get; init; } = default!;
 }

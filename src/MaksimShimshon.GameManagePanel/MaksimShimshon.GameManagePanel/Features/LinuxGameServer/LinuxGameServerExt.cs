@@ -1,4 +1,6 @@
 ﻿using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Notifications.Handlers;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Queries;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Queries.Handlers;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Effects;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Reducers;
@@ -35,6 +37,8 @@ public static class LinuxGameServerExt
 
         services.AddScoped<ISetupProcessViewModel, SetupProcessViewModel>();
         services.AddScoped<IWidgetServerSetupViewModel, WidgetServerSetupViewModel>();
+
+        services.AddMedihaterRequestHandler<GetInstallableGameServerQuery, GetInstallableGameServerHandler, IReadOnlyDictionary<string, string>>();
         services.AddMedihaterNotificationHandler<BeforeRuntimeInitNotification, LoadInstallationStateHandler>();
 
     }

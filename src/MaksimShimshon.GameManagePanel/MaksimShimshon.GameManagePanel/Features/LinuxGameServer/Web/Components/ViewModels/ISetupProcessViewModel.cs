@@ -6,4 +6,6 @@ public interface ISetupProcessViewModel : IWidgetViewModel
 {
     public string KeyGame { get; set; }
     public IReadOnlyDictionary<string, string> AvailableInstallGames { get; }
+    Task InitializeAsync();
+    Task InstallAsync();
 }

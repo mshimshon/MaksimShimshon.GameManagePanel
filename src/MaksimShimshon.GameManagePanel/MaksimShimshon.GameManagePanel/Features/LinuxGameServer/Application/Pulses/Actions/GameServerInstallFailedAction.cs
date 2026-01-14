@@ -4,6 +4,6 @@ namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pu
 
 public record GameServerInstallFailedAction : IAction
 {
-    public string Id { get; init; } = default!;
-    public string DisplayName { get; init; } = default!;
+    public string Id { get; set; } = default!;
+    public string DisplayName { get; set; } = default!;
 }

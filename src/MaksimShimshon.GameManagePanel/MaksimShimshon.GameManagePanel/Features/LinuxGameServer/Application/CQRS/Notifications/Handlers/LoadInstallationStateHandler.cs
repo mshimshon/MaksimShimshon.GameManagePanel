@@ -29,8 +29,7 @@ internal class LoadInstallationStateHandler : INotificationHandler<BeforeRuntime
         string jsonString = await File.ReadAllTextAsync(file);
         InstallationStateDto result = JsonSerializer.Deserialize<InstallationStateDto>(jsonString)!;
         var entity = _coreMap.Map(result).To<GameServerInfoEntity>();
-
-        await _dispatcher.Prepare<GameServerInstallStateLoadedAction>().With(p => p.Info, entity).DispatchAsync();
+        await _dispatcher.Prepare<GameServerInstallStateLoadedAction>(entity).DispatchAsync();
 
     }
 }
