@@ -53,3 +53,15 @@ runuser -l "$LGSM_USER" -c "
     bash ./linuxgsm.sh $GAME_SERVER
     yes y | bash ./$GAME_SERVER install
 "
+# After successful installation, write installationstate.json
+STATE_DIR="/usr/lib/lunaticpanel/plugins/MaksimShimshon.GameManagePanel"
+STATE_FILE="$STATE_DIR/installationstate.json"
+
+mkdir -p "$STATE_DIR"
+
+cat > "$STATE_FILE" <<EOF
+{
+  "Id": "$GAME_SERVER",
+  "InstallDate": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+}
+EOF

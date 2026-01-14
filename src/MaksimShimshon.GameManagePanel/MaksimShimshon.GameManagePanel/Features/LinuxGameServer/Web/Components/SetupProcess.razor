@@ -1,16 +1,47 @@
 @using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Components.ViewModels
 @inherits WidgetComponentBase<PluginEntry, ISetupProcessViewModel>
-<MudGrid>
-    <MudItem>
-        <MudSelect @bind-Value=@ViewModel.KeyGame
-                   Dense FitContent ReadOnly
-                   Variant=@Variant.Text
-                   Label="Select Game Server"
-                   Disabled=@ViewModel.IsLoading >
-            @foreach (var state in ViewModel.AvailableInstallGames)
+@if (!ViewModel.InstallState.IsInstallationCompleted)
+{
+    <MudGrid>
+        <MudItem>
+
+            @if(ViewModel.InstallState.InProgressInstallation != default && ViewModel.InstallState.InProgressInstallation.IsInstalling)
             {
-                <MudSelectItem Value="state.Key">@state.Value</MudSelectItem>
+                <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+                <MudAlert Severity="Severity.Info">
+                    @ViewModel.InstallState.InProgressInstallation.CurrentStep
+                </MudAlert>
             }
-        </MudSelect>
-    </MudItem>
-</MudGrid>
+            else if (ViewModel.IsLoading)
+            {
+                <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+                <MudAlert Severity="Severity.Info">
+                    Loading Game Server Setup Information
+                </MudAlert>
+            }
+            else if (ViewModel.InstallState.AvailableGameServers.Count > 0)
+            {
+                <MudSelect @bind-Value=@ViewModel.KeyGame
+                           Dense FitContent ReadOnly
+                           Variant=@Variant.Text
+                           Label="Select Game Server"
+                           Disabled=@ViewModel.IsLoading>
+                    @foreach (var state in ViewModel.InstallState.AvailableGameServers)
+                    {
+                        <MudSelectItem Value="state.Key">@state.Value</MudSelectItem>
+                    }
+                </MudSelect>
+                <MudButton OnClick=ViewModel.InstallAsync>
+                    Run Install
+                </MudButton>
+            }
+            else
+            {
+                <MudAlert Severity="Severity.Error">
+                    The server is misconfigured, it seems like the available game servers file has not been properly setup. It would be best to reinstall the panel.
+                </MudAlert>
+            }
+
+        </MudItem>
+    </MudGrid>
+}

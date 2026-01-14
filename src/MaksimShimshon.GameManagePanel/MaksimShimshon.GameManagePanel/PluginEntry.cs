@@ -1,8 +1,10 @@
 ﻿using CoreMap;
 using LunaticPanel.Core;
+using LunaticPanel.Core.Abstraction;
 using LunaticPanel.Core.Abstraction.Circuit;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Providers.Linux;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer;
 using MaksimShimshon.GameManagePanel.Features.Notification;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
@@ -13,7 +15,6 @@ using MaksimShimshon.GameManagePanel.Web.Pages.ViewModels;
 using MedihatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Linq;
 using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel;
@@ -22,28 +23,29 @@ namespace MaksimShimshon.GameManagePanel;
 public class PluginEntry : PluginBase
 {
     private IConfiguration _configuration = default!;
+    private GameInfoConfiguration _gameInfoConfig = default!;
+    private HeartbeatConfiguration _heartbeatConfig = default!;
+    private RepositoryConfiguration _repositoryConfig = default!;
+
     protected override void LoadConfiguration(IConfiguration configuration)
     {
         _configuration = configuration;
+        _gameInfoConfig = _configuration.GetSection("GameInfo")?.Get<GameInfoConfiguration>() ?? new();
+        _heartbeatConfig = _configuration.GetSection("Heartbeat")?.Get<HeartbeatConfiguration>() ?? new();
+        _repositoryConfig = _configuration.GetSection("Repositories")?.Get<RepositoryConfiguration>() ?? new();
+
     }
     protected override void RegisterPluginServices(IServiceCollection services, CircuitIdentity circuit)
     {
-        var config = new Configuration()
-        {
-            GameInfo = _configuration.GetSection("GameInfo")?.Get<GameInfoConfiguration>(),
-            Heartbeat = _configuration.GetSection("Heartbeat")?.Get<HeartbeatConfiguration>(),
-        };
-
-        services.AddScoped((sp) => config);
-
-        JObject jsonD = new();
-
-        services.AddScoped<PluginConfiguration>();
         services.AddScoped<CommandRunner>();
-
         services.AddScoped<HomeViewModel>();
         services.AddScoped<IHeartbeatService, HeartbeatService>();
-        services.AddScoped(p => config);
+        services.AddScoped(sp => new PluginConfiguration(sp.GetRequiredService<IPluginConfiguration>())
+        {
+            GameInfo = _gameInfoConfig,
+            Heartbeat = _heartbeatConfig,
+            Repositories = _repositoryConfig
+        });
 
         services.AddLogging();
         services.AddCoreMap(o => o.Scope = CoreMap.Enums.ServiceScope.Transient);
@@ -70,5 +72,7 @@ public class PluginEntry : PluginBase
     {
         var medihater = serviceProvider.GetRequiredService<IMedihater>();
         await medihater.Publish<BeforeRuntimeInitNotification>(new());
+        serviceProvider.RuntimeLinuxGameServerInitializer();
+
     }
 }

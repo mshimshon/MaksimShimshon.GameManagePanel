@@ -3,8 +3,8 @@ using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Servic
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Domain.Entities;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Configuration;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Services.Dto;
+using MaksimShimshon.GameManagePanel.Kernel.Configuration;
 using MaksimShimshon.GameManagePanel.Kernel.Exceptions;
-using MaksimShimshon.GameManagePanel.Services;
 using System.Text.Json;
 
 namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Services;
@@ -18,7 +18,7 @@ internal class LinuxGameServerService : ILinuxGameServerService
     public LinuxGameServerService(PluginConfiguration pluginConfiguration, CommandRunner commandRunner)
     {
         var configFileName = $"{nameof(LgsmSetupConfiguration).ToLower()}.json";
-        var configForInstallPath = Path.Combine(pluginConfiguration.GetConfigBase("linuxgameserver"), configFileName);
+        var configForInstallPath = Path.Combine(pluginConfiguration.GetConfigBase(LinuxGameServerModule.ModuleName), configFileName);
         if (File.Exists(configForInstallPath))
         {
             var configForInstallPathJson = File.ReadAllText(configForInstallPath);
@@ -43,7 +43,7 @@ internal class LinuxGameServerService : ILinuxGameServerService
             if (!localeResponse.Completed)
                 throw new WebServiceException(localeResponse.Failure);
 
-            string scriptInstallGameServer = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "installgameserver.sh" + " " + gameServer);
+            string scriptInstallGameServer = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "installgameserver.sh", gameServer);
             var installGameServer = await _commandRunner.RunLinuxScriptWithReplyAs<ScriptResponse>(scriptInstallGameServer);
             if (!installGameServer.Completed)
                 throw new WebServiceException(localeResponse.Failure);

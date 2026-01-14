@@ -3,7 +3,7 @@ using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Domain.ValueObjects;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Infrastructure.Configurations;
-using MaksimShimshon.GameManagePanel.Services;
+using MaksimShimshon.GameManagePanel.Kernel.Configuration;
 
 namespace MaksimShimshon.GameManagePanel.Features.SystemInfo.Infrastructure.Services;
 

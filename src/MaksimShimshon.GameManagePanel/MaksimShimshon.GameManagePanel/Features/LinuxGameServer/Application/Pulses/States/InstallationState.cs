@@ -10,4 +10,6 @@ public record InstallationState : IStateFeatureSingleton
     public GameServerInfoEntity? GameServerInfo { get; init; }
     public GameServerInstallProcessModel? InProgressInstallation { get; init; }
 
+    public IReadOnlyDictionary<string, string> AvailableGameServers { get; init; } = new Dictionary<string, string>().AsReadOnly();
+
 }

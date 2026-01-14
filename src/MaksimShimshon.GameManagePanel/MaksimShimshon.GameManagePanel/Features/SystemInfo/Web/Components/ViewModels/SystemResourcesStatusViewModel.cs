@@ -14,13 +14,13 @@ public class SystemResourcesStatusViewModel : WidgetViewModelBase, ISystemResour
     private readonly IDispatcher _dispatcher;
 
     public SystemInfoState SystemState => _statePulse.StateOf<SystemInfoState>(() => this, UpdateState);
-    public Configuration Configuration { get; }
+    public PluginConfiguration Configuration { get; }
 
     public SystemInfoEntity? SystemInfo => SystemState.SystemInfo;
     public DateTime LastUpdate => SystemState.LastUpdate;
     public int Delay => SystemState.Delay;
 
-    public SystemResourcesStatusViewModel(IStatePulse statePulse, Configuration configuration, IDispatcher dispatcher)
+    public SystemResourcesStatusViewModel(IStatePulse statePulse, PluginConfiguration configuration, IDispatcher dispatcher)
     {
         _statePulse = statePulse;
         Configuration = configuration;

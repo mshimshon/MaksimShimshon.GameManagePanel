@@ -2,8 +2,8 @@
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Notifications.Dto;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Domain.Entities;
+using MaksimShimshon.GameManagePanel.Kernel.Configuration;
 using MaksimShimshon.GameManagePanel.Kernel.CQRS.Notifications;
-using MaksimShimshon.GameManagePanel.Services;
 using MedihatR;
 using StatePulse.Net;
 using System.Text.Json;

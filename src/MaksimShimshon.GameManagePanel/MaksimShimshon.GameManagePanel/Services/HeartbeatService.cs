@@ -11,7 +11,7 @@ internal class HeartbeatService : IHeartbeatService
     private readonly IStateAccessor<HeartbeatState> _heartbeatStateAccessor;
     private readonly IDispatcher _dispatcher;
     private readonly int _internval = 1000;
-    public HeartbeatService(IStateAccessor<HeartbeatState> heartbeatStateAccessor, Configuration configuration, IDispatcher dispatcher)
+    public HeartbeatService(IStateAccessor<HeartbeatState> heartbeatStateAccessor, PluginConfiguration configuration, IDispatcher dispatcher)
     {
         _heartbeatStateAccessor = heartbeatStateAccessor;
         _dispatcher = dispatcher;
