@@ -1,7 +1,6 @@
 ﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Providers.Linux;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Domain.Entities;
-using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Configuration;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Services.Dto;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
 using MaksimShimshon.GameManagePanel.Kernel.Exceptions;
@@ -11,25 +10,41 @@ namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure
 
 internal class LinuxGameServerService : ILinuxGameServerService
 {
-    private readonly LgsmSetupConfiguration _lGSMSetupConfiguration = new();
     private readonly PluginConfiguration _pluginConfiguration;
     private readonly CommandRunner _commandRunner;
 
     public LinuxGameServerService(PluginConfiguration pluginConfiguration, CommandRunner commandRunner)
     {
-        var configFileName = $"{nameof(LgsmSetupConfiguration).ToLower()}.json";
-        var configForInstallPath = Path.Combine(pluginConfiguration.GetConfigBase(LinuxGameServerModule.ModuleName), configFileName);
-        if (File.Exists(configForInstallPath))
-        {
-            var configForInstallPathJson = File.ReadAllText(configForInstallPath);
-            _lGSMSetupConfiguration = JsonSerializer.Deserialize<LgsmSetupConfiguration>(configForInstallPathJson)!;
-        }
+
 
         _pluginConfiguration = pluginConfiguration;
         _commandRunner = commandRunner;
     }
+
     public Task<Dictionary<string, string>> GetAvailableGames(CancellationToken cancellation = default)
-        => Task.FromResult(_lGSMSetupConfiguration.AvailableGameServers);
+    {
+        var reposFolder = _pluginConfiguration.GetReposFor(LinuxGameServerModule.ModuleName, "available_games");
+        var gameFolders = Path.Combine(reposFolder, "games");
+        var result = new Dictionary<string, string>();
+        if (Directory.Exists(gameFolders))
+        {
+            foreach (var dir in Directory.EnumerateDirectories(gameFolders))
+            {
+                // Extract the last folder name: "/sda/adas/ads/1" -> "1"
+                var folderName = Path.GetFileName(dir);
+                var jsonPath = Path.Combine(dir, "game_info.json");
+                if (!File.Exists(jsonPath))
+                    continue; // or throw, depending on your rules
+                using var stream = File.OpenRead(jsonPath);
+                var json = JsonDocument.Parse(stream);
+                // Guaranteed non-null "name"
+                var name = json.RootElement.GetProperty("name").GetString();
+                result[folderName] = name!;
+            }
+        }
+        return Task.FromResult(result);
+    }
+
     public async Task<GameServerInfoEntity?> PerformServerInstallation(string gameServer, CancellationToken cancellation = default)
     {
         string pathToLockFile = _pluginConfiguration.GetConfigFor(LinuxGameServerModule.ModuleName, ".install_lock");

@@ -53,15 +53,14 @@ public static class LinuxGameServerExt
 
     public static void RuntimeLinuxGameServerInitializer(this IServiceProvider serviceProvider)
     {
-        DownloadAvailableGames(serviceProvider.GetRequiredService<IGitService>(), serviceProvider.GetRequiredService<PluginConfiguration>());
+        DownloadAvailableGames(serviceProvider.GetRequiredService<IGitService>(), serviceProvider.GetRequiredService<PluginConfiguration>(), serviceProvider.GetRequiredService<IDispatcher>());
     }
-    public static void DownloadAvailableGames(IGitService gitService, PluginConfiguration pluginConfig)
+    public static void DownloadAvailableGames(IGitService gitService, PluginConfiguration pluginConfig, IDispatcher dispatcher)
     {
 
         gitService
-            .CloneAsync(pluginConfig.Repositories.GitGameServerScriptRepository, pluginConfig.GetReposFor(LinuxGameServerModule.ModuleName, "available_games"))
+            .CloneAsync(pluginConfig.Repositories.GitGameServerScriptRepository, "available_games")
             .GetAwaiter()
             .GetResult();
-
     }
 }

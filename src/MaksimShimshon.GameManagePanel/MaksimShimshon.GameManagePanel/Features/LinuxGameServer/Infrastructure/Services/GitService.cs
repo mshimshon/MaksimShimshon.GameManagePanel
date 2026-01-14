@@ -20,7 +20,7 @@ internal class GitService : IGitService
     public async Task CloneAsync(string gitUrl, string target, CancellationToken ct = default)
     {
 
-        var targetFolder = _pluginConfiguration.ReposFolder;
+        var targetFolder = _pluginConfiguration.GetReposFor(LinuxGameServerModule.ModuleName, target);
         var cloneLocation = Path.Combine(targetFolder, target);
         var command = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "gitclone.sh", gitUrl, cloneLocation);
 
