@@ -12,4 +12,5 @@ public record InstallationState : IStateFeatureSingleton
 
     public IReadOnlyDictionary<string, string> AvailableGameServers { get; init; } = new Dictionary<string, string>().AsReadOnly();
 
+    public long BusVersion { get; init; } = long.MinValue;
 }

@@ -9,7 +9,6 @@ using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.State
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services;
-using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Providers.Linux;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Hooks.UI.Components.ViewModels;
 using MedihatR;
@@ -27,7 +26,6 @@ public static class LifecycleServiceExt
         services.AddScoped<ILifecycleStartupParameterViewModel, LifecycleStartupParameterViewModel>();
 
         services.AddTransient<ILifecycleStartupParameterFieldViewModel, LifecycleStartupParameterFieldViewModel>();
-        services.AddScoped<CommandRunner>();
         services.AddTransient<ILifecycleServices, LifecycleServices>();
         services.AddStatePulseService<LifecycleFetchStartupParametersAction>();
         services.AddStatePulseService<LifecycleFetchStartupParametersDoneAction>();

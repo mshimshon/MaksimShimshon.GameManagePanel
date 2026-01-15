@@ -1,53 +1,52 @@
 #!/usr/bin/env bash
-
 set -euo pipefail
+
+ERROR_MESSAGE=""
+
+emit_json() {
+    local msg="$1"
+    msg="${msg//\\/\\\\}"
+    msg="${msg//\"/\\\"}"
+    msg="${msg//$'\n'/\\n}"
+    msg="${msg//$'\r'/\\r}"
+    printf '{ "Completed": false, "failure_message": "%s" }\n' "$msg"
+}
+
+emit_success() {
+    printf '{ "Completed": true }\n'
+}
+
+fail() {
+    ERROR_MESSAGE="$1"
+    exit 1
+}
+
+trap 'status=$?; if [[ $status -ne 0 ]]; then emit_json "${ERROR_MESSAGE:-Unexpected failure}"; fi' EXIT
 
 GIT_URL="${1:-}"
 TARGET_DIR="${2:-}"
 
-json_success() {
-    printf '{ "Completed": true }\n'
-}
+[[ -z "$GIT_URL" ]] && fail "Missing required argument: git URL"
 
-json_failure() {
-    local msg="$1"
-    msg="${msg//\"/\\\"}"
-    printf '{ "Completed": false, "failure_message": "%s" }\n' "$msg"
-}
+TMP_ERR="$(mktemp)"
+cleanup() { rm -f "$TMP_ERR"; }
+trap cleanup EXIT
 
-# --- Validation ---
-if [[ -z "$GIT_URL" ]]; then
-    json_failure "Missing required argument: git URL"
-    exit 1
-fi
-
-# --- Clear target directory if provided ---
 if [[ -n "$TARGET_DIR" ]]; then
-    # Prevent catastrophic mistakes like rm -rf /
-    if [[ "$TARGET_DIR" == "/" || "$TARGET_DIR" == "." ]]; then
-        json_failure "Refusing to clear unsafe target directory: $TARGET_DIR"
-        exit 1
-    fi
+    CANON="$(realpath -m "$TARGET_DIR")" || fail "Failed to resolve target directory path"
+    [[ "$CANON" == "/" ]] && fail "Refusing to clear unsafe target directory: $TARGET_DIR"
 
-    if [[ -d "$TARGET_DIR" ]]; then
-        if ! rm -rf "$TARGET_DIR" 2>clear_error.log; then
-            json_failure "Failed to clear target directory: $(cat clear_error.log)"
-            exit 1
-        fi
+    if [[ -d "$CANON" ]]; then
+        rm -rf "$CANON" 2>"$TMP_ERR" || fail "Failed to clear target directory: $(<"$TMP_ERR")"
     fi
 fi
 
-# --- Clone operation ---
 if [[ -z "$TARGET_DIR" ]]; then
-    if ! git clone "$GIT_URL" 2>clone_error.log; then
-        json_failure "$(cat clone_error.log)"
-        exit 1
-    fi
+    git clone "$GIT_URL" >/dev/null 2>"$TMP_ERR" || fail "$(cat "$TMP_ERR")"
 else
-    if ! git clone "$GIT_URL" "$TARGET_DIR" 2>clone_error.log; then
-        json_failure "$(cat clone_error.log)"
-        exit 1
-    fi
+    git clone "$GIT_URL" "$TARGET_DIR" >/dev/null 2>"$TMP_ERR" || fail "$(cat "$TMP_ERR")"
 fi
 
-json_success
+trap - EXIT
+cleanup
+emit_success

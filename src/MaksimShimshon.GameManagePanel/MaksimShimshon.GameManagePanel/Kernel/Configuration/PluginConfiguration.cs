@@ -19,7 +19,7 @@ public class PluginConfiguration
     private string UserBashFolder { get; }
     public PluginConfiguration(IPluginConfiguration pluginConfiguration)
     {
-        PluginFolder = Path.Combine(pluginConfiguration.PluginFolder, pluginConfiguration.LinuxAssemblyName);
+        PluginFolder = Path.Combine(pluginConfiguration.PluginFolder);
         UserFolder = Path.Combine("/", "home", "lgsm");
         UserPluginFolder = Path.Combine(UserFolder, LunaticPanelFolderName, LunaticPanelPluginsFolderName, pluginConfiguration.LinuxAssemblyName);
         UserConfigFolder = Path.Combine(UserPluginFolder, "config");

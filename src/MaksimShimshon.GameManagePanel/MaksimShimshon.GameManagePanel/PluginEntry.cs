@@ -3,12 +3,11 @@ using LunaticPanel.Core;
 using LunaticPanel.Core.Abstraction;
 using LunaticPanel.Core.Abstraction.Circuit;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle;
-using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Providers.Linux;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer;
 using MaksimShimshon.GameManagePanel.Features.Notification;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
-using MaksimShimshon.GameManagePanel.Kernel.CQRS.Notifications;
+using MaksimShimshon.GameManagePanel.Kernel.ConsoleController;
 using MaksimShimshon.GameManagePanel.Kernel.Heartbeat;
 using MaksimShimshon.GameManagePanel.Services;
 using MaksimShimshon.GameManagePanel.Web.Pages.ViewModels;
@@ -37,7 +36,7 @@ public class PluginEntry : PluginBase
     }
     protected override void RegisterPluginServices(IServiceCollection services, CircuitIdentity circuit)
     {
-        services.AddScoped<CommandRunner>();
+        services.AddTransient<ILinuxLockFileController, LinuxLockFileController>();
         services.AddScoped<HomeViewModel>();
         services.AddScoped<IHeartbeatService, HeartbeatService>();
         services.AddScoped(sp => new PluginConfiguration(sp.GetRequiredService<IPluginConfiguration>())
@@ -66,13 +65,13 @@ public class PluginEntry : PluginBase
         services.AddLifecycleFeatureServices();
         services.AddNotificationFeatureServices();
         services.AddSystemInfoFeatureServices(_configuration);
+        services.AddLinuxGameServerServices(_configuration);
+        services.AddTransient<ICrazyReport, CrazyReport>();
     }
 
-    protected override async Task BeforeRuntimeStart(IServiceProvider serviceProvider)
+    protected override async Task BeforeRuntimeStart(IPluginContextService pluginContext)
     {
-        var medihater = serviceProvider.GetRequiredService<IMedihater>();
-        await medihater.Publish<BeforeRuntimeInitNotification>(new());
-        serviceProvider.RuntimeLinuxGameServerInitializer();
-
+        var sp = pluginContext.GetRequired<IServiceProvider>();
+        await sp.RuntimeLinuxGameServerInitializer();
     }
 }

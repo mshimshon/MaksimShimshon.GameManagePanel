@@ -40,7 +40,7 @@ public class LifecycleServerStatusPeriodicUpdateEffect : IEffect<HeartbeatRunner
         var exec = new GetServerStatusQuery();
         var serverInfo = await _medihater.Send(exec);
 
-        if (_lifecycleGameInfoStateAccessor.State.GameInfo == default && serverInfo.GameInfo != default)
+        if (_lifecycleGameInfoStateAccessor.State.GameInfo == default && serverInfo?.GameInfo != default)
         {
             await dispatcher.Prepare<LifecycleServerGameInfoUpdatedAction>()
                 .With(p => p.GameInfo, serverInfo.GameInfo)

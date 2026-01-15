@@ -1,3 +1,7 @@
 [*.sh]
 end_of_line = lf
 charset = utf-8
+
+[*.cs]
+# Disable Sonar rule S3267 (Loops should be simplified with LINQ)
+dotnet_diagnostic.csharpsquid.S3267.severity = none

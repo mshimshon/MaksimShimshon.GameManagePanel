@@ -1,4 +1,6 @@
-﻿using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Notifications.Handlers;
+﻿using LunaticPanel.Core.Abstraction.Messaging.EventBus;
+using LunaticPanel.Core.Extensions;
+using MaksimShimshon.GameManagePanel.Core;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Effects;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Reducers;
@@ -9,8 +11,6 @@ using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Ser
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Hooks.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
-using MaksimShimshon.GameManagePanel.Kernel.CQRS.Notifications;
-using MedihatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StatePulse.Net;
@@ -40,27 +40,32 @@ public static class LinuxGameServerExt
         services.AddStatePulseService<GameRepositoryState>();
         services.AddStatePulseService<RepositoryDownloadStartedAction>();
         services.AddStatePulseService<RepositoryDownloadStartedReducer>();
+        services.AddStatePulseService<ReceivingUpdatedInstallStateAction>();
+        services.AddStatePulseService<ReceivingInstallationStateReducer>();
 
         services.AddScoped<ISetupProcessViewModel, SetupProcessViewModel>();
         services.AddScoped<IWidgetServerSetupViewModel, WidgetServerSetupViewModel>();
 
         services.AddScoped<IGitService, GitService>();
         services.AddScoped<ILinuxGameServerService, LinuxGameServerService>();
-
-        services.AddMedihaterNotificationHandler<BeforeRuntimeInitNotification, LoadInstallationStateHandler>();
-
     }
 
-    public static void RuntimeLinuxGameServerInitializer(this IServiceProvider serviceProvider)
+    public static async Task RuntimeLinuxGameServerInitializer(this IServiceProvider serviceProvider)
     {
-        DownloadAvailableGames(serviceProvider.GetRequiredService<IGitService>(), serviceProvider.GetRequiredService<PluginConfiguration>(), serviceProvider.GetRequiredService<IDispatcher>());
-    }
-    public static void DownloadAvailableGames(IGitService gitService, PluginConfiguration pluginConfig, IDispatcher dispatcher)
-    {
+        Console.WriteLine($"{LinuxGameServerModule.ModuleName} Runtime Setup");
+        await DownloadAvailableGames(
+                serviceProvider.GetRequiredService<IGitService>(),
+                serviceProvider.GetRequiredService<PluginConfiguration>(),
+                serviceProvider.GetRequiredService<IDispatcher>()
+            );
 
-        gitService
-            .CloneAsync(pluginConfig.Repositories.GitGameServerScriptRepository, "available_games")
-            .GetAwaiter()
-            .GetResult();
+        IEventBus eventBus = serviceProvider.GetRequiredService<IEventBus>();
+        await eventBus.PublishDatalessAsync(PluginKeys.Events.OnBeforeRuntimeInitialization);
+    }
+    public static async Task DownloadAvailableGames(IGitService gitService, PluginConfiguration pluginConfig, IDispatcher dispatcher)
+    {
+        Console.WriteLine($"Downloading Available Games");
+        await gitService.CloneAsync(pluginConfig.Repositories.GitGameServerScriptRepository, "available_games");
+
     }
 }

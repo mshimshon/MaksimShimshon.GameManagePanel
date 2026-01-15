@@ -1,4 +1,4 @@
-﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Providers.Linux;
+﻿using LunaticPanel.Core.Abstraction.Tools;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Services.Dto;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
@@ -9,24 +9,27 @@ namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure
 internal class GitService : IGitService
 {
     private readonly PluginConfiguration _pluginConfiguration;
-    private readonly CommandRunner _commandRunner;
+    private readonly ILinuxCommand _linuxCommand;
 
-    public GitService(PluginConfiguration pluginConfiguration, CommandRunner commandRunner)
+    public GitService(PluginConfiguration pluginConfiguration, ILinuxCommand linuxCommand)
     {
         _pluginConfiguration = pluginConfiguration;
-        _commandRunner = commandRunner;
+        _linuxCommand = linuxCommand;
     }
 
     public async Task CloneAsync(string gitUrl, string target, CancellationToken ct = default)
     {
 
         var targetFolder = _pluginConfiguration.GetReposFor(LinuxGameServerModule.ModuleName, target);
-        var cloneLocation = Path.Combine(targetFolder, target);
-        var command = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "gitclone.sh", gitUrl, cloneLocation);
-
-        var result = await _commandRunner.RunLinuxScriptWithReplyAs<ScriptResponse>(command);
+        var command = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "gitclone.sh", gitUrl, targetFolder);
+        Console.WriteLine($"Cloning {gitUrl} to {targetFolder}");
+        var result = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(command);
         if (!result.Completed)
             throw new WebServiceException(result.Failure);
+
+        // Fix Permissions
+        await _linuxCommand.RunLinuxCommand($"chmod 775 -R {targetFolder}");
+
     }
 
 }

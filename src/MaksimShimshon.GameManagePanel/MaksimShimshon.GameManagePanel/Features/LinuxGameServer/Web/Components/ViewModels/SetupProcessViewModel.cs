@@ -2,7 +2,7 @@
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
-using MedihatR;
+using MaksimShimshon.GameManagePanel.Kernel.ConsoleController;
 using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Components.ViewModels;
@@ -17,10 +17,15 @@ public class SetupProcessViewModel : WidgetViewModelBase, ISetupProcessViewModel
 
     public InstallationState InstallState => _statePulse.StateOf<InstallationState>(() => this, UpdateChanges);
 
-    public SetupProcessViewModel(IStatePulse statePulse, IMedihater medihater, PluginConfiguration pluginConfiguration)
+    public string RepositoryTarget { get; }
+
+    public SetupProcessViewModel(IStatePulse statePulse, PluginConfiguration pluginConfiguration, ICrazyReport crazyReport)
     {
         _statePulse = statePulse;
         _dispatcher = statePulse.Dispatcher;
+        RepositoryTarget = pluginConfiguration.Repositories.GitGameServerScriptRepository;
+        crazyReport.SetModule(LinuxGameServerModule.ModuleName);
+        crazyReport.ReportInfo("Loaded Widget {0} and Found {1} Games Available.", nameof(SetupProcessViewModel), InstallState.AvailableGameServers.Count);
     }
 
     public async Task InstallAsync()
