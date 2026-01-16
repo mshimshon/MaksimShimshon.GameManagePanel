@@ -41,7 +41,7 @@ public class PluginEntry : PluginBase
         services.AddTransient<ILinuxLockFileController, LinuxLockFileController>();
         services.AddScoped<HomeViewModel>();
         services.AddScoped<IHeartbeatService, HeartbeatService>();
-        services.AddScoped(sp => new PluginConfiguration(sp.GetRequiredService<IPluginConfiguration>())
+        services.AddScoped(sp => new PluginConfiguration(sp.GetRequiredService<IPluginConfiguration>(), sp.GetRequiredService<ICrazyReport>())
         {
             GameInfo = _gameInfoConfig,
             Heartbeat = _heartbeatConfig,

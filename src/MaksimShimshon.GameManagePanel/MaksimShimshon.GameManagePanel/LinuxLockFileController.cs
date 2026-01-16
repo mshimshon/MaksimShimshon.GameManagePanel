@@ -48,14 +48,15 @@ internal sealed class LinuxLockFileController : ILinuxLockFileController, IDispo
                 FileMode.CreateNew,   // <‑‑ atomic
                 FileAccess.Write,
                 FileShare.None);
-
+            fs.Dispose();
             await File.WriteAllTextAsync(path, id.ToString()); // optional
             LockFiles.TryAdd(id, path);
             return id; // lock acquired
         }
-        catch
+        catch (Exception ex)
         {
-            return Guid.NewGuid();
+            Console.WriteLine(ex.Message);
+            return Guid.Empty;
         }
     }
 

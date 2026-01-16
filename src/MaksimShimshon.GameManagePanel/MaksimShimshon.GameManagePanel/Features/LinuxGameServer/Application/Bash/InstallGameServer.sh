@@ -63,7 +63,7 @@ runuser -l "$LGSM_USER" -c "
     curl -Lo linuxgsm.sh https://linuxgsm.sh
     chmod +x linuxgsm.sh
     bash ./linuxgsm.sh $GAME_SERVER
-    yes y | bash ./$GAME_SERVER install
+    printf \"y\n\" | bash ./$GAME_SERVER install
 " >&2
 
 # -------------------------

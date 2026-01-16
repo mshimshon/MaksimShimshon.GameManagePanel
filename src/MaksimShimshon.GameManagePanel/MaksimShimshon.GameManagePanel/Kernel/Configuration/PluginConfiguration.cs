@@ -1,9 +1,12 @@
 ﻿using LunaticPanel.Core.Abstraction;
+using MaksimShimshon.GameManagePanel.Kernel.ConsoleController;
 using static LunaticPanel.Core.Abstraction.IPluginConfiguration;
 namespace MaksimShimshon.GameManagePanel.Kernel.Configuration;
 
 public class PluginConfiguration
 {
+    private readonly ICrazyReport _crazyReport;
+
     public GameInfoConfiguration GameInfo { get; set; } = default!;
     public HeartbeatConfiguration Heartbeat { get; set; } = default!;
     public RepositoryConfiguration Repositories { get; set; } = default!;
@@ -17,40 +20,56 @@ public class PluginConfiguration
     private string ConfigFolder { get; }
     private string UserConfigFolder { get; }
     private string UserBashFolder { get; }
-    public PluginConfiguration(IPluginConfiguration pluginConfiguration)
+    public PluginConfiguration(IPluginConfiguration pluginConfiguration, ICrazyReport crazyReport)
     {
-        PluginFolder = Path.Combine(pluginConfiguration.PluginFolder);
+        PluginFolder = pluginConfiguration.PluginFolder;
         UserFolder = Path.Combine("/", "home", "lgsm");
         UserPluginFolder = Path.Combine(UserFolder, LunaticPanelFolderName, LunaticPanelPluginsFolderName, pluginConfiguration.LinuxAssemblyName);
         UserConfigFolder = Path.Combine(UserPluginFolder, "config");
         UserBashFolder = Path.Combine(UserPluginFolder, "bash");
         BashFolder = Path.Combine(PluginFolder, "bash");
-        ConfigFolder = Path.Combine(PluginFolder, "config");
-        ReposFolder = Path.Combine(PluginFolder, "repos");
+        ConfigFolder = Path.Combine(pluginConfiguration.PluginEtcFolder, "config");
+        ReposFolder = Path.Combine(pluginConfiguration.PluginEtcFolder, "repos");
         DownloadFolder = Path.Combine(UserPluginFolder, "downloads");
+        _crazyReport = crazyReport;
+    }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+    public string EnsureCreated(string path)
+    {
+        var dir = Path.GetDirectoryName(path);
+        if (!Directory.Exists(dir))
+        {
+            _crazyReport.ReportInfo($"Created (755): {dir}");
+            Directory.CreateDirectory(dir!,
+                UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
+                UnixFileMode.GroupRead | UnixFileMode.GroupExecute |
+                UnixFileMode.OtherRead | UnixFileMode.OtherExecute);
+        }
+        return path;
     }
     public string GetUserDownloadBase(string moduleName)
-        => Path.Combine(DownloadFolder, moduleName.ToLower());
+        => EnsureCreated(Path.Combine(DownloadFolder, moduleName.ToLower()));
     public string GetReposBase(string moduleName)
-        => Path.Combine(ReposFolder, moduleName.ToLower());
+        => EnsureCreated(Path.Combine(ReposFolder, moduleName.ToLower()));
 
     public string GetReposFor(string moduleName, string repos)
-        => Path.Combine(ReposFolder, moduleName.ToLower(), repos.ToLower());
+        => EnsureCreated(Path.Combine(GetReposBase(moduleName), repos.ToLower()));
 
     public string GetConfigBase(string moduleName)
-    => Path.Combine(ConfigFolder, moduleName.ToLower());
+    => EnsureCreated(Path.Combine(ConfigFolder, moduleName.ToLower()));
 
     public string GetBashBase(string moduleName)
-        => Path.Combine(BashFolder, moduleName.ToLower());
+        => EnsureCreated(Path.Combine(BashFolder, moduleName.ToLower()));
 
     public string GetUserConfigBase(string moduleName)
-        => Path.Combine(UserConfigFolder, moduleName.ToLower());
+        => EnsureCreated(Path.Combine(UserConfigFolder, moduleName.ToLower()));
 
     public string GetUserBashBase(string moduleName)
-        => Path.Combine(UserBashFolder, moduleName.ToLower());
+        => EnsureCreated(Path.Combine(UserBashFolder, moduleName.ToLower()));
 
     public string GetConfigFor(string moduleName, string filename)
-        => Path.Combine(GetConfigBase(moduleName), filename);
+        => EnsureCreated(Path.Combine(GetConfigBase(moduleName), filename));
 
     public string GetUserConfigFor(string moduleName, string filename)
         => Path.Combine(GetUserConfigBase(moduleName), filename);
