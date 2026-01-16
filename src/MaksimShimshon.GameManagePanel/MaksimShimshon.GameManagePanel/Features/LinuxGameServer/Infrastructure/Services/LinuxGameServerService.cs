@@ -1,10 +1,11 @@
-﻿using LunaticPanel.Core.Abstraction.Tools;
+﻿using LunaticPanel.Core.Abstraction.Tools.LinuxCommand;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Domain.Entities;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Services.Dto;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
 using MaksimShimshon.GameManagePanel.Kernel.ConsoleController;
 using MaksimShimshon.GameManagePanel.Kernel.Exceptions;
+using MaksimShimshon.GameManagePanel.Kernel.Extensions;
 using System.Text.Json.Nodes;
 
 namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Services;
@@ -59,6 +60,7 @@ internal class LinuxGameServerService : ILinuxGameServerService
 
     public async Task<GameServerInfoEntity?> PerformServerInstallation(string gameServer, CancellationToken cancellation = default)
     {
+        Console.WriteLine("Perform Install");
         Guid lockId = Guid.Empty;
         string pathToLockFile = _pluginConfiguration.GetConfigFor(LinuxGameServerModule.ModuleName, ".install_lock");
         if (File.Exists(pathToLockFile))
@@ -69,6 +71,7 @@ internal class LinuxGameServerService : ILinuxGameServerService
             if (lockId == Guid.Empty)
                 throw new WebServiceException("Another process is already performing the installation.");
             await File.WriteAllTextAsync(pathToLockFile, lockId.ToString());
+            Console.WriteLine("Install Lock Acquired");
 
             string scriptSetLocalCulture = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "setlocalculture.sh");
             var localeResponse = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(scriptSetLocalCulture);
@@ -88,6 +91,7 @@ internal class LinuxGameServerService : ILinuxGameServerService
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex.Message);
             throw new WebServiceException(ex.Message);
         }
         finally

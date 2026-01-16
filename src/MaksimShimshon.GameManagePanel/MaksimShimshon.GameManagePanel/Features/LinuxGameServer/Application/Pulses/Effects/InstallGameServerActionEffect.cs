@@ -15,7 +15,11 @@ public record InstallGameServerActionEffect : IEffect<InstallGameServerAction>
     }
     public async Task EffectAsync(InstallGameServerAction action, IDispatcher dispatcher)
     {
+        Console.WriteLine("Perform Install EFFECT");
+
         var result = await _medihater.Send(new InstallGameServerCommand(action.Id));
+        Console.WriteLine("Perform Install AFTER MEDIATR");
+
         if (result == default)
             await dispatcher.Prepare<GameServerInstallFailedAction>()
                 .With(p => p.Id, action.Id)

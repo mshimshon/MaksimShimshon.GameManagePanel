@@ -5,11 +5,11 @@ set -euo pipefail
 . /usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/kernel/jsonsafepipeline.sh
 
 # -------------------------
-# Locale configuration
+# Your logic here
 # -------------------------
-sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
-locale-gen en_US.UTF-8
-echo 'LANG=en_US.UTF-8' > /etc/default/locale
 
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
+if ! command -v git >/dev/null 2>&1; then
+    json_fail "git is not installed or not in PATH"
+fi
+
+# If we reach this point, the wrapper will emit success JSON automatically 

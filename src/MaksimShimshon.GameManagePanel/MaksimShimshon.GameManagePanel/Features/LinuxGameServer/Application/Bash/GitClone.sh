@@ -1,52 +1,41 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ERROR_MESSAGE=""
-
-emit_json() {
-    local msg="$1"
-    msg="${msg//\\/\\\\}"
-    msg="${msg//\"/\\\"}"
-    msg="${msg//$'\n'/\\n}"
-    msg="${msg//$'\r'/\\r}"
-    printf '{ "Completed": false, "failure_message": "%s" }\n' "$msg"
-}
-
-emit_success() {
-    printf '{ "Completed": true }\n'
-}
-
-fail() {
-    ERROR_MESSAGE="$1"
-    exit 1
-}
-
-trap 'status=$?; if [[ $status -ne 0 ]]; then emit_json "${ERROR_MESSAGE:-Unexpected failure}"; fi' EXIT
+. /usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/kernel/jsonsafepipeline.sh
 
 GIT_URL="${1:-}"
 TARGET_DIR="${2:-}"
 
-[[ -z "$GIT_URL" ]] && fail "Missing required argument: git URL"
+if [[ -z "$GIT_URL" ]]; then
+    json_fail "Missing required argument: git URL"
+fi
 
 TMP_ERR="$(mktemp)"
-cleanup() { rm -f "$TMP_ERR"; }
-trap cleanup EXIT
 
-if [[ -n "$TARGET_DIR" ]]; then
-    CANON="$(realpath -m "$TARGET_DIR")" || fail "Failed to resolve target directory path"
-    [[ "$CANON" == "/" ]] && fail "Refusing to clear unsafe target directory: $TARGET_DIR"
-
-    if [[ -d "$CANON" ]]; then
-        rm -rf "$CANON" 2>"$TMP_ERR" || fail "Failed to clear target directory: $(<"$TMP_ERR")"
+# 2. Clean the folder (if provided)
+if [[ -n "${TARGET_DIR:-}" ]]; then
+    if [[ -d "$TARGET_DIR" ]]; then
+        if ! rm -rf "$TARGET_DIR" 2>"$TMP_ERR"; then
+            ERRMSG="$(cat "$TMP_ERR")"
+            rm -f "$TMP_ERR"
+            json_fail "Failed to clear target directory: $ERRMSG"
+        fi
     fi
 fi
 
-if [[ -z "$TARGET_DIR" ]]; then
-    git clone "$GIT_URL" >/dev/null 2>"$TMP_ERR" || fail "$(cat "$TMP_ERR")"
+# 3. Git clone
+if [[ -n "${TARGET_DIR:-}" ]]; then
+    if ! git clone "$GIT_URL" "$TARGET_DIR" >/dev/null 2>"$TMP_ERR"; then
+        ERRMSG="$(cat "$TMP_ERR")"
+        rm -f "$TMP_ERR"
+        json_fail "$ERRMSG"
+    fi
 else
-    git clone "$GIT_URL" "$TARGET_DIR" >/dev/null 2>"$TMP_ERR" || fail "$(cat "$TMP_ERR")"
+    if ! git clone "$GIT_URL" >/dev/null 2>"$TMP_ERR"; then
+        ERRMSG="$(cat "$TMP_ERR")"
+        rm -f "$TMP_ERR"
+        json_fail "$ERRMSG"
+    fi
 fi
 
-trap - EXIT
-cleanup
-emit_success
+rm -f "$TMP_ERR"

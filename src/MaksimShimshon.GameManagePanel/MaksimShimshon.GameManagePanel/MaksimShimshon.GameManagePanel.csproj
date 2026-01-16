@@ -62,19 +62,21 @@
 		</Content>
 	</ItemGroup>
 
-
 	<ItemGroup>
-		<Content Include="Features\LinuxGameServer\Application\Config\**\*.jcfg">
+		<None Include="Kernel\Bash\**\*" />
+		<Content Include="Kernel\Bash\**\*">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<Link>$([System.String]::Copy('config\linuxgamesserver\%(RecursiveDir)%(Filename).json').ToLower())</Link>
+			<Link>$([System.String]::Copy('bash\kernel\%(RecursiveDir)%(Filename)%(Extension)').ToLower())</Link>
 		</Content>
 	</ItemGroup>
+
 
   <ItemGroup>
     <Content Update="wwwroot\game_banner.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+
 
 
 	<Target Name="RemoveHostOwnedAssembliesAfterBuild" AfterTargets="Build" Condition="'$(IsPublish)' != 'true'">

@@ -1,4 +1,4 @@
-﻿using LunaticPanel.Core.Abstraction.Tools;
+﻿using LunaticPanel.Core.Abstraction.Tools.LinuxCommand;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Domain.ValueObjects;
@@ -23,22 +23,20 @@ internal class LinuxSystemInfoService : ISystemInfoService
     {
         var ramScript = Path.Combine(_bashFolder, "getraminfo.sh");
         var ram = await _linuxCommand.RunLinuxScript(ramScript);
-        Console.WriteLine(ram);
-        var ramUsage = float.Parse(ram.Split(';')[0]);
-        var ramTotal = float.Parse(ram.Split(';')[1]);
+
+        var ramUsage = float.Parse(ram.StandardOutput.Split(';')[0]);
+        var ramTotal = float.Parse(ram.StandardOutput.Split(';')[1]);
 
         var diskScript = Path.Combine(_bashFolder, "getdiskinfo.sh");
         var disk = await _linuxCommand.RunLinuxScript(diskScript + " " + _linuxSystemInfoConfiguration.WorkingDisk);
-        Console.WriteLine(disk);
-        var diskUsage = float.Parse(disk.Split(';')[0]);
-        var diskTotal = float.Parse(disk.Split(';')[1]);
+        var diskUsage = float.Parse(disk.StandardOutput.Split(';')[0]);
+        var diskTotal = float.Parse(disk.StandardOutput.Split(';')[1]);
 
         var processorScript = Path.Combine(_bashFolder, "getcpuinfo.sh");
         var processor = await _linuxCommand.RunLinuxScript(processorScript);
-        Console.WriteLine(processor);
-        var processorUsage = float.Parse(processor.Split(';')[0]);
-        var processorCores = int.Parse(processor.Split(';')[1]);
-        var processorModel = processor.Split(';')[2];
+        var processorUsage = float.Parse(processor.StandardOutput.Split(';')[0]);
+        var processorCores = int.Parse(processor.StandardOutput.Split(';')[1]);
+        var processorModel = processor.StandardOutput.Split(';')[2];
 
         SystemInfoEntity? result = default;
         if (ram != default && disk != default && processor != default)

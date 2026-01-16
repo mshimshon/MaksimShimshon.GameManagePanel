@@ -31,12 +31,8 @@ public class SystemResourcesStatusViewModel : WidgetViewModelBase, ISystemResour
     private DateTime LastLaunch { get; set; }
     public async Task UpdateState()
     {
-        Console.WriteLine("State is Updated");
-
         if (SystemState.LastUpdate >= LastLaunch)
             IsUpdating = false;
-        Console.WriteLine($"State is Updated ({IsUpdating})");
-
         await UpdateChanges();
     }
 

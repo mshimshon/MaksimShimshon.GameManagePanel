@@ -13,7 +13,6 @@ internal class GetSystemInfoHandler : HandlerBase, IRequestHandler<GetSystemInfo
 
     public GetSystemInfoHandler(ISystemInfoService systemInfoService, INotificationService notificationService, ILogger<GetSystemInfoHandler> logger) : base(notificationService, logger)
     {
-        Console.WriteLine("System Info MedihatR Handler");
         _systemInfoService = systemInfoService;
     }
 

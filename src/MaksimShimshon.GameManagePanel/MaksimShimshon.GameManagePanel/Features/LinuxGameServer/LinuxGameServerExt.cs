@@ -1,16 +1,20 @@
 ﻿using LunaticPanel.Core.Abstraction.Messaging.EventBus;
 using LunaticPanel.Core.Extensions;
 using MaksimShimshon.GameManagePanel.Core;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands.Handlers;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Effects;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Reducers;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Domain.Entities;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Configuration;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Services;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Hooks.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
+using MedihatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StatePulse.Net;
@@ -19,7 +23,7 @@ namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer;
 
 public static class LinuxGameServerExt
 {
-    public static void AddLinuxGameServerServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddLinuxGameServerFeatureServices(this IServiceCollection services, IConfiguration configuration)
     {
         var config =
             configuration.GetSection("LinuxGameServer")?.Get<LinuxGameServerConfiguration>() ??
@@ -42,6 +46,8 @@ public static class LinuxGameServerExt
         services.AddStatePulseService<RepositoryDownloadStartedReducer>();
         services.AddStatePulseService<ReceivingUpdatedInstallStateAction>();
         services.AddStatePulseService<ReceivingInstallationStateReducer>();
+
+        services.AddMedihaterRequestHandler<InstallGameServerCommand, InstallGameServerHandler, GameServerInfoEntity?>();
 
         services.AddScoped<ISetupProcessViewModel, SetupProcessViewModel>();
         services.AddScoped<IWidgetServerSetupViewModel, WidgetServerSetupViewModel>();

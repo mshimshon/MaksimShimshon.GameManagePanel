@@ -21,14 +21,14 @@
             }
             else if (ViewModel.InstallState.AvailableGameServers.Count > 0)
             {
+                <p>@ViewModel.InstallState.AvailableGameServers.First().Value</p>
                 <MudSelect @bind-Value=@ViewModel.KeyGame
-                           Dense FitContent ReadOnly
-                           Variant=@Variant.Text
+                           Dense Variant=@Variant.Text
                            Label="Select Game Server"
                            Disabled=@ViewModel.IsLoading>
-                    @foreach (var state in ViewModel.InstallState.AvailableGameServers)
+                    @foreach (var game in ViewModel.InstallState.AvailableGameServers)
                     {
-                        <MudSelectItem Value="state.Key">@state.Value</MudSelectItem>
+                        <MudSelectItem Value=@game.Key>@game.Value</MudSelectItem>
                     }
                 </MudSelect>
                 <MudButton OnClick=ViewModel.InstallAsync>

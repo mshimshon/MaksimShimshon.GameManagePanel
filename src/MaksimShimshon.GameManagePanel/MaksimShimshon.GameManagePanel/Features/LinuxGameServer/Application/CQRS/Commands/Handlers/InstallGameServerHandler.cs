@@ -7,12 +7,14 @@ using Microsoft.Extensions.Logging;
 
 namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands.Handlers;
 
-internal class InstallGameServerHandler : HandlerBase, IRequestHandler<InstallGameServerCommand, GameServerInfoEntity?>
+public class InstallGameServerHandler : HandlerBase, IRequestHandler<InstallGameServerCommand, GameServerInfoEntity?>
 {
     private readonly ILinuxGameServerService _linuxGameServerService;
 
-    public InstallGameServerHandler(ILinuxGameServerService linuxGameServerService, INotificationService notificationService, ILogger logger) : base(notificationService, logger)
+    public InstallGameServerHandler(ILinuxGameServerService linuxGameServerService, INotificationService notificationService, ILogger<InstallGameServerHandler> logger) : base(notificationService, logger)
     {
+        Console.WriteLine("Perform Install MEDITR");
+
         _linuxGameServerService = linuxGameServerService;
     }
 

@@ -34,6 +34,8 @@ public class PluginEntry : PluginBase
         _repositoryConfig = _configuration.GetSection("Repositories")?.Get<RepositoryConfiguration>() ?? new();
 
     }
+    private IServiceCollection? _statePulseStatesRedirectionSingleton;
+    private List<ServiceDescriptor>? _statePulseStatesSingleton;
     protected override void RegisterPluginServices(IServiceCollection services, CircuitIdentity circuit)
     {
         services.AddTransient<ILinuxLockFileController, LinuxLockFileController>();
@@ -64,9 +66,39 @@ public class PluginEntry : PluginBase
 
         services.AddLifecycleFeatureServices();
         services.AddNotificationFeatureServices();
+        services.AddLinuxGameServerFeatureServices(_configuration);
         services.AddSystemInfoFeatureServices(_configuration);
-        services.AddLinuxGameServerServices(_configuration);
         services.AddTransient<ICrazyReport, CrazyReport>();
+
+        // Make Singleton State cross circuit
+        if (_statePulseStatesRedirectionSingleton == default)
+        {
+            _statePulseStatesRedirectionSingleton = new ServiceCollection();
+            _statePulseStatesSingleton = new();
+            foreach (var d in services)
+            {
+                if (d.ServiceType.IsGenericTypeDefinition)
+                    continue;
+
+                if (d.Lifetime != ServiceLifetime.Singleton)
+                    continue;
+
+                if (!d.ServiceType.IsGenericType ||
+                    d.ServiceType.GetGenericTypeDefinition() != typeof(IStateAccessor<>))
+                    continue;
+                _statePulseStatesSingleton.Add(d);
+                _statePulseStatesRedirectionSingleton.AddSingleton(d.ServiceType, sp => _crossCircuitSingletonProvider!.GetRequiredService(d.ServiceType));
+            }
+        }
+        if (_statePulseStatesRedirectionSingleton != default)
+            foreach (var item in _statePulseStatesRedirectionSingleton)
+                services.Add(item);
+    }
+    protected override void RegisterPluginSingletonServices(IServiceCollection services, CircuitIdentity circuit)
+    {
+        if (_statePulseStatesSingleton != default)
+            foreach (var d in _statePulseStatesSingleton)
+                services.Add(d);
     }
 
     protected override async Task BeforeRuntimeStart(IPluginContextService pluginContext)
