@@ -1,4 +1,4 @@
-﻿namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Notifications.Dto;
+﻿namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Dto;
 
 public record InstallationStateDto
 {

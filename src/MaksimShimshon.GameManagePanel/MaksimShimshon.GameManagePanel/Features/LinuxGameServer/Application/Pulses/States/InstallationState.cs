@@ -7,8 +7,12 @@ namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pu
 public record InstallationState : IStateFeatureSingleton
 {
     public bool IsInstallationCompleted => GameServerInfo != default && InProgressInstallation == default;
+
+
     public GameServerInfoEntity? GameServerInfo { get; init; }
+    public bool IsInstalledGameDiskLoaded { get; init; }
     public GameServerInstallProcessModel? InProgressInstallation { get; init; }
+    public bool IsProgressDiskLoaded { get; init; }
 
     public IReadOnlyDictionary<string, string> AvailableGameServers { get; init; } = new Dictionary<string, string>().AsReadOnly();
 

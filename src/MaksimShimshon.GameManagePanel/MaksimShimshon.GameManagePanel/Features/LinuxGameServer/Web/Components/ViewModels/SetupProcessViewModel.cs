@@ -16,7 +16,6 @@ public class SetupProcessViewModel : WidgetViewModelBase, ISetupProcessViewModel
     public string KeyGame { get; set; } = default!;
 
     public InstallationState InstallState => _statePulse.StateOf<InstallationState>(() => this, UpdateChanges);
-
     public string RepositoryTarget { get; }
 
     public SetupProcessViewModel(IStatePulse statePulse, PluginConfiguration pluginConfiguration, ICrazyReport crazyReport)
@@ -26,6 +25,7 @@ public class SetupProcessViewModel : WidgetViewModelBase, ISetupProcessViewModel
         RepositoryTarget = pluginConfiguration.Repositories.GitGameServerScriptRepository;
         crazyReport.SetModule(LinuxGameServerModule.ModuleName);
         crazyReport.ReportInfo("Loaded Widget {0} and Found {1} Games Available.", nameof(SetupProcessViewModel), InstallState.AvailableGameServers.Count);
+
     }
 
     public async Task InstallAsync()
@@ -36,7 +36,6 @@ public class SetupProcessViewModel : WidgetViewModelBase, ISetupProcessViewModel
             .With(p => p.DisplayName, InstallState.AvailableGameServers[KeyGame])
             .DispatchAsync();
         IsLoading = false;
-
     }
 
 }

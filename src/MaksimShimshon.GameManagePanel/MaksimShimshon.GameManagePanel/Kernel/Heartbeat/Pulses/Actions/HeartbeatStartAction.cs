@@ -2,6 +2,6 @@
 
 namespace MaksimShimshon.GameManagePanel.Kernel.Heartbeat.Pulses.Actions;
 
-internal class HeartbeatStartAction : ISafeAction
+public sealed record HeartbeatStartAction : ISafeAction
 {
 }

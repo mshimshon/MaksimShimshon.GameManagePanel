@@ -3,6 +3,7 @@ using LunaticPanel.Core.Extensions;
 using MaksimShimshon.GameManagePanel.Core;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands.Handlers;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Dto.Mapping;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Effects;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Reducers;
@@ -14,6 +15,7 @@ using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Ser
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Hooks.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
+using MaksimShimshon.GameManagePanel.Kernel.Extensions;
 using MedihatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,7 +47,17 @@ public static class LinuxGameServerExt
         services.AddStatePulseService<RepositoryDownloadStartedAction>();
         services.AddStatePulseService<RepositoryDownloadStartedReducer>();
         services.AddStatePulseService<ReceivingUpdatedInstallStateAction>();
-        services.AddStatePulseService<ReceivingInstallationStateReducer>();
+
+        services.AddStatePulseService<UpdateProgressStateFromDiskDoneAction>();
+        services.AddStatePulseService<UpdateProgressStateFromDiskAction>();
+        services.AddStatePulseService<UpdateProgressStateFromDiskEffect>();
+        services.AddStatePulseService<UpdateProgressStateFromDiskDoneReducer>();
+
+        services.AddStatePulseService<UpdateInstalledGameServerAction>();
+        services.AddStatePulseService<UpdateInstalledGameServerDoneAction>();
+        services.AddStatePulseService<UpdateInstalledGameServerDoneReducer>();
+        services.AddStatePulseService<UpdateInstalledGameServerEffect>();
+
 
         services.AddMedihaterRequestHandler<InstallGameServerCommand, InstallGameServerHandler, GameServerInfoEntity?>();
 
@@ -54,6 +66,9 @@ public static class LinuxGameServerExt
 
         services.AddScoped<IGitService, GitService>();
         services.AddScoped<ILinuxGameServerService, LinuxGameServerService>();
+        services.AddCoreMapHandler<InstallationProgressToInstallationProcessModel>();
+        services.AddCoreMapHandler<InstallationStateToGameServerInfoEntity>();
+
     }
 
     public static async Task RuntimeLinuxGameServerInitializer(this IServiceProvider serviceProvider)

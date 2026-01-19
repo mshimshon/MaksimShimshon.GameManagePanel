@@ -1,7 +1,7 @@
 ﻿using CoreMap;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Domain.Entities;
 
-namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Notifications.Dto.Mapping;
+namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Dto.Mapping;
 
 internal class InstallationStateToGameServerInfoEntity : ICoreMapHandler<InstallationStateDto, GameServerInfoEntity>
 {
