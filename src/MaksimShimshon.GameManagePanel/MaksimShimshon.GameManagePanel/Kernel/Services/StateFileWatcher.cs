@@ -7,7 +7,7 @@ namespace MaksimShimshon.GameManagePanel.Kernel.Services;
 internal class StateFileWatcher<TAction> : IStateFileWatcher<TAction> where TAction : FileWatchActionBase
 {
     private bool _disposed;
-    private FileSystemWatcher _fileSystemWatcher;
+    private readonly FileSystemWatcher _fileSystemWatcher;
     private readonly IDispatcher _dispatcher;
 
     public string Directory { get; init; }

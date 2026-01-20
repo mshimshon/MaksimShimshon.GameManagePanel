@@ -66,7 +66,7 @@ public class PluginEntry : PluginBase
 
         services.AddLifecycleFeatureServices();
         services.AddNotificationFeatureServices();
-        services.AddLinuxGameServerFeatureServices(_configuration);
+        services.AddLinuxGameServerFeatureServices(_crossCircuitSingletonProvider!, _configuration, circuit.IsMaster);
         services.AddSystemInfoFeatureServices(_configuration);
         services.AddTransient<ICrazyReport, CrazyReport>();
 
@@ -97,8 +97,11 @@ public class PluginEntry : PluginBase
     protected override void RegisterPluginSingletonServices(IServiceCollection services, CircuitIdentity circuit)
     {
         if (_statePulseStatesSingleton != default)
+        {
             foreach (var d in _statePulseStatesSingleton)
                 services.Add(d);
+        }
+
     }
 
     protected override async Task BeforeRuntimeStart(IPluginContextService pluginContext)

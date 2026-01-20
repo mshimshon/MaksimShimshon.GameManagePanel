@@ -72,6 +72,11 @@
 
 
   <ItemGroup>
+    <Content Update="Features\LinuxGameServer\Application\Bash\check_git_install.sh" Link="bash\linuxgameserver\check_git_install.sh" />
+    <Content Update="Features\LinuxGameServer\Application\Bash\git_clone.sh" Link="bash\linuxgameserver\git_clone.sh" />
+    <Content Update="Features\LinuxGameServer\Application\Bash\install_game_server.sh" Link="bash\linuxgameserver\install_game_server.sh" />
+    <Content Update="Features\LinuxGameServer\Application\Bash\is_user_exist.sh" Link="bash\linuxgameserver\is_user_exist.sh" />
+    <Content Update="Features\LinuxGameServer\Application\Bash\set_local_culture.sh" Link="bash\linuxgameserver\set_local_culture.sh" />
     <Content Update="wwwroot\game_banner.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

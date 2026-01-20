@@ -1,7 +1,7 @@
-﻿using StatePulse.Net;
+﻿using MaksimShimshon.GameManagePanel.Kernel.Services;
 
 namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 
-public sealed record UpdateInstalledGameServerAction : IAction
+public sealed record UpdateInstalledGameServerAction : FileWatchActionBase
 {
 }

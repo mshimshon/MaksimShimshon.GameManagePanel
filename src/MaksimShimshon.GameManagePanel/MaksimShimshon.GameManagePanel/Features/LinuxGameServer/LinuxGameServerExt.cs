@@ -16,6 +16,7 @@ using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Components.Vie
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Hooks.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
 using MaksimShimshon.GameManagePanel.Kernel.Extensions;
+using MaksimShimshon.GameManagePanel.Kernel.Services.Enums;
 using MedihatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +26,10 @@ namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer;
 
 public static class LinuxGameServerExt
 {
-    public static void AddLinuxGameServerFeatureServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddLinuxGameServerFeatureServices(this IServiceCollection services,
+        IServiceProvider singletonCrossCircuitSp,
+        IConfiguration configuration,
+        bool isMaster)
     {
         var config =
             configuration.GetSection("LinuxGameServer")?.Get<LinuxGameServerConfiguration>() ??
@@ -69,6 +73,24 @@ public static class LinuxGameServerExt
         services.AddCoreMapHandler<InstallationProgressToInstallationProcessModel>();
         services.AddCoreMapHandler<InstallationStateToGameServerInfoEntity>();
 
+        if (isMaster)
+        {
+            var watchUpdate = FileWatchEvents.Updated;
+            var watchCreation = FileWatchEvents.Created;
+            var watchRemoval = FileWatchEvents.Removed;
+
+            services.AddMasterStateFileWatcherService<UpdateInstalledGameServerAction>(
+                c => c.GetConfigBase(LinuxGameServerModule.ModuleName),
+                "installation_state.json",
+                [watchUpdate, watchCreation, watchRemoval]);
+
+            services.AddMasterStateFileWatcherService<UpdateProgressStateFromDiskAction>(
+                c => c.GetConfigBase(LinuxGameServerModule.ModuleName),
+                "installation_progress_state.json",
+                [watchUpdate, watchCreation, watchRemoval]);
+        }
+
+
     }
 
     public static async Task RuntimeLinuxGameServerInitializer(this IServiceProvider serviceProvider)
@@ -82,6 +104,10 @@ public static class LinuxGameServerExt
 
         IEventBus eventBus = serviceProvider.GetRequiredService<IEventBus>();
         await eventBus.PublishDatalessAsync(PluginKeys.Events.OnBeforeRuntimeInitialization);
+
+        serviceProvider.LoadWatcher<UpdateInstalledGameServerAction>();
+        serviceProvider.LoadWatcher<UpdateProgressStateFromDiskAction>();
+
     }
     public static async Task DownloadAvailableGames(IGitService gitService, PluginConfiguration pluginConfig, IDispatcher dispatcher)
     {
