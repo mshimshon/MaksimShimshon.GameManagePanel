@@ -6,4 +6,5 @@ public record GameServerInstallFailedAction : IAction
 {
     public string Id { get; set; } = default!;
     public string DisplayName { get; set; } = default!;
+    public string FailureReason { get; set; } = default!;
 }

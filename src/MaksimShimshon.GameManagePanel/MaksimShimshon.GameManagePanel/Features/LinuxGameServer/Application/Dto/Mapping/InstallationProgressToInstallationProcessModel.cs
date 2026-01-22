@@ -10,7 +10,7 @@ internal class InstallationProgressToInstallationProcessModel : ICoreMapHandler<
         {
             CurrentStep = data.CurrentStep,
             DisplayName = data.DisplayName,
-            Failed = data.Failed,
+            FailureReason = data.FailureReason,
             Id = data.Id,
             IsInstalling = data.IsInstalling
         };

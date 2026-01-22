@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-. /usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/kernel/jsonsafepipeline.sh
+. /usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/kernel/json_safe_pipeline.sh
 
 GIT_URL="${1:-}"
 TARGET_DIR="${2:-}"
@@ -39,3 +39,5 @@ else
 fi
 
 rm -f "$TMP_ERR"
+
+chmod -R 755 "$TARGET_DIR"

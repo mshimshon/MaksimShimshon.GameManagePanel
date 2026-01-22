@@ -37,8 +37,10 @@ public class PluginConfiguration
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
     public string EnsureCreated(string path)
     {
-        var dir = Path.GetDirectoryName(path);
-        if (!Directory.Exists(dir))
+        var dir = File.Exists(path) ? Path.GetDirectoryName(path) : path;
+        bool doesNotExist = !Directory.Exists(dir);
+        //_crazyReport.ReportInfo("Ensure Path {0} is Created ({1})", dir, !doesNotExist);
+        if (doesNotExist)
         {
             _crazyReport.ReportInfo($"Created (755): {dir}");
             Directory.CreateDirectory(dir!,
@@ -69,7 +71,7 @@ public class PluginConfiguration
         => EnsureCreated(Path.Combine(UserBashFolder, moduleName.ToLower()));
 
     public string GetConfigFor(string moduleName, string filename)
-        => EnsureCreated(Path.Combine(GetConfigBase(moduleName), filename));
+        => Path.Combine(GetConfigBase(moduleName), filename);
 
     public string GetUserConfigFor(string moduleName, string filename)
         => Path.Combine(GetUserConfigBase(moduleName), filename);

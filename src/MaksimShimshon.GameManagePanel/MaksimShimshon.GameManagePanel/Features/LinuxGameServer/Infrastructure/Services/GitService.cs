@@ -21,12 +21,12 @@ internal class GitService : IGitService
     public async Task CloneAsync(string gitUrl, string target, CancellationToken ct = default)
     {
 
-        var commandCheckGit = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "checkgitinstall.sh");
+        var commandCheckGit = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "check_git_install.sh");
         var checkGitResult = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(commandCheckGit, true, (s) => new() { Failure = s });
         Console.WriteLine(checkGitResult.ToString());
         if (!checkGitResult.Completed) throw new WebServiceException(checkGitResult.Failure);
         var targetFolder = _pluginConfiguration.GetReposFor(LinuxGameServerModule.ModuleName, target);
-        var command = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "gitclone.sh", gitUrl, targetFolder);
+        var command = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "git_clone.sh", gitUrl, targetFolder);
         var result = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(command, true, (s) => new() { Failure = s });
         if (!result.Completed)
             throw new WebServiceException(result.Failure);

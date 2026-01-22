@@ -36,8 +36,12 @@ public class PluginEntry : PluginBase
     }
     private IServiceCollection? _statePulseStatesRedirectionSingleton;
     private List<ServiceDescriptor>? _statePulseStatesSingleton;
+    private static Guid MasterId { get; set; }
     protected override void RegisterPluginServices(IServiceCollection services, CircuitIdentity circuit)
     {
+        if (circuit.IsMaster) MasterId = circuit.CircuitId;
+        Console.WriteLine($"Is {circuit.CircuitId} DI Master? {(circuit.IsMaster)}");
+
         services.AddTransient<ILinuxLockFileController, LinuxLockFileController>();
         services.AddScoped<HomeViewModel>();
         services.AddScoped<IHeartbeatService, HeartbeatService>();
@@ -66,7 +70,7 @@ public class PluginEntry : PluginBase
 
         services.AddLifecycleFeatureServices();
         services.AddNotificationFeatureServices();
-        services.AddLinuxGameServerFeatureServices(_crossCircuitSingletonProvider!, _configuration, circuit.IsMaster);
+        services.AddLinuxGameServerFeatureServices(_crossCircuitSingletonProvider!, _configuration, MasterId == circuit.CircuitId);
         services.AddSystemInfoFeatureServices(_configuration);
         services.AddTransient<ICrazyReport, CrazyReport>();
 
@@ -107,6 +111,6 @@ public class PluginEntry : PluginBase
     protected override async Task BeforeRuntimeStart(IPluginContextService pluginContext)
     {
         var sp = pluginContext.GetRequired<IServiceProvider>();
-        await sp.RuntimeLinuxGameServerInitializer();
+        await sp.RuntimeLinuxGameServerInitializer(MasterId == pluginContext.CircuitId);
     }
 }

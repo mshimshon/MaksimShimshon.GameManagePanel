@@ -41,7 +41,6 @@
 	  <Folder Include="Features\LinuxGameServer\Domain\ValueObjects\" />
 	  <Folder Include="Features\LinuxGameServer\Infrastructure\Hooks\" />
 	  <Folder Include="Features\SystemInfo\Application\CQRS\Commands\" />
-	  <Folder Include="Features\SystemInfo\Application\Bash\" />
 	  <Folder Include="Kernel\StateManagement\" />
   </ItemGroup>
 
@@ -77,6 +76,11 @@
     <Content Update="Features\LinuxGameServer\Application\Bash\install_game_server.sh" Link="bash\linuxgameserver\install_game_server.sh" />
     <Content Update="Features\LinuxGameServer\Application\Bash\is_user_exist.sh" Link="bash\linuxgameserver\is_user_exist.sh" />
     <Content Update="Features\LinuxGameServer\Application\Bash\set_local_culture.sh" Link="bash\linuxgameserver\set_local_culture.sh" />
+    <Content Update="Features\SystemInfo\Application\Bash\get_ram_info.sh" Link="bash\systeminfo\get_ram_info.sh" />
+    <Content Update="Features\SystemInfo\Application\Bash\get_disk_info.sh" Link="bash\systeminfo\get_disk_info.sh" />
+    <Content Update="Features\SystemInfo\Application\Bash\get_cpu_info.sh" Link="bash\systeminfo\get_cpu_info.sh" />
+    <Content Update="Kernel\Bash\install_package_dependencies.sh" Link="bash\kernel\install_package_dependencies.sh" />
+    <Content Update="Kernel\Bash\json_safe_pipeline.sh" Link="bash\kernel\json_safe_pipeline.sh" />
     <Content Update="wwwroot\game_banner.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

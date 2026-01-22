@@ -21,18 +21,18 @@ internal class LinuxSystemInfoService : ISystemInfoService
 
     public async Task<SystemInfoEntity?> GetSystemInfoAsync(CancellationToken ct = default)
     {
-        var ramScript = Path.Combine(_bashFolder, "getraminfo.sh");
+        var ramScript = Path.Combine(_bashFolder, "get_ram_info.sh");
         var ram = await _linuxCommand.RunLinuxScript(ramScript);
 
         var ramUsage = float.Parse(ram.StandardOutput.Split(';')[0]);
         var ramTotal = float.Parse(ram.StandardOutput.Split(';')[1]);
 
-        var diskScript = Path.Combine(_bashFolder, "getdiskinfo.sh");
+        var diskScript = Path.Combine(_bashFolder, "get_disk_info.sh");
         var disk = await _linuxCommand.RunLinuxScript(diskScript + " " + _linuxSystemInfoConfiguration.WorkingDisk);
         var diskUsage = float.Parse(disk.StandardOutput.Split(';')[0]);
         var diskTotal = float.Parse(disk.StandardOutput.Split(';')[1]);
 
-        var processorScript = Path.Combine(_bashFolder, "getcpuinfo.sh");
+        var processorScript = Path.Combine(_bashFolder, "get_cpu_info.sh");
         var processor = await _linuxCommand.RunLinuxScript(processorScript);
         var processorUsage = float.Parse(processor.StandardOutput.Split(';')[0]);
         var processorCores = int.Parse(processor.StandardOutput.Split(';')[1]);

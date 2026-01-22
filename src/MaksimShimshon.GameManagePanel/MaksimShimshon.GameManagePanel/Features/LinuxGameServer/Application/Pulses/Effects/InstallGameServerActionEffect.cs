@@ -15,7 +15,7 @@ public record InstallGameServerActionEffect : IEffect<InstallGameServerAction>
     }
     public Task EffectAsync(InstallGameServerAction action, IDispatcher dispatcher)
     {
-        _ = _medihater.Send(new InstallGameServerCommand(action.Id));
+        _ = _medihater.Send(new InstallGameServerCommand(action.Id, action.DisplayName));
 
         return Task.CompletedTask;
     }

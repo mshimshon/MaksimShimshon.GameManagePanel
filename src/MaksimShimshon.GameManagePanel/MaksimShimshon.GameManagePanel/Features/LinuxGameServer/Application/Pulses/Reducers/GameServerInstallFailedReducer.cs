@@ -11,7 +11,7 @@ internal class GameServerInstallFailedReducer : IReducer<InstallationState, Game
     {
         InProgressInstallation = new Models.GameServerInstallProcessModel()
         {
-            Failed = true,
+            FailureReason = action.FailureReason,
             Id = action.Id,
             DisplayName = action.DisplayName
         },

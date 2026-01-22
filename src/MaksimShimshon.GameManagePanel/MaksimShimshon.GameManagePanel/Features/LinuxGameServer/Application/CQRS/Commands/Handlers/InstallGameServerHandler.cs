@@ -20,7 +20,7 @@ public class InstallGameServerHandler : HandlerBase, IRequestHandler<InstallGame
 
     public async Task<GameServerInfoEntity?> Handle(InstallGameServerCommand request, CancellationToken cancellationToken)
     => await ExecAndHandleExceptions(
-        () => _linuxGameServerService.PerformServerInstallation(request.Id, cancellationToken),
+        () => _linuxGameServerService.PerformServerInstallation(request.Id, request.DisplayName, cancellationToken),
         () => default
         );
 }

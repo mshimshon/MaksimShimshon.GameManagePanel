@@ -72,15 +72,18 @@ public static class LinuxGameServerExt
         services.AddScoped<ILinuxGameServerService, LinuxGameServerService>();
         services.AddCoreMapHandler<InstallationProgressToInstallationProcessModel>();
         services.AddCoreMapHandler<InstallationStateToGameServerInfoEntity>();
-
         if (isMaster)
         {
             var watchUpdate = FileWatchEvents.Updated;
             var watchCreation = FileWatchEvents.Created;
             var watchRemoval = FileWatchEvents.Removed;
-
             services.AddMasterStateFileWatcherService<UpdateInstalledGameServerAction>(
-                c => c.GetConfigBase(LinuxGameServerModule.ModuleName),
+                c =>
+                {
+                    string path = c.GetConfigBase(LinuxGameServerModule.ModuleName);
+                    Console.WriteLine(path);
+                    return path;
+                },
                 "installation_state.json",
                 [watchUpdate, watchCreation, watchRemoval]);
 
@@ -93,23 +96,24 @@ public static class LinuxGameServerExt
 
     }
 
-    public static async Task RuntimeLinuxGameServerInitializer(this IServiceProvider serviceProvider)
+    public static async Task RuntimeLinuxGameServerInitializer(this IServiceProvider serviceProvider, bool isMaster)
     {
         Console.WriteLine($"{LinuxGameServerModule.ModuleName} Runtime Setup");
         await DownloadAvailableGames(
                 serviceProvider.GetRequiredService<IGitService>(),
-                serviceProvider.GetRequiredService<PluginConfiguration>(),
-                serviceProvider.GetRequiredService<IDispatcher>()
+                serviceProvider.GetRequiredService<PluginConfiguration>()
             );
 
         IEventBus eventBus = serviceProvider.GetRequiredService<IEventBus>();
         await eventBus.PublishDatalessAsync(PluginKeys.Events.OnBeforeRuntimeInitialization);
-
-        serviceProvider.LoadWatcher<UpdateInstalledGameServerAction>();
-        serviceProvider.LoadWatcher<UpdateProgressStateFromDiskAction>();
+        if (isMaster)
+        {
+            serviceProvider.LoadWatcher<UpdateInstalledGameServerAction>();
+            serviceProvider.LoadWatcher<UpdateProgressStateFromDiskAction>();
+        }
 
     }
-    public static async Task DownloadAvailableGames(IGitService gitService, PluginConfiguration pluginConfig, IDispatcher dispatcher)
+    public static async Task DownloadAvailableGames(IGitService gitService, PluginConfiguration pluginConfig)
     {
         Console.WriteLine($"Downloading Available Games");
         await gitService.CloneAsync(pluginConfig.Repositories.GitGameServerScriptRepository, "available_games");

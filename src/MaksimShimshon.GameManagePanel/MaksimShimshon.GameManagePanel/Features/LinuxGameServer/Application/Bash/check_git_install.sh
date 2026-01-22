@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Load the shared JSON‑safe pipeline
-. /usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/kernel/jsonsafepipeline.sh
+. /usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/kernel/json_safe_pipeline.sh
 
 # -------------------------
 # Your logic here

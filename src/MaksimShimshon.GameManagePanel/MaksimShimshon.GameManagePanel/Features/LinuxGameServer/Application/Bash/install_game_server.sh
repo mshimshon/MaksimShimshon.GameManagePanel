@@ -14,13 +14,12 @@ fi
 GAME_SERVER="$1"
 DISPLAY_NAME="$2"
 
-STATE_DIR="/etc/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/linuxgameserver"
+STATE_DIR="/etc/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/config/linuxgameserver"
 PROGRESS_FILE="$STATE_DIR/installation_progress_state.json"
 FINAL_FILE="$STATE_DIR/installation_state.json"
 
-AVAILABLE_GAMES_DIR="/usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/repos/linuxgameserver/available_games"
+AVAILABLE_GAMES_DIR="/etc/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/repos/linuxgameserver/available_games/games"
 GAME_REPO_PATH="$AVAILABLE_GAMES_DIR/$GAME_SERVER"
-
 TARGET_CONTROL_DIR="/home/lgsm/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/server_control"
 
 if [ ! -d "$GAME_REPO_PATH" ]; then
@@ -65,20 +64,26 @@ cat > "$PROGRESS_FILE" <<EOF
 EOF
 chmod -R 755 "$STATE_DIR"
 
+
+
 }
 
 write_progress
+ls -l "$PROGRESS_FILE" || echo "NO PROGRESS FILE FROM INSIDE SCRIPT" >&2
+
 
 SUCCESS=0
 
 cleanup() {
     # ALWAYS remove sudo perms
     rm -f "$SUDOERS_FILE" || true
-
+    # Clear the locked file
+    rm -f "$STATE_DIR/.install_lock" || true
     # On success, delete progress file
     if [ "$SUCCESS" -eq 1 ]; then
         rm -f "$PROGRESS_FILE" || true
     fi
+
 }
 trap cleanup EXIT
 
@@ -99,12 +104,7 @@ fi
 echo "$LGSM_USER ALL=(ALL) NOPASSWD:ALL" > "$SUDOERS_FILE"
 chmod 440 "$SUDOERS_FILE"
 
-if ! id "$LGSM_USER" >/dev/null 2>&1; then
-    useradd -m -d "$LGSM_HOME" -s /bin/bash "$LGSM_USER"
-    passwd -d "$LGSM_USER"
-fi
-
-DEPENDENCY_SCRIPT="/usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/kernel/installpackagedependencies.sh"
+DEPENDENCY_SCRIPT="/usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/kernel/install_package_dependencies.sh"
 bash "$DEPENDENCY_SCRIPT" curl locales >&2
 
 runuser -l "$LGSM_USER" -c "
@@ -114,9 +114,10 @@ runuser -l "$LGSM_USER" -c "
     cd \"$LGSM_HOME\"
     curl -Lo linuxgsm.sh https://linuxgsm.sh
     chmod +x linuxgsm.sh
-    bash ./linuxgsm.sh $GAME_SERVER
-    printf \"y\n\" | bash ./$GAME_SERVER install
+    bash ./linuxgsm.sh \"$GAME_SERVER\"
+    bash \"./$GAME_SERVER\" auto-install
 " >&2
+
 
 cat > "$FINAL_FILE" <<EOF
 {

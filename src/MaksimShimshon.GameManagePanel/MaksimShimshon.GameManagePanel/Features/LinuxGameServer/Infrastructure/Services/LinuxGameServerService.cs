@@ -111,7 +111,7 @@ internal class LinuxGameServerService : ILinuxGameServerService
         }
     }
 
-    public async Task<GameServerInfoEntity?> PerformServerInstallation(string gameServer, CancellationToken cancellation = default)
+    public async Task<GameServerInfoEntity?> PerformServerInstallation(string gameServer, string displayName, CancellationToken cancellation = default)
     {
         Console.WriteLine("Perform Install");
         Guid lockId = Guid.Empty;
@@ -124,14 +124,13 @@ internal class LinuxGameServerService : ILinuxGameServerService
             if (lockId == Guid.Empty)
                 throw new WebServiceException("Another process is already performing the installation.");
             await File.WriteAllTextAsync(pathToLockFile, lockId.ToString());
-            Console.WriteLine("Install Lock Acquired");
 
-            string scriptSetLocalCulture = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "setlocalculture.sh");
+            string scriptSetLocalCulture = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "set_local_culture.sh");
             var localeResponse = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(scriptSetLocalCulture);
             if (!localeResponse.Completed)
                 throw new WebServiceException(localeResponse.Failure);
 
-            string scriptInstallGameServer = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "installgameserver.sh", gameServer);
+            string scriptInstallGameServer = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "install_game_server.sh", gameServer, $"\"{displayName}\"");
             var installGameServer = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(scriptInstallGameServer);
             if (!installGameServer.Completed)
                 throw new WebServiceException(localeResponse.Failure);
@@ -139,6 +138,7 @@ internal class LinuxGameServerService : ILinuxGameServerService
             return new GameServerInfoEntity()
             {
                 Id = gameServer,
+                DisplayName = displayName,
                 InstallDate = DateTime.UtcNow
             };
         }

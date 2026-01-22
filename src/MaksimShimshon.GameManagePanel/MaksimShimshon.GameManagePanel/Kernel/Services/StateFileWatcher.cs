@@ -13,6 +13,8 @@ internal class StateFileWatcher<TAction> : IStateFileWatcher<TAction> where TAct
     public string Directory { get; init; }
     public string FilePattern { get; init; }
     private readonly ConcurrentQueue<Func<Task>> _changeQueue = new();
+    private readonly Task _queueWorker;
+
     public StateFileWatcher(string path, string filePattern, FileWatchEvents[] whatToWatch, IDispatcher dispatcher)
     {
 
@@ -21,7 +23,11 @@ internal class StateFileWatcher<TAction> : IStateFileWatcher<TAction> where TAct
         _dispatcher = dispatcher;
         _fileSystemWatcher = new FileSystemWatcher(path, filePattern);
         _fileSystemWatcher.Created += DispatchNotify;
-        _ = WatchQueue();
+        _fileSystemWatcher.Changed += DispatchNotify;
+        _fileSystemWatcher.Deleted += DispatchNotify;
+        _fileSystemWatcher.Renamed += DispatchNotify;
+        _fileSystemWatcher.EnableRaisingEvents = true;
+        _queueWorker = WatchQueue();
     }
 
 
@@ -37,23 +43,22 @@ internal class StateFileWatcher<TAction> : IStateFileWatcher<TAction> where TAct
         };
 #pragma warning restore CS8509 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
 
-        _changeQueue.Enqueue(() => Notify(e, eventType));
+        Enqueue(() => Notify(e, eventType));
     }
     private async Task Notify(FileSystemEventArgs args, FileWatchEvents eventType)
     {
 
-
-        var action = Activator.CreateInstance<TAction>() as FileWatchActionBase;
+        TAction action = Activator.CreateInstance<TAction>();
         if (action == default) return;
         action.Event = eventType;
         action.FullName = args.FullPath;
         action.Date = DateTime.UtcNow;
         action.FileName = args.Name!;
-        await _dispatcher.Prepared(action).Await().DispatchAsync();
+        await _dispatcher.Prepared(action).DispatchAsync();
     }
     private readonly SemaphoreSlim _signal = new(0);
 
-    public void Enqueue(Func<Task> work)
+    private void Enqueue(Func<Task> work)
     {
         _changeQueue.Enqueue(work);
         _signal.Release();
@@ -66,7 +71,17 @@ internal class StateFileWatcher<TAction> : IStateFileWatcher<TAction> where TAct
             await _signal.WaitAsync(ct);
 
             if (_changeQueue.TryDequeue(out var next))
-                await next();
+                try
+                {
+                    Console.WriteLine("WatchQueue: executing next");
+                    await next();
+                    Console.WriteLine("WatchQueue: finished next");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("WatchQueue exception: " + ex);
+                }
+
         }
     }
 
@@ -84,6 +99,7 @@ internal class StateFileWatcher<TAction> : IStateFileWatcher<TAction> where TAct
         if (disposing)
         {
             _fileSystemWatcher.Dispose();
+            _queueWorker.Dispose();
         }
 
         // free unmanaged resources here
