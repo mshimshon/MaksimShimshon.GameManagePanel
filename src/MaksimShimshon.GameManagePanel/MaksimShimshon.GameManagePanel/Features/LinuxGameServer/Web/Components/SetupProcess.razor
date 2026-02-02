@@ -5,43 +5,54 @@
     <MudGrid>
         <MudItem>
 
-            @if(ViewModel.InstallState.InProgressInstallation != default && ViewModel.InstallState.InProgressInstallation.IsInstalling)
+            @if (ViewModel.InstallState.InProgressInstallation != default && ViewModel.InstallState.InProgressInstallation.IsInstalling)
             {
-                <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
-                <MudAlert Severity="Severity.Info">
-                    @ViewModel.InstallState.InProgressInstallation.CurrentStep
-                </MudAlert>
+                <MudItem @key=@("installing")>
+
+                    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+                    <MudAlert Severity="Severity.Info">
+                        @ViewModel.InstallState.InProgressInstallation.CurrentStep
+                    </MudAlert>
+                </MudItem>
             }
             else if (ViewModel.IsLoading)
             {
-                <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
-                <MudAlert Severity="Severity.Info">
-                    Loading Game Server Setup Information
-                </MudAlert>
+                <MudItem @key=@("loading")>
+
+                    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+                    <MudAlert Severity="Severity.Info">
+                        Loading Game Server Setup Information
+                    </MudAlert>
+                </MudItem>
             }
             else if (ViewModel.InstallState.AvailableGameServers.Count > 0)
             {
-                <p>@ViewModel.InstallState.AvailableGameServers.First().Value</p>
-                <MudSelect @bind-Value=@ViewModel.KeyGame
-                           Dense Variant=@Variant.Text
-                           Label="Select Game Server"
-                           Disabled=@ViewModel.IsLoading>
-                    @foreach (var game in ViewModel.InstallState.AvailableGameServers)
-                    {
-                        <MudSelectItem Value=@game.Key>@game.Value</MudSelectItem>
-                    }
-                </MudSelect>
-                <MudButton OnClick=ViewModel.InstallAsync>
-                    Run Install
-                </MudButton>
+                <MudItem @key=@("selectgame")>
+
+                    <p>@ViewModel.InstallState.AvailableGameServers.First().Value</p>
+                    <MudSelect @bind-Value=@ViewModel.KeyGame
+                               Dense Variant=@Variant.Text
+                               Label="Select Game Server"
+                               Disabled=@ViewModel.IsLoading>
+                        @foreach (var game in ViewModel.InstallState.AvailableGameServers)
+                        {
+                            <MudSelectItem Value=@game.Key>@game.Value</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudButton OnClick=ViewModel.InstallAsync>
+                        Run Install
+                    </MudButton>
+                </MudItem>
             }
             else
             {
-                <MudAlert Severity="Severity.Error">
-                    The server is misconfigured, it seems like the available game servers file has not been properly setup. It would be best to reinstall the panel.
-                </MudAlert>
-            }
+                <MudItem @key=@("error")>
 
+                    <MudAlert Severity="Severity.Error">
+                        The server is misconfigured, it seems like the available game servers file has not been properly setup. It would be best to reinstall the panel.
+                    </MudAlert>
+                </MudItem>
+            }
         </MudItem>
     </MudGrid>
 }

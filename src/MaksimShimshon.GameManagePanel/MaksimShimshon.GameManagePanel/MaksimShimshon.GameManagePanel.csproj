@@ -24,10 +24,9 @@
 	<PackageReference Include="Microsoft.Extensions.Logging" />
 	<PackageReference Include="MudBlazor" PrivateAssets="false" />
 	<PackageReference Include="Newtonsoft.Json" />
-	  
-	<PackageReference Include="StatePulse.Net" GeneratePathProperty="true" />
 	<PackageReference Include="CoreMap" GeneratePathProperty="true" />
 	<PackageReference Include="MediHater" GeneratePathProperty="true" />
+	<PackageReference Include="StatePulse.Net" />
 
   </ItemGroup>
 

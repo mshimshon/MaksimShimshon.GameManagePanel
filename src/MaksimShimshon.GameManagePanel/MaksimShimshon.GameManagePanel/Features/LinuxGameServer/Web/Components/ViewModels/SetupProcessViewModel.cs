@@ -25,7 +25,6 @@ public class SetupProcessViewModel : WidgetViewModelBase, ISetupProcessViewModel
         RepositoryTarget = pluginConfiguration.Repositories.GitGameServerScriptRepository;
         crazyReport.SetModule(LinuxGameServerModule.ModuleName);
         crazyReport.ReportInfo("Loaded Widget {0} and Found {1} Games Available.", nameof(SetupProcessViewModel), InstallState.AvailableGameServers.Count);
-
     }
 
     public async Task InstallAsync()

@@ -3,7 +3,10 @@ using LunaticPanel.Core.Extensions;
 using MaksimShimshon.GameManagePanel.Core;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands.Handlers;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Queries;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Queries.Handlers;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Dto.Mapping;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Models;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Effects;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Reducers;
@@ -64,6 +67,8 @@ public static class LinuxGameServerExt
 
 
         services.AddMedihaterRequestHandler<InstallGameServerCommand, InstallGameServerHandler, GameServerInfoEntity?>();
+        services.AddMedihaterRequestHandler<GetInstallationProgressQuery, GetInstallationProgressHandler, GameServerInstallProcessModel?>();
+        services.AddMedihaterRequestHandler<GetInstalledGameQuery, GetInstalledGameHandler, GameServerInfoEntity?>();
 
         services.AddScoped<ISetupProcessViewModel, SetupProcessViewModel>();
         services.AddScoped<IWidgetServerSetupViewModel, WidgetServerSetupViewModel>();

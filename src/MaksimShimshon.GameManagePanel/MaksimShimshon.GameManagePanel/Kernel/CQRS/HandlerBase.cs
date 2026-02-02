@@ -23,6 +23,7 @@ public abstract class HandlerBase
         }
         catch (WebServiceException ex)
         {
+            Console.WriteLine("WebService Error: {0}", ex.Message);
             await _notificationService.NotifyAsync(ex.Message, NotificationSeverity.Error);
             if (ex.Origin != default)
                 _logger.LogError(ex, ex.Origin.Message);
@@ -31,6 +32,7 @@ public abstract class HandlerBase
         }
         catch (Exception ex)
         {
+            Console.WriteLine("WebService Error: {0}", ex.Message);
             await _notificationService.NotifyAsync("Unknown Error, Please contact admins if persistent.", NotificationSeverity.Error);
             _logger.LogError(ex, ex.Message);
         }

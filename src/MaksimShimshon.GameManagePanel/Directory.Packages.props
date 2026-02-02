@@ -14,7 +14,7 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1" />
     <PackageVersion Include="MudBlazor" Version="8.15.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageVersion Include="StatePulse.Net" Version="2.0.537" />
+    <PackageVersion Include="StatePulse.Net" Version="2.0.600" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="10.0.1" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.1" />
     <PackageVersion Include="MediHater" Version="1.0.0" />

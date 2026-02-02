@@ -3,7 +3,7 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Kernel.Services;
 
-public abstract record FileWatchActionBase : IAction
+public abstract record FileWatchActionBase : ISafeAction
 {
     public DateTime Date { get; set; }
     public FileWatchEvents Event { get; set; }

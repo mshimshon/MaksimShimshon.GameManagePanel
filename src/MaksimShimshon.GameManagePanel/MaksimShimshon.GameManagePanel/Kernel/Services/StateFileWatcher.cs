@@ -54,7 +54,7 @@ internal class StateFileWatcher<TAction> : IStateFileWatcher<TAction> where TAct
         action.FullName = args.FullPath;
         action.Date = DateTime.UtcNow;
         action.FileName = args.Name!;
-        await _dispatcher.Prepared(action).DispatchAsync();
+        await _dispatcher.Prepared(action).Await().DispatchAsync();
     }
     private readonly SemaphoreSlim _signal = new(0);
 
@@ -73,12 +73,11 @@ internal class StateFileWatcher<TAction> : IStateFileWatcher<TAction> where TAct
             if (_changeQueue.TryDequeue(out var next))
                 try
                 {
-                    Console.WriteLine("WatchQueue: executing next");
                     await next();
-                    Console.WriteLine("WatchQueue: finished next");
                 }
                 catch (Exception ex)
                 {
+                    // TODO: Handle that shit
                     Console.WriteLine("WatchQueue exception: " + ex);
                 }
 

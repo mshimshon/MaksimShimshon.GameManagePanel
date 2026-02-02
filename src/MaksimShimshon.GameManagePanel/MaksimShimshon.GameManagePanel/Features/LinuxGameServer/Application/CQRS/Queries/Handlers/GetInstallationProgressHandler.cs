@@ -20,6 +20,10 @@ internal class GetInstallationProgressHandler : HandlerBase, IRequestHandler<Get
     public async Task<GameServerInstallProcessModel?> Handle(GetInstallationProgressQuery request, CancellationToken cancellationToken)
     => await ExecAndHandleExceptions(
         () => _linuxGameServerService.GetInstallationProgress(cancellationToken),
-        () => default
+        () =>
+        {
+            Console.WriteLine($"{nameof(GetInstallationProgressHandler)} :: Error ");
+            return default;
+        }
         );
 }
