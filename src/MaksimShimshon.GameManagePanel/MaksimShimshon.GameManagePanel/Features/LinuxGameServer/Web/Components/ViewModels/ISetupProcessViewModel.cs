@@ -8,5 +8,7 @@ public interface ISetupProcessViewModel : IWidgetViewModel
     public InstallationState InstallState { get; }
     public string KeyGame { get; set; }
     public string RepositoryTarget { get; }
+    DateTime LastUpdate { get; }
     Task InstallAsync();
+    Task UpdateTest();
 }

@@ -12,9 +12,11 @@ internal class StateFileWatcher<TAction> : IStateFileWatcher<TAction> where TAct
 
     public string Directory { get; init; }
     public string FilePattern { get; init; }
-    private readonly ConcurrentQueue<Func<Task>> _changeQueue = new();
+    private readonly ConcurrentQueue<StateFileNotifyQueueElement> _changeQueue = new();
     private readonly Task _queueWorker;
+    private readonly CancellationTokenSource _cts = new();
 
+    private readonly ConcurrentDictionary<string, long> _pendingByPath = new();
     public StateFileWatcher(string path, string filePattern, FileWatchEvents[] whatToWatch, IDispatcher dispatcher)
     {
 
@@ -27,12 +29,13 @@ internal class StateFileWatcher<TAction> : IStateFileWatcher<TAction> where TAct
         _fileSystemWatcher.Deleted += DispatchNotify;
         _fileSystemWatcher.Renamed += DispatchNotify;
         _fileSystemWatcher.EnableRaisingEvents = true;
-        _queueWorker = WatchQueue();
+        _queueWorker = Task.Run(() => WatchQueue(_cts.Token));
     }
 
 
     private void DispatchNotify(object _, FileSystemEventArgs e)
     {
+
         if (e.ChangeType == WatcherChangeTypes.Renamed) return;
 #pragma warning disable CS8509 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
         var eventType = e.ChangeType switch
@@ -42,8 +45,19 @@ internal class StateFileWatcher<TAction> : IStateFileWatcher<TAction> where TAct
             WatcherChangeTypes.Changed => FileWatchEvents.Updated
         };
 #pragma warning restore CS8509 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
+        var version = _pendingByPath.AddOrUpdate(
+            e.FullPath,
+            _ => 1,
+            (_, v) => v + 1
+        );
 
-        Enqueue(() => Notify(e, eventType));
+        var action = new StateFileNotifyQueueElement()
+        {
+            Version = version,
+            Path = e.FullPath,
+            Action = () => Notify(e, eventType)
+        };
+        Enqueue(action);
     }
     private async Task Notify(FileSystemEventArgs args, FileWatchEvents eventType)
     {
@@ -54,31 +68,42 @@ internal class StateFileWatcher<TAction> : IStateFileWatcher<TAction> where TAct
         action.FullName = args.FullPath;
         action.Date = DateTime.UtcNow;
         action.FileName = args.Name!;
-        await _dispatcher.Prepared(action).Await().DispatchAsync();
+        await _dispatcher.Prepared(action).DispatchAsync().ConfigureAwait(false);
     }
     private readonly SemaphoreSlim _signal = new(0);
 
-    private void Enqueue(Func<Task> work)
+    private void Enqueue(StateFileNotifyQueueElement work)
     {
         _changeQueue.Enqueue(work);
         _signal.Release();
     }
 
-    private async Task WatchQueue(CancellationToken ct = default)
+    private async Task WatchQueue(CancellationToken ct)
     {
         while (!ct.IsCancellationRequested)
         {
-            await _signal.WaitAsync(ct);
+            await _signal.WaitAsync(ct).ConfigureAwait(false);
 
             if (_changeQueue.TryDequeue(out var next))
                 try
                 {
-                    await next();
+                    // only keep lastest update and kill any stale
+                    var currentVersion = _pendingByPath[next.Path];
+                    if (currentVersion > next.Version) continue;
+
+                    await next.Action().ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
                     // TODO: Handle that shit
                     Console.WriteLine("WatchQueue exception: " + ex);
+                }
+                finally
+                {
+                    if (_pendingByPath.TryGetValue(next.Path, out var currentVersion) && currentVersion == next.Version)
+                    {
+                        _pendingByPath.TryRemove(next.Path, out _);
+                    }
                 }
 
         }
@@ -97,8 +122,8 @@ internal class StateFileWatcher<TAction> : IStateFileWatcher<TAction> where TAct
 
         if (disposing)
         {
+            _cts.Cancel();
             _fileSystemWatcher.Dispose();
-            _queueWorker.Dispose();
         }
 
         // free unmanaged resources here

@@ -19,7 +19,6 @@ public class SystemResourcesStatusViewModel : WidgetViewModelBase, ISystemResour
     public SystemInfoEntity? SystemInfo => SystemState.SystemInfo;
     public DateTime LastUpdate => SystemState.LastUpdate;
     public int Delay => SystemState.Delay;
-
     public SystemResourcesStatusViewModel(IStatePulse statePulse, PluginConfiguration configuration, IDispatcher dispatcher)
     {
         _statePulse = statePulse;
@@ -29,10 +28,10 @@ public class SystemResourcesStatusViewModel : WidgetViewModelBase, ISystemResour
     private bool AutoUpdateActivated { get; set; }
     private bool IsUpdating { get; set; }
     private DateTime LastLaunch { get; set; }
+
     public async Task UpdateState()
     {
-        if (SystemState.LastUpdate >= LastLaunch)
-            IsUpdating = false;
+        IsUpdating = false;
         await UpdateChanges();
     }
 

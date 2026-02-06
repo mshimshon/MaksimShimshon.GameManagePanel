@@ -11,13 +11,20 @@ public class SetupProcessViewModel : WidgetViewModelBase, ISetupProcessViewModel
 {
     private readonly IStatePulse _statePulse;
     private readonly IDispatcher _dispatcher;
-
-
     public string KeyGame { get; set; } = default!;
 
-    public InstallationState InstallState => _statePulse.StateOf<InstallationState>(() => this, UpdateChanges);
+    public InstallationState InstallState => _statePulse.StateOf<InstallationState>(() => this, UpdateTest);
     public string RepositoryTarget { get; }
+    public DateTime LastUpdate { get; private set; } = DateTime.UtcNow;
+    public async Task UpdateTest()
+    {
 
+        //Console.WriteLine($"State updated: {(InstallState.ToString())}");
+        LastUpdate = DateTime.UtcNow;
+        await UpdateChanges();
+        //await Task.Delay(10000);
+        //await UpdateChanges();
+    }
     public SetupProcessViewModel(IStatePulse statePulse, PluginConfiguration pluginConfiguration, ICrazyReport crazyReport)
     {
         _statePulse = statePulse;
@@ -25,6 +32,7 @@ public class SetupProcessViewModel : WidgetViewModelBase, ISetupProcessViewModel
         RepositoryTarget = pluginConfiguration.Repositories.GitGameServerScriptRepository;
         crazyReport.SetModule(LinuxGameServerModule.ModuleName);
         crazyReport.ReportInfo("Loaded Widget {0} and Found {1} Games Available.", nameof(SetupProcessViewModel), InstallState.AvailableGameServers.Count);
+
     }
 
     public async Task InstallAsync()
@@ -36,5 +44,10 @@ public class SetupProcessViewModel : WidgetViewModelBase, ISetupProcessViewModel
             .DispatchAsync();
         IsLoading = false;
     }
+    protected override bool GetStateLoadingStatus() => !InstallState.IsInstalledGameDiskLoaded || !InstallState.IsProgressDiskLoaded;
 
+    protected override void OnViewModelDispose()
+    {
+        Console.WriteLine("VM Disposed");
+    }
 }

@@ -2,4 +2,9 @@
 
 public partial class SetupProcess
 {
+
+    protected override void OnWidgetDispose()
+    {
+        Console.WriteLine("Widget Disposed");
+    }
 }

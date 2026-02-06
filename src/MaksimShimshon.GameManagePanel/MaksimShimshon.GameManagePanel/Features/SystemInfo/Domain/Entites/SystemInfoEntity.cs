@@ -2,7 +2,7 @@
 
 namespace MaksimShimshon.GameManagePanel.Features.SystemInfo.Domain.Entites;
 
-public sealed class SystemInfoEntity
+public sealed record SystemInfoEntity
 {
     public SystemMemory Memory { get; init; } = default!;
     public SystemDisk Disk { get; init; } = default!;

@@ -41,11 +41,11 @@ public abstract class HandlerBase
 
     protected async Task<TResult> ExecAndHandleExceptions<TResult>(Func<Task<TResult>> exec, Func<TResult> onError)
     {
-        TResult? result = onError();
+        TResult? result = default;
         await ExecAndHandleExceptions(async () =>
         {
             result = await exec();
         });
-        return result;
+        return result ?? onError();
     }
 }

@@ -7,15 +7,15 @@
     <GlobalCopyright>Maksim Shimshon © 2026</GlobalCopyright>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="LunaticPanel.Core" Version="0.1.735" />
-    <PackageVersion Include="LunaticPanel.Core.Extensions" Version="0.1.735" />
+    <PackageVersion Include="LunaticPanel.Core" Version="0.1.739" />
+    <PackageVersion Include="LunaticPanel.Core.Extensions" Version="0.1.739" />
     <PackageVersion Include="LunaticPanel.Engine.Core" Version="0.1.735" />
-    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1" />
     <PackageVersion Include="MudBlazor" Version="8.15.0" />
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="StatePulse.Net" Version="2.0.600" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="10.0.2" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.1" />
     <PackageVersion Include="MediHater" Version="1.0.0" />
     <PackageVersion Include="CoreMap" Version="1.1.2" />

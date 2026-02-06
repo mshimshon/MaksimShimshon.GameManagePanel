@@ -113,45 +113,22 @@ internal class LinuxGameServerService : ILinuxGameServerService
 
     public async Task<GameServerInfoEntity?> PerformServerInstallation(string gameServer, string displayName, CancellationToken cancellation = default)
     {
-        Console.WriteLine("Perform Install");
-        Guid lockId = Guid.Empty;
-        string pathToLockFile = _pluginConfiguration.GetConfigFor(LinuxGameServerModule.ModuleName, ".install_lock");
-        if (File.Exists(pathToLockFile))
-            throw new WebServiceException("Installation is already in process.");
-        try
-        {
-            lockId = await _linuxLockFileController.TryToLockAsync(pathToLockFile);
-            if (lockId == Guid.Empty)
-                throw new WebServiceException("Another process is already performing the installation.");
-            await File.WriteAllTextAsync(pathToLockFile, lockId.ToString());
+        string scriptSetLocalCulture = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "set_local_culture.sh");
+        var localeResponse = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(scriptSetLocalCulture);
+        if (!localeResponse.Completed)
+            throw new WebServiceException(localeResponse.Failure);
 
-            string scriptSetLocalCulture = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "set_local_culture.sh");
-            var localeResponse = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(scriptSetLocalCulture);
-            if (!localeResponse.Completed)
-                throw new WebServiceException(localeResponse.Failure);
+        string scriptInstallGameServer = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "install_game_server.sh", gameServer, $"\"{displayName}\"");
+        var installGameServer = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(scriptInstallGameServer);
+        if (!installGameServer.Completed)
+            throw new WebServiceException(localeResponse.Failure);
 
-            string scriptInstallGameServer = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "install_game_server.sh", gameServer, $"\"{displayName}\"");
-            var installGameServer = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(scriptInstallGameServer);
-            if (!installGameServer.Completed)
-                throw new WebServiceException(localeResponse.Failure);
-
-            return new GameServerInfoEntity()
-            {
-                Id = gameServer,
-                DisplayName = displayName,
-                InstallDate = DateTime.UtcNow
-            };
-        }
-        catch (Exception ex)
+        return new GameServerInfoEntity()
         {
-            Console.WriteLine(ex.Message);
-            throw new WebServiceException(ex.Message);
-        }
-        finally
-        {
-            if (lockId != Guid.Empty)
-                await _linuxLockFileController.ReleaseLockAsync(lockId);
-        }
+            Id = gameServer,
+            DisplayName = displayName,
+            InstallDate = DateTime.UtcNow
+        };
     }
 
 }
