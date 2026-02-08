@@ -14,6 +14,13 @@ fi
 GAME_SERVER="$1"
 DISPLAY_NAME="$2"
 
+PLUGIN_DIR="/usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel"
+PLUGIN_BASH_BASE="$PLUGIN_DIR/bash"
+PLUGIN_BASH_KERNEL_BASE="$PLUGIN_BASH_BASE/kernel"
+PLUGIN_BASH_LGS_BASE="$PLUGIN_BASH_BASE/linuxgameserver"
+PLUGIN_BASH_KERNEL_FILEWRITER="$PLUGIN_BASH_KERNEL_BASE/file_writer_method.sh"
+source "$PLUGIN_BASH_KERNEL_FILEWRITER"
+
 STATE_DIR="/etc/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/config/linuxgameserver"
 PROGRESS_FILE="$STATE_DIR/installation_progress_state.json"
 FINAL_FILE="$STATE_DIR/installation_state.json"
@@ -21,6 +28,9 @@ FINAL_FILE="$STATE_DIR/installation_state.json"
 AVAILABLE_GAMES_DIR="/etc/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/repos/linuxgameserver/available_games/games"
 GAME_REPO_PATH="$AVAILABLE_GAMES_DIR/$GAME_SERVER"
 TARGET_CONTROL_DIR="/home/lgsm/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/server_control"
+DEPENDENCY_SCRIPT="$PLUGIN_BASH_KERNEL_BASE/install_package_dependencies.sh"
+FIX_HOME_PERM_SCRIPT="$PLUGIN_BASH_LGS_BASE/fix_home_permission.sh"
+
 
 if [ ! -d "$GAME_REPO_PATH" ]; then
     echo "Cannot install unsupported server by the panel, unless you forgot to fetch/clone the panel repos of supported game scripts." >&2
@@ -38,35 +48,61 @@ if [ -f "$FINAL_FILE" ]; then
 fi
 
 write_progress() {
-cat > "$PROGRESS_FILE" <<EOF
-{
-  "FailureReason": null,
-  "IsInstalling": true,
-  "CurrentStep": "Installing Server for $DISPLAY_NAME...",
-  "Id": "$GAME_SERVER",
-  "DisplayName": "$DISPLAY_NAME"
-}
-EOF
-chmod -R 755 "$STATE_DIR"
+    local content
+    content="$(jq -n \
+        --arg step "Installing Server for $DISPLAY_NAME..." \
+        --arg id "$GAME_SERVER" \
+        --arg name "$DISPLAY_NAME" \
+        '{
+            FailureReason: null,
+            IsInstalling: true,
+            CurrentStep: $step,
+            Id: $id,
+            DisplayName: $name
+        }'
+    )"
 
+    write_file "$PROGRESS_FILE" "$content"
+    chmod -R 755 "$STATE_DIR"
 }
 
 write_failure() {
-local reason="$1"
-cat > "$PROGRESS_FILE" <<EOF
-{
-  "FailureReason": "$reason",
-  "IsInstalling": false,
-  "CurrentStep": "Installing Server for $DISPLAY_NAME...",
-  "Id": "$GAME_SERVER",
-  "DisplayName": "$DISPLAY_NAME"
+    local reason="$1"
+    local content
+    content="$(jq -n \
+        --arg reason "$reason" \
+        --arg step "Installing Server for $DISPLAY_NAME..." \
+        --arg id "$GAME_SERVER" \
+        --arg name "$DISPLAY_NAME" \
+        '{
+            FailureReason: $reason,
+            IsInstalling: false,
+            CurrentStep: $step,
+            Id: $id,
+            DisplayName: $name
+        }'
+    )"
+
+    write_file "$PROGRESS_FILE" "$content"
+    chmod -R 755 "$STATE_DIR"
 }
-EOF
-chmod -R 755 "$STATE_DIR"
 
+write_final_file() {
+    local content
+    content="$(jq -n \
+        --arg id "$GAME_SERVER" \
+        --arg dn "$DISPLAY_NAME" \
+        --arg date "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
+        '{
+            Id: $id,
+            DisplayName: $dn
+            InstallDate: $date
+        }'
+    )"
 
-
+    write_file "$FINAL_FILE" "$content"
 }
+
 
 write_progress
 ls -l "$PROGRESS_FILE" || echo "NO PROGRESS FILE FROM INSIDE SCRIPT" >&2
@@ -104,7 +140,6 @@ fi
 echo "$LGSM_USER ALL=(ALL) NOPASSWD:ALL" > "$SUDOERS_FILE"
 chmod 440 "$SUDOERS_FILE"
 
-DEPENDENCY_SCRIPT="/usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/kernel/install_package_dependencies.sh"
 bash "$DEPENDENCY_SCRIPT" curl locales >&2
 
 runuser -l "$LGSM_USER" -c "
@@ -119,19 +154,14 @@ runuser -l "$LGSM_USER" -c "
 " >&2
 
 
-cat > "$FINAL_FILE" <<EOF
-{
-  "Id": "$GAME_SERVER",
-  "InstallDate": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-}
-EOF
+write_final_file
 
 chmod -R 755 "$STATE_DIR"
 
 
 cp -a "$GAME_REPO_PATH"/. "$TARGET_CONTROL_DIR"/
 
-bash -e /usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/linuxgameserver/fix_home_permission.sh
+bash -e "$FIX_HOME_PERM_SCRIPT"
 SUCCESS=1
 
 

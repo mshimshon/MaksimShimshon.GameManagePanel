@@ -68,7 +68,18 @@ internal class StateFileWatcher<TAction> : IStateFileWatcher<TAction> where TAct
         action.FullName = args.FullPath;
         action.Date = DateTime.UtcNow;
         action.FileName = args.Name!;
-        await _dispatcher.Prepared(action).DispatchAsync().ConfigureAwait(false);
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await _dispatcher.Prepared(action).DispatchAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Dispatch error: " + ex);
+            }
+        });
+
     }
     private readonly SemaphoreSlim _signal = new(0);
 

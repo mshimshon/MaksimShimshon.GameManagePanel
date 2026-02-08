@@ -80,6 +80,7 @@ internal class LinuxGameServerService : ILinuxGameServerService
         try
         {
             string jsonString = await File.ReadAllTextAsync(file);
+            _crazyReport.ReportInfo(jsonString);
             var result = JsonSerializer.Deserialize<InstallationProgressStateDto>(jsonString)!;
             if (result == default) return default;
             var entity = _coreMap.Map(result).To<GameServerInstallProcessModel>();
