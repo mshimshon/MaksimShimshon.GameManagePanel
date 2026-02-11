@@ -80,14 +80,14 @@ public class PluginConfiguration
         => Path.Combine(GetBashBase(moduleName), filename);
     public string GetBashFor(string moduleName, string filename, params string[] args)
     {
-        string inlineParams = string.Join(' ', args);
+        string inlineParams = string.Join(' ', args.Select(p => $"\\\"{p}\\\""));
         return GetBashFor(moduleName, filename + " " + inlineParams);
     }
     public string GetUserBashFor(string moduleName, string filename)
         => Path.Combine(GetUserBashBase(moduleName), filename);
     public string GetUserBashFor(string moduleName, string filename, params string[] args)
     {
-        string inlineParams = string.Join(' ', args);
+        string inlineParams = string.Join(' ', args.Select(p => $"\\\"{p}\\\""));
         return GetUserBashFor(moduleName, filename + " " + inlineParams);
     }
 }

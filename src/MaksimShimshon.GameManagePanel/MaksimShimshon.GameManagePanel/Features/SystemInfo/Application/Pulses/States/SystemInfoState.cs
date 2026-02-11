@@ -7,6 +7,5 @@ public record SystemInfoState : IStateFeatureSingleton
 {
     public SystemInfoEntity? SystemInfo { get; init; }
     public DateTime LastUpdate { get; init; }
-    public int Delay { get; init; } = 8;
 
 }

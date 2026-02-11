@@ -11,7 +11,6 @@ public partial class SystemResourcesStatus
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender) { }
-        //await ViewModel.StartPeriodicUpdates();
     }
 
     public static string FormatMegabytes(float mb)

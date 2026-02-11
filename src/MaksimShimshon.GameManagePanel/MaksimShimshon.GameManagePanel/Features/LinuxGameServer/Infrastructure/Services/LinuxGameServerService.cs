@@ -114,15 +114,10 @@ internal class LinuxGameServerService : ILinuxGameServerService
 
     public async Task<GameServerInfoEntity?> PerformServerInstallation(string gameServer, string displayName, CancellationToken cancellation = default)
     {
-        string scriptSetLocalCulture = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "set_local_culture.sh");
-        var localeResponse = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(scriptSetLocalCulture);
-        if (!localeResponse.Completed)
-            throw new WebServiceException(localeResponse.Failure);
-
-        string scriptInstallGameServer = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "install_game_server.sh", gameServer, $"\"{displayName}\"");
+        string scriptInstallGameServer = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "install_game_server.sh", gameServer, displayName);
         var installGameServer = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(scriptInstallGameServer);
         if (!installGameServer.Completed)
-            throw new WebServiceException(localeResponse.Failure);
+            throw new WebServiceException(installGameServer.Failure);
 
         return new GameServerInfoEntity()
         {

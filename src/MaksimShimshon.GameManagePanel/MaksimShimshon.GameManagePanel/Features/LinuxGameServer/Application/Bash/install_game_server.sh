@@ -2,6 +2,10 @@
 set -euo pipefail
 set -E
 
+LOCKFILE="/tmp/lgs_game_server_install.lock"
+exec 9>"$LOCKFILE" || exit 1
+flock -n 9 || exit 1
+
 LGSM_USER="lgsm"
 LGSM_HOME="/home/$LGSM_USER"
 SUDOERS_FILE="/etc/sudoers.d/lgsm"
@@ -19,6 +23,8 @@ PLUGIN_BASH_BASE="$PLUGIN_DIR/bash"
 PLUGIN_BASH_KERNEL_BASE="$PLUGIN_BASH_BASE/kernel"
 PLUGIN_BASH_LGS_BASE="$PLUGIN_BASH_BASE/linuxgameserver"
 PLUGIN_BASH_KERNEL_FILEWRITER="$PLUGIN_BASH_KERNEL_BASE/file_writer_method.sh"
+PLUGIN_BASH_LGS_LOCALE_SCRIPT="$PLUGIN_BASH_LGS_BASE/set_local_culture.sh"
+
 source "$PLUGIN_BASH_KERNEL_FILEWRITER"
 
 STATE_DIR="/etc/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/config/linuxgameserver"
@@ -31,11 +37,13 @@ TARGET_CONTROL_DIR="/home/lgsm/lunaticpanel/plugins/maksimshimshon_gamemanagepan
 DEPENDENCY_SCRIPT="$PLUGIN_BASH_KERNEL_BASE/install_package_dependencies.sh"
 FIX_HOME_PERM_SCRIPT="$PLUGIN_BASH_LGS_BASE/fix_home_permission.sh"
 
-
 if [ ! -d "$GAME_REPO_PATH" ]; then
     echo "Cannot install unsupported server by the panel, unless you forgot to fetch/clone the panel repos of supported game scripts." >&2
     exit 1
 fi
+
+
+bash "$PLUGIN_BASH_LGS_LOCALE_SCRIPT"
 
 mkdir -p "$TARGET_CONTROL_DIR"
 
@@ -46,6 +54,8 @@ if [ -f "$FINAL_FILE" ]; then
     echo "Server for $DISPLAY_NAME is already installed" >&2
     exit 1
 fi
+
+
 
 write_progress() {
     local content
@@ -91,11 +101,11 @@ write_final_file() {
     local content
     content="$(jq -n \
         --arg id "$GAME_SERVER" \
-        --arg dn "$DISPLAY_NAME" \
+        --arg name "$DISPLAY_NAME" \
         --arg date "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
         '{
             Id: $id,
-            DisplayName: $dn
+            DisplayName: $name,
             InstallDate: $date
         }'
     )"
@@ -111,15 +121,16 @@ ls -l "$PROGRESS_FILE" || echo "NO PROGRESS FILE FROM INSIDE SCRIPT" >&2
 SUCCESS=0
 
 cleanup() {
+
     # ALWAYS remove sudo perms
     rm -f "$SUDOERS_FILE" || true
-    # Clear the locked file
-    rm -f "$STATE_DIR/.install_lock" || true
     # On success, delete progress file
     if [ "$SUCCESS" -eq 1 ]; then
         rm -f "$PROGRESS_FILE" || true
     fi
 
+    exec 9>&-
+    rm -f "$LOCKFILE"
 }
 trap cleanup EXIT
 
@@ -127,7 +138,7 @@ trap cleanup EXIT
 trap '
     trap - EXIT
     write_failure "Installation failed"
-    rm -f "$SUDOERS_FILE" || true
+    cleanup
     exit 1
 ' ERR
 

@@ -7,6 +7,4 @@ public interface ISystemResourcesStatusViewModel : IWidgetViewModel
 {
     public SystemInfoEntity? SystemInfo { get; }
     public DateTime LastUpdate { get; }
-    public int Delay { get; }
-    public Task StartPeriodicUpdates();
 }

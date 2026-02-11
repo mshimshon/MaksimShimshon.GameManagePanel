@@ -9,6 +9,7 @@ using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Infrastructure.Configurations;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Infrastructure.Services;
+using MaksimShimshon.GameManagePanel.Features.SystemInfo.Infrastructure.Workers;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Web.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Web.Hooks.Components.ViewModels;
 using MedihatR;
@@ -28,7 +29,7 @@ public static class SystemInfoServiceExt
 
         services.AddScoped<ISystemInfoService, LinuxSystemInfoService>();
 
-        services.AddScoped((sp) => linuxSysInfoConfig);
+        services.AddScoped<LinuxSystemInfoConfiguration>((sp) => linuxSysInfoConfig);
 
         services.AddScoped<ISystemResourcesStatusViewModel, SystemResourcesStatusViewModel>();
         services.AddScoped<IWidgetSystemInfoViewModel, WidgetSystemInfoViewModel>();
@@ -39,5 +40,11 @@ public static class SystemInfoServiceExt
         services.AddStatePulseService<SystemInfoState>();
         services.AddStatePulseService<OnServerInfoUpdateMiddleware>();
         services.AddMedihaterRequestHandler<GetSystemInfoQuery, GetSystemInfoHandler, SystemInfoEntity?>();
+        services.AddSingleton<PeriodicSystemInfoUpdate>();
+    }
+    public static async Task RuntimeSystemInfoFeatureInitializer(this IServiceProvider serviceProvider)
+    {
+        var periodicResourceUpdater = serviceProvider.GetRequiredService<PeriodicSystemInfoUpdate>();
+        _ = periodicResourceUpdater.StartAsync();
     }
 }

@@ -103,7 +103,6 @@ public static class LinuxGameServerExt
 
     public static async Task RuntimeLinuxGameServerInitializer(this IServiceProvider serviceProvider, bool isMaster)
     {
-        Console.WriteLine($"{LinuxGameServerModule.ModuleName} Runtime Setup");
         await DownloadAvailableGames(
                 serviceProvider.GetRequiredService<IGitService>(),
                 serviceProvider.GetRequiredService<PluginConfiguration>()
@@ -111,11 +110,8 @@ public static class LinuxGameServerExt
 
         IEventBus eventBus = serviceProvider.GetRequiredService<IEventBus>();
         await eventBus.PublishDatalessAsync(PluginKeys.Events.OnBeforeRuntimeInitialization);
-        if (isMaster)
-        {
-            serviceProvider.LoadWatcher<UpdateInstalledGameServerAction>();
-            serviceProvider.LoadWatcher<UpdateProgressStateFromDiskAction>();
-        }
+        serviceProvider.LoadWatcher<UpdateInstalledGameServerAction>();
+        serviceProvider.LoadWatcher<UpdateProgressStateFromDiskAction>();
 
     }
     public static async Task DownloadAvailableGames(IGitService gitService, PluginConfiguration pluginConfig)
