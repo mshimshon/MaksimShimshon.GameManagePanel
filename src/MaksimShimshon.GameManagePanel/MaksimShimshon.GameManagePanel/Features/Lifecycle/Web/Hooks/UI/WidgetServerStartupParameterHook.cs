@@ -9,5 +9,5 @@ namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Hooks.UI;
 internal class WidgetServerStartupParameterHook : IEngineBusHandler
 {
     public Task<EngineBusResponse> HandleAsync(IEngineBusMessage engineBusMessage)
-        => engineBusMessage.ReplyWith<WidgetStartupParameters>();
+        => engineBusMessage.ReplyWithTypeOf<WidgetStartupParameters>();
 }

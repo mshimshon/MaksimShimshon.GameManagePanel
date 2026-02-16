@@ -9,5 +9,5 @@ namespace MaksimShimshon.GameManagePanel.Features.SystemInfo.Web.Hooks;
 public class WidgetSystemInfoHook : IEngineBusHandler
 {
     public Task<EngineBusResponse> HandleAsync(IEngineBusMessage engineBusMessage)
-        => engineBusMessage.ReplyWith<WidgetSystemInfo>();
+        => engineBusMessage.ReplyWithTypeOf<WidgetSystemInfo>();
 }

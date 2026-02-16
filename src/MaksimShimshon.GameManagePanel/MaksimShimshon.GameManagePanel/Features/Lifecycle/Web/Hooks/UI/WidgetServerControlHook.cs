@@ -9,5 +9,5 @@ namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Hooks.UI;
 internal class WidgetServerControlHook : IEngineBusHandler
 {
     public Task<EngineBusResponse> HandleAsync(IEngineBusMessage engineBusMessage)
-        => engineBusMessage.ReplyWith<WidgetServerControl>();
+        => engineBusMessage.ReplyWithFragmentOf<WidgetServerControl>();
 }

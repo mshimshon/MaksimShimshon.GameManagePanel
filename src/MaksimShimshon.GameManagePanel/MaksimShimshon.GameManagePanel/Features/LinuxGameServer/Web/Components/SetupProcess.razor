@@ -5,15 +5,6 @@
     <MudGrid>
         <MudItem xs=12>
             <MudText Typo=@Typo.h6>@("Setup System")</MudText>
-            <MudText Typo=@Typo.caption>@ViewModel.LastUpdate.ToString()</MudText>
-            <MudButton OnClick=@(() => { Console.WriteLine("Force Rerender");
-                InvokeAsync(StateHasChanged);})>Force ReRender</MudButton>
-            <MudButton OnClick=@(() => {
-                
-                Console.WriteLine("Rerender");
-                ViewModel.UpdateTest();
-            })>ReRender</MudButton>
-
             <MudDivider Class="my-2" />
         </MudItem>
         <MudItem>

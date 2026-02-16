@@ -13,15 +13,22 @@ public class SetupProcessViewModel : WidgetViewModelBase, ISetupProcessViewModel
     private readonly IDispatcher _dispatcher;
     public string KeyGame { get; set; } = default!;
 
-    public InstallationState InstallState => _statePulse.StateOf<InstallationState>(() => this, UpdateTest);
+    public InstallationState InstallState => _statePulse.StateOf<InstallationState>(() => this, UpdateState);
     public string RepositoryTarget { get; }
     public DateTime LastUpdate { get; private set; } = DateTime.UtcNow;
-    public async Task UpdateTest()
+    private bool _isInstallCompleted;
+    public async Task UpdateState()
     {
 
         //Console.WriteLine($"State updated: {(InstallState.ToString())}");
         LastUpdate = DateTime.UtcNow;
-        await UpdateChanges();
+        if (_isInstallCompleted != InstallState.IsInstallationCompleted)
+        {
+            _isInstallCompleted = InstallState.IsInstallationCompleted;
+            await UpdateParentChanges();
+        }
+        else
+            await UpdateChanges();
         //await Task.Delay(10000);
         //await UpdateChanges();
     }
