@@ -5,12 +5,12 @@ namespace MaksimShimshon.GameManagePanel.Kernel.Extensions;
 
 public static class LinuxCommandExt
 {
-    public static async Task<TResponse> RunLinuxScriptWithReplyAs<TResponse>(this ILinuxCommand linuxCommand, string file, bool sudo = true,
-        Func<string, TResponse>? OnAbnormalError = default)
+    public static async Task<TResponse> RunLinuxScriptWithReplyAs<TResponse>(this ILinuxCommand linuxCommand, string file, Func<string, TResponse> OnAbnormalError, bool sudo = true)
     {
         var response = await linuxCommand.RunLinuxScript(file, sudo);
         if (response.Failed && OnAbnormalError != default)
             return OnAbnormalError.Invoke("Error with BASH: " + response.StandardError);
+
         if (!IsValidJson(response.StandardOutput) && OnAbnormalError != default)
             return OnAbnormalError.Invoke("Invalid JSON: " + response.StandardOutput);
 
@@ -28,7 +28,7 @@ public static class LinuxCommandExt
             JsonDocument.Parse(s);
             return true;
         }
-        catch
+        catch (Exception ex)
         {
             return false;
         }

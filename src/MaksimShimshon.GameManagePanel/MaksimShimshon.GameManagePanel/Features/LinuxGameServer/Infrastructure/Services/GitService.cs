@@ -22,12 +22,12 @@ internal class GitService : IGitService
     {
 
         var commandCheckGit = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "check_git_install.sh");
-        var checkGitResult = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(commandCheckGit, true, (s) => new() { Failure = s });
+        var checkGitResult = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(commandCheckGit, (s) => new() { Failure = s }, true);
         Console.WriteLine(checkGitResult.ToString());
         if (!checkGitResult.Completed) throw new WebServiceException(checkGitResult.Failure);
         var targetFolder = _pluginConfiguration.GetReposFor(LinuxGameServerModule.ModuleName, target);
         var command = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "git_clone.sh", gitUrl, targetFolder);
-        var result = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(command, true, (s) => new() { Failure = s });
+        var result = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(command, (s) => new() { Failure = s }, true);
         if (!result.Completed)
             throw new WebServiceException(result.Failure);
 

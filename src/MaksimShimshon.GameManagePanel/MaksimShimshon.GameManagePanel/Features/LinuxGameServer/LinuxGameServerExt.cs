@@ -66,7 +66,7 @@ public static class LinuxGameServerExt
         services.AddStatePulseService<UpdateInstalledGameServerEffect>();
 
 
-        services.AddMedihaterRequestHandler<InstallGameServerCommand, InstallGameServerHandler, GameServerInfoEntity?>();
+        services.AddMedihaterRequestHandler<InstallGameServerCommand, InstallGameServerHandler>();
         services.AddMedihaterRequestHandler<GetInstallationProgressQuery, GetInstallationProgressHandler, GameServerInstallProcessModel?>();
         services.AddMedihaterRequestHandler<GetInstalledGameQuery, GetInstalledGameHandler, GameServerInfoEntity?>();
 

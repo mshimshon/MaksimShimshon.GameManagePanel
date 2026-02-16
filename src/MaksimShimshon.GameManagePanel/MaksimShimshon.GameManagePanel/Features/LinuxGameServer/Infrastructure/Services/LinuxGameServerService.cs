@@ -4,11 +4,8 @@ using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Dto;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Models;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Domain.Entities;
-using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Services.Dto;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
 using MaksimShimshon.GameManagePanel.Kernel.ConsoleController;
-using MaksimShimshon.GameManagePanel.Kernel.Exceptions;
-using MaksimShimshon.GameManagePanel.Kernel.Extensions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -112,19 +109,10 @@ internal class LinuxGameServerService : ILinuxGameServerService
         }
     }
 
-    public async Task<GameServerInfoEntity?> PerformServerInstallation(string gameServer, string displayName, CancellationToken cancellation = default)
+    public async Task PerformServerInstallation(string gameServer, string displayName, CancellationToken cancellation = default)
     {
         string scriptInstallGameServer = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "install_game_server.sh", gameServer, displayName);
-        var installGameServer = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(scriptInstallGameServer);
-        if (!installGameServer.Completed)
-            throw new WebServiceException(installGameServer.Failure);
-
-        return new GameServerInfoEntity()
-        {
-            Id = gameServer,
-            DisplayName = displayName,
-            InstallDate = DateTime.UtcNow
-        };
+        await _linuxCommand.RunLinuxScript(scriptInstallGameServer);
     }
 
 }

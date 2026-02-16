@@ -115,7 +115,7 @@ write_final_file() {
 
 
 write_progress
-ls -l "$PROGRESS_FILE" || echo "NO PROGRESS FILE FROM INSIDE SCRIPT" >&2
+ls -l "$PROGRESS_FILE">&2 || echo "NO PROGRESS FILE FROM INSIDE SCRIPT" >&2
 
 
 SUCCESS=0
