@@ -4,10 +4,10 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Reducers;
 
-public class LifecycleServerGameInfoUpdatedReducer : IReducer<LifecycleGameInfoState, LifecycleServerGameInfoUpdatedAction>
+public class LifecycleServerGameInfoUpdatedReducer : IReducer<LifecycleGameInfoState, LifecycleServerGameInfoUpdateDoneAction>
 {
 
-    public LifecycleGameInfoState Reduce(LifecycleGameInfoState state, LifecycleServerGameInfoUpdatedAction action)
+    public LifecycleGameInfoState Reduce(LifecycleGameInfoState state, LifecycleServerGameInfoUpdateDoneAction action)
         => state with
         {
             GameInfo = action.GameInfo

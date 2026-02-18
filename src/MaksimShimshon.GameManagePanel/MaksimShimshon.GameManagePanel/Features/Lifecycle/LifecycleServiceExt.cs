@@ -9,8 +9,10 @@ using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.State
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Dto.Mapping;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Hooks.UI.Components.ViewModels;
+using MaksimShimshon.GameManagePanel.Kernel.Extensions;
 using MedihatR;
 using Microsoft.Extensions.DependencyInjection;
 using StatePulse.Net;
@@ -29,7 +31,7 @@ public static class LifecycleServiceExt
         services.AddTransient<ILifecycleServices, LifecycleServices>();
         services.AddStatePulseService<LifecycleFetchStartupParametersAction>();
         services.AddStatePulseService<LifecycleFetchStartupParametersDoneAction>();
-        services.AddStatePulseService<LifecycleServerGameInfoUpdatedAction>();
+        services.AddStatePulseService<LifecycleServerGameInfoUpdateDoneAction>();
         services.AddStatePulseService<LifecycleServerStartAction>();
         services.AddStatePulseService<LifecycleServerStartDoneAction>();
         services.AddStatePulseService<LifecycleServerStatusTransitionDoneAction>();
@@ -40,15 +42,14 @@ public static class LifecycleServiceExt
         services.AddStatePulseService<LifecycleServerStopDoneAction>();
         services.AddStatePulseService<LifecycleUpdateStartupParameterAction>();
         services.AddStatePulseService<LifecycleUpdateStartupParameterDoneAction>();
-
+        services.AddStatePulseService<LifecycleServerGameInfoUpdateAction>();
+        services.AddStatePulseService<LifecycleServerGameInfoUpdateEffect>();
         services.AddStatePulseService<LifecycleFetchStartupParametersEffect>();
         services.AddStatePulseService<LifecycleServerStartEffect>();
         services.AddStatePulseService<LifecycleServerStatusPeriodicUpdateEffect>();
         services.AddStatePulseService<LifecycleServerStatusTransitionEffect>();
         services.AddStatePulseService<LifecycleServerStopEffect>();
         services.AddStatePulseService<LifecycleUpdateStartupParameterEffect>();
-
-
         services.AddStatePulseService<LifecycleFetchStartupParametersDoneReducer>();
         services.AddStatePulseService<LifecycleServerGameInfoUpdatedReducer>();
         services.AddStatePulseService<LifecycleServerStatusTransitionDoneReducer>();
@@ -57,7 +58,6 @@ public static class LifecycleServiceExt
         services.AddStatePulseService<LifecycleServerStatusUpdateDoneReducer>();
         services.AddStatePulseService<LifecycleServerStatusUpdateSkippedReducer>();
         services.AddStatePulseService<LifecycleServerStopDoneReducer>();
-
         services.AddStatePulseService<LifecycleGameInfoState>();
         services.AddStatePulseService<LifecycleServerState>();
 
@@ -67,5 +67,16 @@ public static class LifecycleServiceExt
         services.AddMedihaterRequestHandler<ExecStartServerCommand, ExecStartServerHandler>();
         services.AddMedihaterRequestHandler<ExecStopServerCommand, ExecStopServerHandler>();
         services.AddMedihaterRequestHandler<ExecUpdateStartupParameterCommand, ExecUpdateStartupParameterHandler>();
+        services.AddMedihaterRequestHandler<GetGameInfoQuery, GetGameInfoHandler, GameInfoEntity?>();
+
+        services.AddCoreMapHandler<AllowedValueResponseToAllowedValueEntity>();
+        services.AddCoreMapHandler<GameStartupParameterResponseToStartupParameter>();
+        services.AddCoreMapHandler<GameStartupParamRespToGameStartupParamEntity>();
+        services.AddCoreMapHandler<RelatedToResponseToConstraintTypeEntity>();
+        services.AddCoreMapHandler<ValidationResponseToValidationEntity>();
+        services.AddCoreMapHandler<StatusGameInfoResponseToGameInfoEntity>();
+        services.AddCoreMapHandler<StatusResponseToServerInfoEntity>();
     }
+
+
 }

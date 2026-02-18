@@ -5,7 +5,7 @@ using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Hooks.Components;
 using StatePulse.Net;
 
-namespace MaksimShimshon.GameManagePanel.Features.SystemInfo.Web.Hooks;
+namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Hooks;
 
 [EngineBusId(DashboardKeys.UI.GetWidgets)]
 public class WidgetServerSetupHook : IEngineBusHandler

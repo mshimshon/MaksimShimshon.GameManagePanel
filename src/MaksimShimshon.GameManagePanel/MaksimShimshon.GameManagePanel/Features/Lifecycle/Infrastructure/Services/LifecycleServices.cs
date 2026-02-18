@@ -1,12 +1,79 @@
-﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Services;
+﻿using CoreMap;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Dto;
+using MaksimShimshon.GameManagePanel.Kernel.Configuration;
+using MaksimShimshon.GameManagePanel.Kernel.Exceptions;
+using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
+using Microsoft.Extensions.Logging;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services;
 
 internal class LifecycleServices : ILifecycleServices
 {
-    public Task<Dictionary<string, string>> GetServerStartupParametersAsync(CancellationToken cancellationToken = default)
-        => Task.FromResult(new Dictionary<string, string>());
+    private readonly ICoreMap _coreMap;
+    private readonly PluginConfiguration _pluginConfiguration;
+    private readonly ILogger<LifecycleServices> _logger;
+    private readonly ICrazyReport _crazyReport;
+    private const string SERVER_CONTROL_FOLDER = "server_control";
+    private const string USER_DEF_STARTUP_PARAM_FILE = "user_defined_startup_params.json";
+    private const string GAMEINFO_FILE = "game_info.json";
+
+    private readonly JsonSerializerOptions _jsonSerializerConfiguration;
+
+    public LifecycleServices(ICoreMap coreMap, PluginConfiguration pluginConfiguration, ILogger<LifecycleServices> logger, ICrazyReport crazyReport)
+    {
+        _coreMap = coreMap;
+        _pluginConfiguration = pluginConfiguration;
+        _logger = logger;
+        _crazyReport = crazyReport;
+        _crazyReport.SetModule(LifecycleModule.ModuleName);
+        _jsonSerializerConfiguration = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+        };
+    }
+    public async Task<Dictionary<string, string>> GetServerStartupParametersAsync(CancellationToken cancellationToken = default)
+    {
+        string file = _pluginConfiguration.GetUserConfigFor(LifecycleModule.ModuleName, USER_DEF_STARTUP_PARAM_FILE);
+        if (!File.Exists(file)) return new();
+        try
+        {
+            string jsonString = await File.ReadAllTextAsync(file);
+            _crazyReport.ReportInfo(jsonString);
+            var result = JsonSerializer.Deserialize<List<GameStartupParameterKeyValueResponse>>(jsonString, _jsonSerializerConfiguration)!;
+            if (result == default) return new();
+            return result.ToDictionary(p => p.Key, p => p.Value); ;
+        }
+        catch (Exception ex)
+        {
+            _crazyReport.ReportError(ex.Message);
+            throw new WebServiceException($"Unable to load {USER_DEF_STARTUP_PARAM_FILE}");
+        }
+    }
+
+    public async Task<GameInfoEntity?> LoadGameInfoAsync(CancellationToken cancellationToken = default)
+    {
+        string file = _pluginConfiguration.GetUserBashFor(LifecycleModule.ModuleName, [SERVER_CONTROL_FOLDER], GAMEINFO_FILE);
+        if (!File.Exists(file)) return default;
+        try
+        {
+            string jsonString = await File.ReadAllTextAsync(file);
+            _crazyReport.ReportInfo(jsonString);
+            var result = JsonSerializer.Deserialize<GameInfoResponse>(jsonString, _jsonSerializerConfiguration)!;
+            if (result == default) return default;
+            var entity = _coreMap.Map(result).To<GameInfoEntity>();
+            return entity;
+        }
+        catch (Exception ex)
+        {
+            _crazyReport.ReportError(ex.Message);
+            throw new WebServiceException($"Unable to load {GAMEINFO_FILE}");
+        }
+    }
 
     public Task ServerRestartAsync(CancellationToken cancellationToken = default)
         => Task.CompletedTask;
@@ -20,6 +87,14 @@ internal class LifecycleServices : ILifecycleServices
     public Task ServerStopAsync(CancellationToken cancellationToken = default)
         => Task.CompletedTask;
 
-    public Task UpdateStartupParameterAsync(string key, string value, CancellationToken cancellationToken = default)
-        => Task.CompletedTask;
+    public async Task UpdateStartupParameterAsync(string key, string value, CancellationToken cancellationToken = default)
+    {
+
+        /*
+            1. create json tmp file -> 
+            2. call bash tmpfile
+            3. bash read and convert to final file
+            4. tmp -> all changed props
+         */
+    }
 }

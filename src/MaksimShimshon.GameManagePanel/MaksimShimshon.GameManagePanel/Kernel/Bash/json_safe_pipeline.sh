@@ -1,7 +1,8 @@
+
 #!/usr/bin/env bash
 
 # jsonwrap.sh
-# Provides JSON-safe stdout isolation and helper functions.
+# Provides JSON-safe stdout isolation and helper functions using jq
 
 # Redirect stdout → stderr, preserve original stdout in FD3
 exec 3>&1 1>&2
@@ -24,15 +25,11 @@ json_fail() {
 
 json_emit_failure() {
     local msg="$1"
-    msg="${msg//\\/\\\\}"
-    msg="${msg//\"/\\\"}"
-    msg="${msg//$'\n'/\\n}"
-    msg="${msg//$'\r'/\\r}"
-    printf '{"completed":false,"failure_message":"%s"}\n' "$msg" >&3
+    jq -n --arg msg "$msg" '{completed:false, failure_message:$msg}' >&3
 }
 
 json_emit_success() {
-    printf '{"completed":true,"failure_message":""}\n' >&3
+    jq -n '{completed:true, failure_message:""}' >&3
 }
 
 json_cleanup() {

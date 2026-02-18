@@ -5,7 +5,7 @@ using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Models
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Domain.Entities;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
-using MaksimShimshon.GameManagePanel.Kernel.ConsoleController;
+using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -15,7 +15,7 @@ internal class LinuxGameServerService : ILinuxGameServerService
 {
     private readonly PluginConfiguration _pluginConfiguration;
     private readonly ILinuxCommand _linuxCommand;
-    private readonly ILinuxLockFileController _linuxLockFileController;
+    private readonly ILinuxLockFileController _linuxLockFileController; // TODO: REMOVE
     private readonly ICrazyReport _crazyReport;
     private readonly ICoreMap _coreMap;
 

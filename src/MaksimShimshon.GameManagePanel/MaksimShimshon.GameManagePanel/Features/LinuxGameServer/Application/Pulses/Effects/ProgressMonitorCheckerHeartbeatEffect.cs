@@ -1,7 +1,7 @@
 ﻿using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
-using MaksimShimshon.GameManagePanel.Kernel.ConsoleController;
 using MaksimShimshon.GameManagePanel.Kernel.Heartbeat.Pulses.Actions;
+using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Effects;

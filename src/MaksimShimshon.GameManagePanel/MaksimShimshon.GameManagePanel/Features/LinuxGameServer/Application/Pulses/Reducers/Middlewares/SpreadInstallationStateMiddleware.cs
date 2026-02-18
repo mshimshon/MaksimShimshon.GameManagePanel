@@ -1,7 +1,6 @@
 ﻿using LunaticPanel.Core.Abstraction.Messaging.EventBus;
 using LunaticPanel.Core.Extensions;
 using MaksimShimshon.GameManagePanel.Core.Features;
-using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.States;
 using StatePulse.Net;
 
@@ -22,12 +21,11 @@ internal class SpreadInstallationStateMiddleware : IReducerMiddleware
 
     public async Task AfterReducing(object state, object action)
     {
-        if (action.GetType() == typeof(ReceivingUpdatedInstallStateAction)) return;
-
         if (state.GetType() == typeof(InstallationState))
-            await _eventBus.PublishDataAsync(LinuxGameServerKeys.Events.OnGameServerInstallStateChanged, state);
+            _ = _eventBus.PublishDataAsync(LinuxGameServerKeys.Events.OnGameServerInstallStateChanged, state);
     }
 
     public Task BeforeReducing(object state, object action) => Task.CompletedTask;
+
 
 }

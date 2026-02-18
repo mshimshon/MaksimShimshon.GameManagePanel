@@ -1,4 +1,4 @@
-﻿namespace MaksimShimshon.GameManagePanel.Kernel.ConsoleController;
+﻿namespace MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 
 
 public interface ICrazyReport

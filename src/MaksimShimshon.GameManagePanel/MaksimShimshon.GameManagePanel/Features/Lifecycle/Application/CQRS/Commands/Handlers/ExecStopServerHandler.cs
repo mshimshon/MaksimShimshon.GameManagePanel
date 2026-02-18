@@ -15,5 +15,5 @@ public class ExecStopServerHandler : HandlerBase, IRequestHandler<ExecStopServer
         _lifecycleServices = lifecycleServices;
     }
     public async Task Handle(ExecStopServerCommand request, CancellationToken cancellationToken)
-        => await ExecAndHandleExceptions(() => _lifecycleServices.ServerStopAsync());
+        => await ExecAndHandleExceptions(() => _lifecycleServices.ServerStopAsync(cancellationToken));
 }

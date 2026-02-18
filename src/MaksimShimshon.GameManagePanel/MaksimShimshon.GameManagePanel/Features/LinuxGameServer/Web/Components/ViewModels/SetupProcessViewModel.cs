@@ -2,7 +2,7 @@
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
-using MaksimShimshon.GameManagePanel.Kernel.ConsoleController;
+using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Components.ViewModels;

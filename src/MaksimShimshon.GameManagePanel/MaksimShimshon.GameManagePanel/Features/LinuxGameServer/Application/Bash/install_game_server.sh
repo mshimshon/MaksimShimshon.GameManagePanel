@@ -6,6 +6,8 @@ LOCKFILE="/tmp/lgs_game_server_install.lock"
 exec 9>"$LOCKFILE" || exit 1
 flock -n 9 || exit 1
 
+source "/usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/kernel/plugin_configuration.sh"
+
 LGSM_USER="lgsm"
 LGSM_HOME="/home/$LGSM_USER"
 SUDOERS_FILE="/etc/sudoers.d/lgsm"
@@ -17,6 +19,7 @@ fi
 
 GAME_SERVER="$1"
 DISPLAY_NAME="$2"
+ASSEMBLY_NAME="maksimshimshon_gamemanagepanel"
 
 PLUGIN_DIR="/usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel"
 PLUGIN_BASH_BASE="$PLUGIN_DIR/bash"
@@ -35,7 +38,10 @@ AVAILABLE_GAMES_DIR="/etc/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/re
 GAME_REPO_PATH="$AVAILABLE_GAMES_DIR/$GAME_SERVER"
 TARGET_CONTROL_DIR="/home/lgsm/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/server_control"
 DEPENDENCY_SCRIPT="$PLUGIN_BASH_KERNEL_BASE/install_package_dependencies.sh"
-FIX_HOME_PERM_SCRIPT="$PLUGIN_BASH_LGS_BASE/fix_home_permission.sh"
+
+KERNEL_BASH_BASE="$(lp_bash_base "$ASSEMBLY_NAME" "kernel")"
+
+FIX_HOME_PERM_SCRIPT="$KERNEL_BASH_BASE/fix_home_permission.sh"
 
 if [ ! -d "$GAME_REPO_PATH" ]; then
     echo "Cannot install unsupported server by the panel, unless you forgot to fetch/clone the panel repos of supported game scripts." >&2

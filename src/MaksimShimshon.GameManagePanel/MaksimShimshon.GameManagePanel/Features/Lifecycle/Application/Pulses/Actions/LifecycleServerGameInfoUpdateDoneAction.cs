@@ -3,7 +3,7 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
 
-public record LifecycleServerGameInfoUpdatedAction : IAction
+public record LifecycleServerGameInfoUpdateDoneAction : IAction
 {
     public GameInfoEntity GameInfo { get; set; } = default!;
 }

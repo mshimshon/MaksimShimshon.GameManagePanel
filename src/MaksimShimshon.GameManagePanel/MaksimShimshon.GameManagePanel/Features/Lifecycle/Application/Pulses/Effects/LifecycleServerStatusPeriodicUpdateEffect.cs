@@ -31,6 +31,7 @@ public class LifecycleServerStatusPeriodicUpdateEffect : IEffect<HeartbeatRunner
         {
             return;
         }
+
         if (_stateAccessor.State.SkipNextUpdates > 1)
         {
             await dispatcher.Prepare<LifecycleServerStatusUpdateSkippedAction>().DispatchAsync();
@@ -42,7 +43,7 @@ public class LifecycleServerStatusPeriodicUpdateEffect : IEffect<HeartbeatRunner
 
         if (_lifecycleGameInfoStateAccessor.State.GameInfo == default && serverInfo?.GameInfo != default)
         {
-            await dispatcher.Prepare<LifecycleServerGameInfoUpdatedAction>()
+            await dispatcher.Prepare<LifecycleServerGameInfoUpdateDoneAction>()
                 .With(p => p.GameInfo, serverInfo.GameInfo)
                 .Await()
                 .DispatchAsync();

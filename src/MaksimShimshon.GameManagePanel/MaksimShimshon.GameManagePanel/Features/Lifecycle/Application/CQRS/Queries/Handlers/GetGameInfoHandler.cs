@@ -7,21 +7,17 @@ using Microsoft.Extensions.Logging;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.CQRS.Queries.Handlers;
 
-public class GetServerStatusHandler : HandlerBase, IRequestHandler<GetServerStatusQuery, ServerInfoEntity?>
+internal sealed class GetGameInfoHandler : HandlerBase, IRequestHandler<GetGameInfoQuery, GameInfoEntity?>
 {
     private readonly ILifecycleServices _lifecycleServices;
 
-    public GetServerStatusHandler(ILifecycleServices lifecycleServices, INotificationService notificationService, ILogger<GetServerStatusHandler> logger) : base(notificationService, logger)
+    public GetGameInfoHandler(ILifecycleServices lifecycleServices, INotificationService notificationService, ILogger<GetGameInfoHandler> logger) : base(notificationService, logger)
     {
         _lifecycleServices = lifecycleServices;
     }
-    public async Task<ServerInfoEntity?> Handle(GetServerStatusQuery request, CancellationToken cancellationToken)
-    {
-        return
-            await ExecAndHandleExceptions(
-                () => _lifecycleServices.ServerStatusAsync(cancellationToken),
+    public async Task<GameInfoEntity?> Handle(GetGameInfoQuery request, CancellationToken cancellationToken)
+        => await ExecAndHandleExceptions(
+                () => _lifecycleServices.LoadGameInfoAsync(cancellationToken),
                 () => default
                 );
-
-    }
 }

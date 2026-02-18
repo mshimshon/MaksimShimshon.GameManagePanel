@@ -7,8 +7,8 @@ using MaksimShimshon.GameManagePanel.Features.LinuxGameServer;
 using MaksimShimshon.GameManagePanel.Features.Notification;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
-using MaksimShimshon.GameManagePanel.Kernel.ConsoleController;
 using MaksimShimshon.GameManagePanel.Kernel.Heartbeat;
+using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using MaksimShimshon.GameManagePanel.Services;
 using MaksimShimshon.GameManagePanel.Web.Pages.ViewModels;
 using MedihatR;
@@ -22,14 +22,12 @@ namespace MaksimShimshon.GameManagePanel;
 public class PluginEntry : PluginBase
 {
     private IConfiguration _configuration = default!;
-    private GameInfoConfiguration _gameInfoConfig = default!;
     private HeartbeatConfiguration _heartbeatConfig = default!;
     private RepositoryConfiguration _repositoryConfig = default!;
 
     protected override void LoadConfiguration(IConfiguration configuration)
     {
         _configuration = configuration;
-        _gameInfoConfig = _configuration.GetSection("GameInfo")?.Get<GameInfoConfiguration>() ?? new();
         _heartbeatConfig = _configuration.GetSection("Heartbeat")?.Get<HeartbeatConfiguration>() ?? new();
         _repositoryConfig = _configuration.GetSection("Repositories")?.Get<RepositoryConfiguration>() ?? new();
 
@@ -47,7 +45,6 @@ public class PluginEntry : PluginBase
         services.AddScoped<IHeartbeatService, HeartbeatService>();
         services.AddScoped(sp => new PluginConfiguration(sp.GetRequiredService<IPluginConfiguration>(), sp.GetRequiredService<ICrazyReport>())
         {
-            GameInfo = _gameInfoConfig,
             Heartbeat = _heartbeatConfig,
             Repositories = _repositoryConfig
         });

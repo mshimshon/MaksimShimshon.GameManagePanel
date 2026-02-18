@@ -2,7 +2,7 @@
 using MaksimShimshon.GameManagePanel.Core;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
-using MaksimShimshon.GameManagePanel.Kernel.ConsoleController;
+using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Hooks.Events.OnBeforeRuntimeInitialization;

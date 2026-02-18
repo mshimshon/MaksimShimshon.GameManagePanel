@@ -53,7 +53,6 @@ public static class LinuxGameServerExt
         services.AddStatePulseService<GameRepositoryState>();
         services.AddStatePulseService<RepositoryDownloadStartedAction>();
         services.AddStatePulseService<RepositoryDownloadStartedReducer>();
-        services.AddStatePulseService<ReceivingUpdatedInstallStateAction>();
 
         services.AddStatePulseService<UpdateProgressStateFromDiskDoneAction>();
         services.AddStatePulseService<UpdateProgressStateFromDiskAction>();

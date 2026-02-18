@@ -36,6 +36,7 @@ public static class LinuxGameServerKeys
         /// </para>
         /// </summary>
         public const string OnGameServerInstalled = $"{BaseInfo.AssemblyName}.{nameof(LinuxGameServerKeys)}.{nameof(Events)}.{nameof(OnGameServerInstalled)}";
+
         /// <summary>
         /// Event name raised when a game server installation fails to complete.
         /// <para>
