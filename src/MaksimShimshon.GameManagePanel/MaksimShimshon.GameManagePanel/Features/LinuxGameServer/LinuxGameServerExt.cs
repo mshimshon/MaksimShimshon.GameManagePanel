@@ -10,6 +10,7 @@ using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Models
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Effects;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Reducers;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Reducers.Middlewares;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Domain.Entities;
@@ -53,7 +54,7 @@ public static class LinuxGameServerExt
         services.AddStatePulseService<GameRepositoryState>();
         services.AddStatePulseService<RepositoryDownloadStartedAction>();
         services.AddStatePulseService<RepositoryDownloadStartedReducer>();
-
+        services.AddStatePulseService<SpreadInstallationStateMiddleware>();
         services.AddStatePulseService<UpdateProgressStateFromDiskDoneAction>();
         services.AddStatePulseService<UpdateProgressStateFromDiskAction>();
         services.AddStatePulseService<UpdateProgressStateFromDiskEffect>();

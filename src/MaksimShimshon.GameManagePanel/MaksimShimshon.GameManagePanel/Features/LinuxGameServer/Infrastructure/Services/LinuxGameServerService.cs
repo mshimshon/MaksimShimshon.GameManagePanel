@@ -112,6 +112,7 @@ internal class LinuxGameServerService : ILinuxGameServerService
     public async Task PerformServerInstallation(string gameServer, string displayName, CancellationToken cancellation = default)
     {
         string scriptInstallGameServer = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "install_game_server.sh", gameServer, displayName);
+        _crazyReport.ReportInfo("Run Script: {0}", scriptInstallGameServer);
         await _linuxCommand.RunLinuxScript(scriptInstallGameServer);
     }
 

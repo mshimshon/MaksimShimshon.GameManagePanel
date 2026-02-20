@@ -8,6 +8,7 @@ using MaksimShimshon.GameManagePanel.Features.Notification;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
 using MaksimShimshon.GameManagePanel.Kernel.Heartbeat;
+using MaksimShimshon.GameManagePanel.Kernel.Middlewares.StatePulse;
 using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using MaksimShimshon.GameManagePanel.Services;
 using MaksimShimshon.GameManagePanel.Web.Pages.ViewModels;
@@ -41,6 +42,7 @@ public class PluginEntry : PluginBase
         Console.WriteLine($"Is {circuit.CircuitId} DI Master? {(circuit.IsMaster)}");
 
         services.AddTransient<ILinuxLockFileController, LinuxLockFileController>();
+        services.AddStatePulseService<DispatchErrorMiddleware>();
         services.AddScoped<HomeViewModel>();
         services.AddScoped<IHeartbeatService, HeartbeatService>();
         services.AddScoped(sp => new PluginConfiguration(sp.GetRequiredService<IPluginConfiguration>(), sp.GetRequiredService<ICrazyReport>())

@@ -15,7 +15,7 @@ REPOS_FOLDER_NAME="repos"
 DOWNLOAD_FOLDER_NAME="download"
 
 HOME_FOLDER_NAME="home"
-LGSM_FOLDER_NAME="lsgm"
+LGSM_FOLDER_NAME="lgsm"
 
 lp_linux_assembly_name() {
   printf '%s' "$1" | tr '.' '_' | tr '[:upper:]' '[:lower:]'
@@ -109,12 +109,13 @@ lp_user_download_for() {
   local assembly="$1"; shift
   local module="$1"; shift
   local filename="$1"; shift
+  local basePath="$(lp_user_download_base "$assembly" "$module")"
   local subpath
   subpath="$(lp_path_join_lower "$@")"
   if [ -n "$subpath" ]; then
-    lp_ensure_created "$(lp_user_download_base "$assembly" "$module")/${subpath}/${filename}"
+    printf '%s\n' "$(lp_ensure_created "$basePath/$subpath")/$filename"
   else
-    lp_ensure_created "$(lp_user_download_base "$assembly" "$module")/${filename}"
+    printf '%s\n' "$basePath/$filename"
   fi
 }
 
@@ -140,12 +141,13 @@ lp_repos_for() {
   local assembly="$1"; shift
   local module="$1"; shift
   local repos_name="$1"; shift
+  local basePath="$(lp_repos_base "$assembly" "$module")"
   local subpath
   subpath="$(lp_path_join_lower "$@")"
   if [ -n "$subpath" ]; then
-    lp_ensure_created "$(lp_repos_base "$assembly" "$module")/${subpath}/$(printf '%s' "$repos_name" | tr '[:upper:]' '[:lower:]')"
+    printf '%s\n' "$(lp_ensure_created "$basePath/$subpath")/$repos_name"
   else
-    lp_ensure_created "$(lp_repos_base "$assembly" "$module")/$(printf '%s' "$repos_name" | tr '[:upper:]' '[:lower:]')"
+    printf '%s\n' "$basePath/$repos_name"
   fi
 }
 
@@ -159,12 +161,13 @@ lp_config_for() {
   local assembly="$1"; shift
   local module="$1"; shift
   local filename="$1"; shift
+  local basePath="$(lp_config_base "$assembly" "$module")"
   local subpath
   subpath="$(lp_path_join_lower "$@")"
   if [ -n "$subpath" ]; then
-    lp_ensure_created "$(lp_config_base "$assembly" "$module")/${subpath}/${filename}"
+    printf '%s\n' "$(lp_ensure_created "$basePath/$subpath")/$filename"
   else
-    lp_ensure_created "$(lp_config_base "$assembly" "$module")/${filename}"
+    printf '%s\n' "$basePath/$filename"
   fi
 }
 
@@ -178,12 +181,13 @@ lp_user_config_for() {
   local assembly="$1"; shift
   local module="$1"; shift
   local filename="$1"; shift
+  local basePath="$(lp_user_config_base "$assembly" "$module")"
   local subpath
   subpath="$(lp_path_join_lower "$@")"
   if [ -n "$subpath" ]; then
-    lp_ensure_created "$(lp_user_config_base "$assembly" "$module")/${subpath}/${filename}"
+    printf '%s\n' "$(lp_ensure_created "$basePath/$subpath")/$filename"
   else
-    lp_ensure_created "$(lp_user_config_base "$assembly" "$module")/${filename}"
+    printf '%s\n' "$basePath/$filename"
   fi
 }
 
@@ -197,12 +201,13 @@ lp_bash_for() {
   local assembly="$1"; shift
   local module="$1"; shift
   local filename="$1"; shift
+  local basePath="$(lp_bash_base "$assembly" "$module")"
   local subpath
   subpath="$(lp_path_join_lower "$@")"
   if [ -n "$subpath" ]; then
-    lp_ensure_created "$(lp_bash_base "$assembly" "$module")/${subpath}/${filename}"
+    printf '%s\n' "$(lp_ensure_created "$basePath/$subpath")/$filename"
   else
-    lp_ensure_created "$(lp_bash_base "$assembly" "$module")/${filename}"
+    printf '%s\n' "$basePath/$filename"
   fi
 }
 
@@ -216,12 +221,13 @@ lp_user_bash_for() {
   local assembly="$1"; shift
   local module="$1"; shift
   local filename="$1"; shift
+  local basePath="$(lp_user_bash_base "$assembly" "$module")"
   local subpath
   subpath="$(lp_path_join_lower "$@")"
   if [ -n "$subpath" ]; then
-    lp_ensure_created "$(lp_user_bash_base "$assembly" "$module")/${subpath}/${filename}"
+    printf '%s\n' "$(lp_ensure_created "$basePath/$subpath")/$filename"
   else
-    lp_ensure_created "$(lp_user_bash_base "$assembly" "$module")/${filename}"
+    printf '%s\n' "$basePath/$filename"
   fi
 }
 

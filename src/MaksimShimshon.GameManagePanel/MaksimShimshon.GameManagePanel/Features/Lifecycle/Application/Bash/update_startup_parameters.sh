@@ -2,22 +2,37 @@
 set -euo pipefail
 . /usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/kernel/json_safe_pipeline.sh
 . /usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/kernel/plugin_configuration.sh
+. /usr/lib/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/kernel/file_writer_method.sh
 
 LOCKFILE="/tmp/user_startup_params.lock"
-
 exec 9>"$LOCKFILE" || json_fail "failed to open startup params lockfile"
 flock -n 9 || json_fail "someone else is already writing changes to startup params"
 
-if [ $# -lt 1 ]; then
-    json_fail "missing argument 1: startup params file path"
+if [ $# -lt 2 ]; then
+    json_fail "missing arguments: <key> <value>"
 fi
 
-PARAMS_FILE="$1"
+KEY="$1"
+VALUE="$2"
 
-if [ ! -e "$PARAMS_FILE" ]; then
-    json_fail "startup params file does not exist: $PARAMS_FILE"
+USER_CONFIG_FILE="$(lp_user_config_for "maksimshimshon_gamemanagepanel" "lifecycle" "user_defined_startup_params.json")"
+
+
+if [ ! -f "$USER_CONFIG_FILE" ]; then
+    write_file "$USER_CONFIG_FILE" "[]" 755
 fi
 
-USER_CONFIG_FILE="$(lp_user_config_for "maksimshimshon_gamemanagepanel" "lifecycle" "user_startup_params.json")"
+if [ -z "$VALUE" ]; then
+    tmp="$(jq --arg key "$KEY" 'map(select(.Key != $key))' "$USER_CONFIG_FILE")"
+else
+    tmp="$(jq --arg key "$KEY" --arg value "$VALUE" '
+        if any(.[]; .Key == $key) then
+            map(if .Key == $key then .Value = $value else . end)
+        else
+            . + [{ Key: $key, Value: $value }]
+        end
+    ' "$USER_CONFIG_FILE")"
+fi
 
-mv -f "$PARAMS_FILE" "$USER_CONFIG_FILE"
+write_file "$USER_CONFIG_FILE" "$tmp" 755
+

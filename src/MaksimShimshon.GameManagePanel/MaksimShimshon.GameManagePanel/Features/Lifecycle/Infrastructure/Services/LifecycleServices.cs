@@ -1,9 +1,12 @@
 ﻿using CoreMap;
+using LunaticPanel.Core.Abstraction.Tools.LinuxCommand;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Dto;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Services.Dto;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
 using MaksimShimshon.GameManagePanel.Kernel.Exceptions;
+using MaksimShimshon.GameManagePanel.Kernel.Extensions;
 using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
@@ -13,6 +16,7 @@ namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Servi
 
 internal class LifecycleServices : ILifecycleServices
 {
+    private readonly ILinuxCommand _linuxCommand;
     private readonly ICoreMap _coreMap;
     private readonly PluginConfiguration _pluginConfiguration;
     private readonly ILogger<LifecycleServices> _logger;
@@ -23,13 +27,14 @@ internal class LifecycleServices : ILifecycleServices
 
     private readonly JsonSerializerOptions _jsonSerializerConfiguration;
 
-    public LifecycleServices(ICoreMap coreMap, PluginConfiguration pluginConfiguration, ILogger<LifecycleServices> logger, ICrazyReport crazyReport)
+    public LifecycleServices(ILinuxCommand linuxCommand, ICoreMap coreMap, PluginConfiguration pluginConfiguration, ILogger<LifecycleServices> logger, ICrazyReport crazyReport)
     {
+        _linuxCommand = linuxCommand;
         _coreMap = coreMap;
         _pluginConfiguration = pluginConfiguration;
         _logger = logger;
         _crazyReport = crazyReport;
-        _crazyReport.SetModule(LifecycleModule.ModuleName);
+        _crazyReport.SetModule<LifecycleServices>(LifecycleModule.ModuleName);
         _jsonSerializerConfiguration = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
@@ -58,6 +63,7 @@ internal class LifecycleServices : ILifecycleServices
     public async Task<GameInfoEntity?> LoadGameInfoAsync(CancellationToken cancellationToken = default)
     {
         string file = _pluginConfiguration.GetUserBashFor(LifecycleModule.ModuleName, [SERVER_CONTROL_FOLDER], GAMEINFO_FILE);
+        _crazyReport.ReportInfo("Checking({1}) {0} ", file, File.Exists(file));
         if (!File.Exists(file)) return default;
         try
         {
@@ -89,12 +95,8 @@ internal class LifecycleServices : ILifecycleServices
 
     public async Task UpdateStartupParameterAsync(string key, string value, CancellationToken cancellationToken = default)
     {
-
-        /*
-            1. create json tmp file -> 
-            2. call bash tmpfile
-            3. bash read and convert to final file
-            4. tmp -> all changed props
-         */
+        var script = _pluginConfiguration.GetBashFor(LifecycleModule.ModuleName, "update_startup_parameters.sh", key, value);
+        var result = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(script, (str) => new() { Completed = false, Failure = str });
+        if (!result.Completed) throw new WebServiceException("Update of the startup parameter failed"); //TODO: Localize
     }
 }

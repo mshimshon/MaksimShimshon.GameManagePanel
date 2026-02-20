@@ -27,7 +27,7 @@ internal class LoadInstallationStateHandler : IEventBusHandler
     public async Task HandleAsync(IEventBusMessage evt)
     {
 
-        await _dispatcher.Prepare<UpdateInstalledGameServerAction>().DispatchAsync();
+        await _dispatcher.Prepare<UpdateInstalledGameServerAction>().Await().DispatchAsync();
         if (_installStateAccess.State.IsInstallationCompleted) return;
         await _dispatcher.Prepare<UpdateProgressStateFromDiskAction>().DispatchAsync();
 

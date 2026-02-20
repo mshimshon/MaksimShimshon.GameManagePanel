@@ -36,7 +36,7 @@ FINAL_FILE="$STATE_DIR/installation_state.json"
 
 AVAILABLE_GAMES_DIR="/etc/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/repos/linuxgameserver/available_games/games"
 GAME_REPO_PATH="$AVAILABLE_GAMES_DIR/$GAME_SERVER"
-TARGET_CONTROL_DIR="/home/lgsm/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/server_control"
+TARGET_CONTROL_DIR="/home/lgsm/lunaticpanel/plugins/maksimshimshon_gamemanagepanel/bash/lifecycle/server_control"
 DEPENDENCY_SCRIPT="$PLUGIN_BASH_KERNEL_BASE/install_package_dependencies.sh"
 
 KERNEL_BASH_BASE="$(lp_bash_base "$ASSEMBLY_NAME" "kernel")"

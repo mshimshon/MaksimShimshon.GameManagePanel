@@ -5,7 +5,7 @@
 # Provides JSON-safe stdout isolation and helper functions using jq
 
 # Redirect stdout → stderr, preserve original stdout in FD3
-exec 3>&1 1>&2
+exec 3>&1 4>/dev/tty 1>&2 
 
 # Neutralize inherited functions
 unset -f exit || true
@@ -42,4 +42,4 @@ json_cleanup() {
 
 # Install traps
 trap json_cleanup EXIT
-trap 'json_fail "Script failed"' ERR
+trap 'echo "ERROR: ${BASH_COMMAND}" >&4; json_fail "Script failed"' ERR

@@ -1,8 +1,7 @@
-﻿using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Domain.Entities;
-using MedihatR;
+﻿using MedihatR;
 
 namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands;
 
-public record InstallGameServerCommand(string Id, string DisplayName) : IRequest<GameServerInfoEntity?>
+public record InstallGameServerCommand(string Id, string DisplayName) : IRequest
 {
 }

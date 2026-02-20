@@ -12,7 +12,7 @@ internal class InstallGameServerActionReducer : IReducer<InstallationState, Inst
      {
          InProgressInstallation = new()
          {
-             CurrentStep = $"Installing ${action.DisplayName}...",
+             CurrentStep = $"Installing {action.DisplayName}...",
              IsInstalling = true
          }
      };

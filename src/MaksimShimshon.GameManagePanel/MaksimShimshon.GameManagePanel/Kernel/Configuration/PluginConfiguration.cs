@@ -23,7 +23,7 @@ public class PluginConfiguration
 
     public const string BASH_FOLDER_NAME = "bash";
     public const string CONFIG_FOLDER_NAME = "config";
-    public const string LGSM_FOLDER_NAME = "lsgm";
+    public const string LGSM_FOLDER_NAME = "lgsm";
     public const string HOME_FOLDER_NAME = "home";
     public const string REPOS_FOLDER_NAME = "repos";
     public const string DOWNLOAD_FOLDER_NAME = "download";
