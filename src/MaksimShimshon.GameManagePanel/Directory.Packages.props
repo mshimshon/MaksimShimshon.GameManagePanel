@@ -7,9 +7,9 @@
     <GlobalCopyright>Maksim Shimshon © 2026</GlobalCopyright>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="LunaticPanel.Core" Version="0.1.761" />
+    <PackageVersion Include="LunaticPanel.Core" Version="0.1.762" />
     <PackageVersion Include="LunaticPanel.Core.Abstraction" Version="0.1.760" />
-    <PackageVersion Include="LunaticPanel.Core.Extensions" Version="0.1.761" />
+    <PackageVersion Include="LunaticPanel.Core.Extensions" Version="0.1.762" />
     <PackageVersion Include="LunaticPanel.Engine.Core" Version="0.1.758" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1" />

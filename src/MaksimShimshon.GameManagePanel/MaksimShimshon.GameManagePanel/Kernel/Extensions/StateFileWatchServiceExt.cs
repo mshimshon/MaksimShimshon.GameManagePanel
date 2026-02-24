@@ -1,5 +1,6 @@
 ﻿using MaksimShimshon.GameManagePanel.Kernel.Configuration;
 using MaksimShimshon.GameManagePanel.Kernel.Services;
+using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using MaksimShimshon.GameManagePanel.Kernel.Services.Enums;
 using Microsoft.Extensions.DependencyInjection;
 using StatePulse.Net;
@@ -15,7 +16,7 @@ public static class StateFileWatchServiceExt
 
     static StateFileWatcher<TAction> AddActionService<TAction>(IServiceProvider serviceProvider, string folder, string filePattern, FileWatchEvents[] whatToWatch)
         where TAction : FileWatchActionBase
-        => new StateFileWatcher<TAction>(folder, filePattern, whatToWatch, serviceProvider.GetRequiredService<IDispatcher>());
+        => new StateFileWatcher<TAction>(folder, filePattern, whatToWatch, serviceProvider.GetRequiredService<IDispatcher>(), serviceProvider.GetRequiredService<ICrazyReport>());
 
     public static IStateFileWatcher<TAction> LoadWatcher<TAction>(this IServiceProvider sp)
         where TAction : FileWatchActionBase

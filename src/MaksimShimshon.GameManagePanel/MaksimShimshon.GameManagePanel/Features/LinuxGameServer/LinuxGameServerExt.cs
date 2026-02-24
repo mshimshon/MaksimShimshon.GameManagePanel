@@ -1,7 +1,4 @@
-﻿using LunaticPanel.Core.Abstraction.Messaging.EventBus;
-using LunaticPanel.Core.Extensions;
-using MaksimShimshon.GameManagePanel.Core;
-using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands;
+﻿using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands.Handlers;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Queries;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Queries.Handlers;
@@ -79,23 +76,15 @@ public static class LinuxGameServerExt
         services.AddCoreMapHandler<InstallationStateToGameServerInfoEntity>();
         if (isMaster)
         {
-            var watchUpdate = FileWatchEvents.Updated;
-            var watchCreation = FileWatchEvents.Created;
-            var watchRemoval = FileWatchEvents.Removed;
             services.AddMasterStateFileWatcherService<UpdateInstalledGameServerAction>(
-                c =>
-                {
-                    string path = c.GetConfigBase(LinuxGameServerModule.ModuleName);
-                    Console.WriteLine(path);
-                    return path;
-                },
+                c => c.GetConfigBase(LinuxGameServerModule.ModuleName),
                 "installation_state.json",
-                [watchUpdate, watchCreation, watchRemoval]);
+                [FileWatchEvents.Any]);
 
             services.AddMasterStateFileWatcherService<UpdateProgressStateFromDiskAction>(
                 c => c.GetConfigBase(LinuxGameServerModule.ModuleName),
                 "installation_progress_state.json",
-                [watchUpdate, watchCreation, watchRemoval]);
+                [FileWatchEvents.Any]);
         }
 
 
@@ -108,8 +97,6 @@ public static class LinuxGameServerExt
                 serviceProvider.GetRequiredService<PluginConfiguration>()
             );
 
-        IEventBus eventBus = serviceProvider.GetRequiredService<IEventBus>();
-        await eventBus.PublishDatalessAsync(PluginKeys.Events.OnBeforeRuntimeInitialization);
         serviceProvider.LoadWatcher<UpdateInstalledGameServerAction>();
         serviceProvider.LoadWatcher<UpdateProgressStateFromDiskAction>();
 

@@ -5,6 +5,8 @@ public interface ICrazyReport
 {
     void SetModule(string moduleName);
     void SetModule<TClass>(string moduleName) where TClass : class;
+    void SetClass<TClass>() where TClass : class;
+
     void Report(string line);
     void Report(string format, params object?[]? arg);
     void ReportError(string line);

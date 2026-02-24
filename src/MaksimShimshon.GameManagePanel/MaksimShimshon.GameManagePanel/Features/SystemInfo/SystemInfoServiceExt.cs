@@ -42,9 +42,13 @@ public static class SystemInfoServiceExt
         services.AddMedihaterRequestHandler<GetSystemInfoQuery, GetSystemInfoHandler, SystemInfoEntity?>();
         services.AddSingleton<PeriodicSystemInfoUpdate>();
     }
-    public static async Task RuntimeSystemInfoFeatureInitializer(this IServiceProvider serviceProvider)
+    public static async Task RuntimeSystemInfoFeatureInitializer(this IServiceProvider serviceProvider, bool isMaster)
     {
-        var periodicResourceUpdater = serviceProvider.GetRequiredService<PeriodicSystemInfoUpdate>();
-        _ = periodicResourceUpdater.StartAsync();
+        if (isMaster)
+        {
+            var periodicResourceUpdater = serviceProvider.GetRequiredService<PeriodicSystemInfoUpdate>();
+            _ = periodicResourceUpdater.StartAsync();
+        }
+
     }
 }

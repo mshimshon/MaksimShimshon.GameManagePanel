@@ -7,6 +7,6 @@ public abstract record FileWatchActionBase : ISafeAction
 {
     public DateTime Date { get; set; }
     public FileWatchEvents Event { get; set; }
-    public string FullName { get; set; } = default!;
-    public string FileName { get; set; } = default!;
+    public string? FullName { get; set; }
+    public string? FileName { get; set; }
 }

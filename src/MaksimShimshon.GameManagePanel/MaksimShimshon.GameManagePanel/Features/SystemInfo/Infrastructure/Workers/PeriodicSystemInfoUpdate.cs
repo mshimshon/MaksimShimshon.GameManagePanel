@@ -22,7 +22,14 @@ internal sealed class PeriodicSystemInfoUpdate
         do
         {
             await _dispatcher.Prepare<SystemInfoUpdateAction>().Await().DispatchAsync();
+
             await Task.Delay(_linuxSystemInfoConfiguration.PeriodicResourceCheckDelaySeconds * 1000);
         } while (!ct.IsCancellationRequested);
     }
 }
+/*
+ * IScheduleRunner, IScheduleAction<TAction>, IScheduledStatePulseAction<TAction> TAction = IAction or class
+ * ActionSchedule Record -> Datetime nextRun
+ * IScheduledAction Task<ActionSchedule> Run(Ct); 
+ * [ScheduledActionId("ID", InitialTick, RunOnceAtStartup)] =>  
+ */

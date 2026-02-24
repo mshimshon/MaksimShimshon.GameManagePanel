@@ -8,11 +8,6 @@ public partial class SystemResourcesStatus
 {
     [Parameter] public InfoPanelFormFactor FormFactor { get; set; } = InfoPanelFormFactor.Normal;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender) { }
-    }
-
     public static string FormatMegabytes(float mb)
     {
         if (mb < 1024)

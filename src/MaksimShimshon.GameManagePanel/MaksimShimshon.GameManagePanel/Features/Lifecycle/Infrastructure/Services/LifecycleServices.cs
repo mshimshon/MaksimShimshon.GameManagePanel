@@ -3,8 +3,8 @@ using LunaticPanel.Core.Abstraction.Tools.LinuxCommand;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Dto;
-using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Services.Dto;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
+using MaksimShimshon.GameManagePanel.Kernel.Dto;
 using MaksimShimshon.GameManagePanel.Kernel.Exceptions;
 using MaksimShimshon.GameManagePanel.Kernel.Extensions;
 using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
@@ -22,6 +22,8 @@ internal class LifecycleServices : ILifecycleServices
     private readonly ILogger<LifecycleServices> _logger;
     private readonly ICrazyReport _crazyReport;
     private const string SERVER_CONTROL_FOLDER = "server_control";
+    private const string SERVER_CONTROL_COMMON_FOLDER = "common";
+    private const string SERVER_CONTROL_COMMON_STATUS_FILE = "server_status.sh";
     private const string USER_DEF_STARTUP_PARAM_FILE = "user_defined_startup_params.json";
     private const string GAMEINFO_FILE = "game_info.json";
 
@@ -44,6 +46,7 @@ internal class LifecycleServices : ILifecycleServices
     public async Task<Dictionary<string, string>> GetServerStartupParametersAsync(CancellationToken cancellationToken = default)
     {
         string file = _pluginConfiguration.GetUserConfigFor(LifecycleModule.ModuleName, USER_DEF_STARTUP_PARAM_FILE);
+        _crazyReport.ReportInfo("Checking({1}) {0} ", file, File.Exists(file));
         if (!File.Exists(file)) return new();
         try
         {
@@ -87,8 +90,15 @@ internal class LifecycleServices : ILifecycleServices
     public Task ServerStartAsync(CancellationToken cancellationToken = default)
         => Task.CompletedTask;
 
-    public Task<ServerInfoEntity?> ServerStatusAsync(CancellationToken cancellationToken = default)
-        => Task.FromResult(default(ServerInfoEntity));
+    public async Task<ServerInfoEntity?> ServerStatusAsync(CancellationToken cancellationToken = default)
+    {
+        var script = _pluginConfiguration.GetUserBashFor(LifecycleModule.ModuleName, [SERVER_CONTROL_FOLDER, SERVER_CONTROL_COMMON_FOLDER], SERVER_CONTROL_COMMON_STATUS_FILE);
+        var result = await _linuxCommand.RunLinuxScriptWithReplyAs<StatusResponse>(script, (str) => new() { Completed = false, Failure = str });
+        if (!result.Completed)
+            throw new WebServiceException("Failed unable to get server status"); //TODO: Localize
+        var resultEntity = _coreMap.Map(result).To<ServerInfoEntity>();
+        return resultEntity;
+    }
 
     public Task ServerStopAsync(CancellationToken cancellationToken = default)
         => Task.CompletedTask;

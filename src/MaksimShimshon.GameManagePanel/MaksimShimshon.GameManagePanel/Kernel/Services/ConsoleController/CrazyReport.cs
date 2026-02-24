@@ -68,6 +68,12 @@ internal class CrazyReport : ICrazyReport
     public void SetModule<TClass>(string moduleName) where TClass : class
     {
         SetModule(moduleName);
+        SetClass<TClass>();
+    }
+
+    public void SetClass<TClass>() where TClass : class
+    {
         _className = $"[{typeof(TClass).Name}]";
+
     }
 }

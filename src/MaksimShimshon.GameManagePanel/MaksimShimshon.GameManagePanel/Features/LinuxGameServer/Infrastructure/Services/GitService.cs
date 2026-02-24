@@ -1,7 +1,7 @@
 ﻿using LunaticPanel.Core.Abstraction.Tools.LinuxCommand;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
-using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Services.Dto;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
+using MaksimShimshon.GameManagePanel.Kernel.Dto;
 using MaksimShimshon.GameManagePanel.Kernel.Exceptions;
 using MaksimShimshon.GameManagePanel.Kernel.Extensions;
 

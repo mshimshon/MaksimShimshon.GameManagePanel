@@ -8,19 +8,22 @@ public class StatusResponseToServerInfoEntity : ICoreMapHandler<StatusResponse, 
 {
     public ServerInfoEntity Handler(StatusResponse data, ICoreMap alsoMap)
     {
+        if (data.Data == default)
+            return new ServerInfoEntity(Status.Unknown);
+
         Status currentStatus = Status.Unknown;
-        if (string.Equals(data.Status, "started", StringComparison.InvariantCultureIgnoreCase))
+        if (data.Data.Status == 1)
             currentStatus = Status.Running;
-        else if (string.Equals(data.Status, "stopped", StringComparison.InvariantCultureIgnoreCase))
+        else if (data.Data.Status == 0)
             currentStatus = Status.Stopped;
+
 
         return new ServerInfoEntity(currentStatus)
         {
             Status = currentStatus,
-            Port = data.Server?.Port.ToString() ?? "????",
-            Name = data.Server?.Name ?? "Unknown",
-            LastUpdate = data.Timestamp,
-            GameInfo = alsoMap.Map(data.GameInfo).To<GameInfoEntity>(),
+            Port = data.Data.Port?.ToString() ?? "????",
+            Name = data.Data.Name ?? "Unknown",
+            LastUpdate = DateTime.UtcNow,
         };
     }
 }

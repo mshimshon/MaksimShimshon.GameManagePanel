@@ -1,21 +1,7 @@
-@using MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Hooks.UI.Components.ViewModels
-@inherits WidgetComponentBase<PluginEntry, IWidgetStartupParametersViewModel>
+@inherits WidgetComponentBase<PluginEntry>
 
-@if (ViewModel.GameInfo != default)
-{
-    <MudItem xs=12 sm=12 md=8>
-        <MudPaper Class="mud-width-full py-6 px-6">
-            @if (ViewModel.GameInfo.StartupParameters != default)
-            {
-                <LifecycleStartupParameter />
-            }
-            else
-            {
-                <MudAlert Severity=@Severity.Warning ContentAlignment=@HorizontalAlignment.Center NoIcon=true>
-                    <MudProgressLinear Color="Color.Warning" Indeterminate="true" Class="my-1" />
-                    <MudText Align=Align.Center>Loading Parameters...</MudText>
-                </MudAlert>
-            }
-        </MudPaper>
-    </MudItem>
-}
+<MudItem xs=12 sm=12 md=8>
+    <MudPaper Class="mud-width-full py-6 px-6">
+        <StartupParameter OnParentStateHasChanged=@InvokeParentStateChanged />
+    </MudPaper>
+</MudItem>

@@ -12,11 +12,16 @@ namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Hooks.Fe
 [EventBusId(LinuxGameServerKeys.Events.OnGameServerInstallStateChanged)]
 internal class OnInstallationStateChangedEvent : IEventBusHandler
 {
+    /*
+     * IScheduledEventBusHandler
+     * Receiver Receives -> Event -> Fetch All Match Id if cross circuit resolve for all circuits call 
+     * Check if type Implement IEventBusHandler.HandleAsync or IScheduledEventBusHandler
+     */
     private readonly IDispatcher _dispatcher;
-    private readonly IStateAccessor<LifecycleGameInfoState> _gameInfoStateAccess;
+    private readonly IStateAccessor<GameInfoState> _gameInfoStateAccess;
     private readonly ICrazyReport _crazyReport;
 
-    public OnInstallationStateChangedEvent(IDispatcher dispatcher, IStateAccessor<LifecycleGameInfoState> gameInfoStateAccess, ICrazyReport crazyReport)
+    public OnInstallationStateChangedEvent(IDispatcher dispatcher, IStateAccessor<GameInfoState> gameInfoStateAccess, ICrazyReport crazyReport)
     {
         _dispatcher = dispatcher;
         _gameInfoStateAccess = gameInfoStateAccess;
@@ -31,6 +36,6 @@ internal class OnInstallationStateChangedEvent : IEventBusHandler
         var state = await evt.ReadAs<InstallationStateResponse>();
         _crazyReport.ReportInfo("InstallationStateResponse is {0}", state.ToString());
         if (state.IsInstallationCompleted)
-            await _dispatcher.Prepare<LifecycleServerGameInfoUpdateAction>().DispatchAsync();
+            await _dispatcher.Prepare<ServerGameInfoUpdateAction>().DispatchAsync();
     }
 }

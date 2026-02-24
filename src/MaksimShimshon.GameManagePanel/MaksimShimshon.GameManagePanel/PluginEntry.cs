@@ -2,6 +2,9 @@
 using LunaticPanel.Core;
 using LunaticPanel.Core.Abstraction;
 using LunaticPanel.Core.Abstraction.Circuit;
+using LunaticPanel.Core.Abstraction.Messaging.EventBus;
+using LunaticPanel.Core.Extensions;
+using MaksimShimshon.GameManagePanel.Core;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer;
 using MaksimShimshon.GameManagePanel.Features.Notification;
@@ -67,9 +70,9 @@ public class PluginEntry : PluginBase
         });
         services.AddScoped<HomeViewModel>();
 
-        services.AddLifecycleFeatureServices();
+        services.AddLifecycleFeatureServices(circuit.IsMaster);
         services.AddNotificationFeatureServices();
-        services.AddLinuxGameServerFeatureServices(_crossCircuitSingletonProvider!, _configuration, MasterId == circuit.CircuitId);
+        services.AddLinuxGameServerFeatureServices(_crossCircuitSingletonProvider!, _configuration, circuit.IsMaster);
         services.AddSystemInfoFeatureServices(_configuration);
         services.AddTransient<ICrazyReport, CrazyReport>();
         // Make Singleton State cross circuit
@@ -109,7 +112,11 @@ public class PluginEntry : PluginBase
     protected override async Task BeforeRuntimeStart(IPluginContextService pluginContext)
     {
         var sp = pluginContext.GetRequired<IServiceProvider>();
+        IEventBus eventBus = sp.GetRequiredService<IEventBus>();
+        await eventBus.PublishDatalessAsync(PluginKeys.Events.OnBeforeRuntimeInitialization);
+        await sp.RuntimeLifecycleInitializer(MasterId == pluginContext.CircuitId);
         await sp.RuntimeLinuxGameServerInitializer(MasterId == pluginContext.CircuitId);
-        await sp.RuntimeSystemInfoFeatureInitializer();
+        await sp.RuntimeSystemInfoFeatureInitializer(MasterId == pluginContext.CircuitId);
+        await eventBus.PublishDatalessAsync(PluginKeys.Events.OnAfterRuntimeInitialization);
     }
 }

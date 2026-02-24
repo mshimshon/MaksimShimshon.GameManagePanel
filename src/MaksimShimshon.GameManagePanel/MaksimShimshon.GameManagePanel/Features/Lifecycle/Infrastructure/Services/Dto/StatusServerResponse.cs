@@ -1,18 +1,12 @@
-﻿using System.Text.Json.Serialization;
+﻿using MaksimShimshon.GameManagePanel.Kernel.Dto;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Dto;
 
-public sealed record StatusServerResponse
+public sealed record StatusServerResponse : ScriptResponse
 {
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = default!;
-
-    [JsonPropertyName("ip")]
-    public string Ip { get; set; } = default!;
-
-    [JsonPropertyName("port")]
-    public int Port { get; set; }
-
-    [JsonPropertyName("max_players")]
-    public int MaxPlayers { get; set; }
+    public int Status { get; init; }
+    public string? Name { get; init; }
+    public string? Ip { get; init; }
+    public string? Port { get; init; }
+    public string? Pid { get; init; }
 }
