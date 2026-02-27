@@ -1,10 +1,13 @@
-﻿using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Pulses.Actions;
+﻿using LunaticPanel.Core.Abstraction.Messaging.EventScheduledBus;
+using MaksimShimshon.GameManagePanel.Core.Features;
+using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Infrastructure.Configurations;
 using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.SystemInfo.Infrastructure.Workers;
 
-internal sealed class PeriodicSystemInfoUpdate
+[EventScheduledBusId(SystemInfoKeys.Events.UpdateInformation, 0, 10)]
+internal sealed class PeriodicSystemInfoUpdate : IEventScheduledBusHandler
 {
     private readonly IDispatcher _dispatcher;
     private readonly LinuxSystemInfoConfiguration _linuxSystemInfoConfiguration;
@@ -14,6 +17,13 @@ internal sealed class PeriodicSystemInfoUpdate
         _dispatcher = dispatcher;
         _linuxSystemInfoConfiguration = linuxSystemInfoConfiguration;
     }
+
+    public EventScheduledBusMessageData DueToExecute(IEventScheduledBusMessage msg, CancellationToken ct = default)
+        => new EventScheduledBusMessageData(UpdateCycle)
+        {
+            NextRun = DateTime.UtcNow.AddSeconds(10)
+        };
+
     public Task StartAsync(CancellationToken ct = default)
         => Task.Run(() => UpdateCycle(ct));
 
