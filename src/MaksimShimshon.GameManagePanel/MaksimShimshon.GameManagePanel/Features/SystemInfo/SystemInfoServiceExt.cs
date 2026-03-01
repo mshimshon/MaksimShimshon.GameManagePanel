@@ -46,8 +46,9 @@ public static class SystemInfoServiceExt
     {
         if (isMaster)
         {
-            var periodicResourceUpdater = serviceProvider.GetRequiredService<PeriodicSystemInfoUpdate>();
-            _ = periodicResourceUpdater.StartAsync();
+            // TODO: CLEAN UP 
+            //var periodicResourceUpdater = serviceProvider.GetRequiredService<PeriodicSystemInfoUpdate>();
+            //_ = periodicResourceUpdater.StartAsync();
         }
 
     }
