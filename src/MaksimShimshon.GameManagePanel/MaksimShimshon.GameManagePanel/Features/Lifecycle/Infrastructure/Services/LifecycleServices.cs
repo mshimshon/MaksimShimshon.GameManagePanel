@@ -1,5 +1,6 @@
 ﻿using CoreMap;
 using LunaticPanel.Core.Abstraction.Tools.LinuxCommand;
+using LunaticPanel.Core.Extensions;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Dto;
@@ -11,7 +12,6 @@ using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services;
 
 internal class LifecycleServices : ILifecycleServices
@@ -24,8 +24,11 @@ internal class LifecycleServices : ILifecycleServices
     private const string SERVER_CONTROL_FOLDER = "server_control";
     private const string SERVER_CONTROL_COMMON_FOLDER = "common";
     private const string SERVER_CONTROL_COMMON_STATUS_FILE = "server_status.sh";
+    private const string SERVER_CONTROL_COMMON_START_FILE = "start_server.sh";
+    private const string SERVER_CONTROL_COMMON_STOP_FILE = "stop_server.sh";
     private const string USER_DEF_STARTUP_PARAM_FILE = "user_defined_startup_params.json";
     private const string GAMEINFO_FILE = "game_info.json";
+    private const string USERNAME = "lgsm";
 
     private readonly JsonSerializerOptions _jsonSerializerConfiguration;
 
@@ -87,26 +90,32 @@ internal class LifecycleServices : ILifecycleServices
     public Task ServerRestartAsync(CancellationToken cancellationToken = default)
         => Task.CompletedTask;
 
-    public Task ServerStartAsync(CancellationToken cancellationToken = default)
-        => Task.CompletedTask;
+    public async Task ServerStartAsync(CancellationToken cancellationToken = default)
+    {
+        var script = _pluginConfiguration.GetUserBashFor(LifecycleModule.ModuleName, [SERVER_CONTROL_FOLDER, SERVER_CONTROL_COMMON_FOLDER], SERVER_CONTROL_COMMON_START_FILE);
+        await _linuxCommand.BuildBash(script).AsUser(USERNAME).ExecAsync(cancellationToken);
+    }
 
     public async Task<ServerInfoEntity?> ServerStatusAsync(CancellationToken cancellationToken = default)
     {
         var script = _pluginConfiguration.GetUserBashFor(LifecycleModule.ModuleName, [SERVER_CONTROL_FOLDER, SERVER_CONTROL_COMMON_FOLDER], SERVER_CONTROL_COMMON_STATUS_FILE);
-        var result = await _linuxCommand.RunLinuxScriptWithReplyAs<StatusResponse>(script, (str) => new() { Completed = false, Failure = str });
+        var result = await _linuxCommand.BuildBash(script).Sudo().ExecAndReadAs<StatusResponse>((str) => new() { Completed = false, Failure = str }, cancellationToken);
         if (!result.Completed)
             throw new WebServiceException("Failed unable to get server status"); //TODO: Localize
         var resultEntity = _coreMap.Map(result).To<ServerInfoEntity>();
         return resultEntity;
     }
 
-    public Task ServerStopAsync(CancellationToken cancellationToken = default)
-        => Task.CompletedTask;
+    public async Task ServerStopAsync(CancellationToken cancellationToken = default)
+    {
+        var script = _pluginConfiguration.GetUserBashFor(LifecycleModule.ModuleName, [SERVER_CONTROL_FOLDER, SERVER_CONTROL_COMMON_FOLDER], SERVER_CONTROL_COMMON_STOP_FILE);
+        await _linuxCommand.BuildBash(script).AsUser(USERNAME).ExecAsync(cancellationToken);
+    }
 
     public async Task UpdateStartupParameterAsync(string key, string value, CancellationToken cancellationToken = default)
     {
         var script = _pluginConfiguration.GetBashFor(LifecycleModule.ModuleName, "update_startup_parameters.sh", key, value);
-        var result = await _linuxCommand.RunLinuxScriptWithReplyAs<ScriptResponse>(script, (str) => new() { Completed = false, Failure = str });
+        var result = await _linuxCommand.BuildBash(script).Sudo().ExecAndReadAs<ScriptResponse>((str) => new() { Completed = false, Failure = str }, cancellationToken);
         if (!result.Completed) throw new WebServiceException("Update of the startup parameter failed"); //TODO: Localize
     }
 }

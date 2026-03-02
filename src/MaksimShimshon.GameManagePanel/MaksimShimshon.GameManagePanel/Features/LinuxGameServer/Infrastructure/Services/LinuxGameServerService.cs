@@ -1,5 +1,6 @@
 ﻿using CoreMap;
 using LunaticPanel.Core.Abstraction.Tools.LinuxCommand;
+using LunaticPanel.Core.Extensions;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Dto;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Models;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
@@ -113,7 +114,7 @@ internal class LinuxGameServerService : ILinuxGameServerService
     {
         string scriptInstallGameServer = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "install_game_server.sh", gameServer, displayName);
         _crazyReport.ReportInfo("Run Script: {0}", scriptInstallGameServer);
-        await _linuxCommand.RunLinuxScript(scriptInstallGameServer);
+        await _linuxCommand.BuildBash(scriptInstallGameServer).Sudo().ExecAsync(cancellation);
     }
 
 }

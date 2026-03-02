@@ -1,13 +1,13 @@
-﻿using LunaticPanel.Core.Abstraction.Tools.LinuxCommand;
+﻿using LunaticPanel.Core.Extensions;
 using System.Text.Json;
 
 namespace MaksimShimshon.GameManagePanel.Kernel.Extensions;
 
 public static class LinuxCommandExt
 {
-    public static async Task<TResponse> RunLinuxScriptWithReplyAs<TResponse>(this ILinuxCommand linuxCommand, string file, Func<string, TResponse> OnAbnormalError, bool sudo = true)
+    public static async Task<TResponse> ExecAndReadAs<TResponse>(this LinuxCommandBuilderContext context, Func<string, TResponse> OnAbnormalError, CancellationToken ct = default)
     {
-        var response = await linuxCommand.RunLinuxScript(file, sudo);
+        var response = await context.LinuxCommand.RunCommand(context.CommandBuilder);
         if (response.Failed && OnAbnormalError != default)
             return OnAbnormalError.Invoke("Error with BASH: " + response.StandardError);
 
@@ -21,6 +21,7 @@ public static class LinuxCommandExt
             PropertyNameCaseInsensitive = true,
         })!;
     }
+
     static bool IsValidJson(string s)
     {
         try
