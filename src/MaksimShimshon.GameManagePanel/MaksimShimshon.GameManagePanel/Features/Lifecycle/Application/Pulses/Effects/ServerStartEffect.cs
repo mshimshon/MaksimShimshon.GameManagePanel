@@ -5,7 +5,7 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Effects;
 
-public class ServerStartEffect : IEffect<ServerStartAction>
+internal class ServerStartEffect : IEffect<ServerStartAction>
 {
     private readonly IMedihater _medihater;
 
@@ -17,8 +17,5 @@ public class ServerStartEffect : IEffect<ServerStartAction>
     {
         var exec = new ExecStartServerCommand();
         await _medihater.Send(exec);
-        await dispatcher
-            .Prepare<ServerStartDoneAction>()
-            .DispatchAsync();
     }
 }

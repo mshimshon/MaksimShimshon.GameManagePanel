@@ -77,6 +77,14 @@
 		</Content>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Content Remove="Features\Lifecycle\Web\Hooks\UI\Components\WidgetTest.razor" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Features\Lifecycle\Web\Components\WidgetTest.razor" />
+	</ItemGroup>
+
 
   <ItemGroup>
     <Content Update="Features\LinuxGameServer\Application\Bash\check_git_install.sh" Link="bash\linuxgameserver\check_git_install.sh" />

@@ -3,7 +3,7 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
 
-public class ServerStatusUpdateDoneAction : IAction
+internal sealed record ServerStatusUpdateDoneAction : IAction
 {
     public ServerInfoEntity? ServerInfo { get; set; }
 }

@@ -5,7 +5,7 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Effects;
 
-public class ServerStopEffect : IEffect<ServerStopAction>
+internal class ServerStopEffect : IEffect<ServerStopAction>
 {
     private readonly IMedihater _medihater;
 
@@ -17,7 +17,5 @@ public class ServerStopEffect : IEffect<ServerStopAction>
     {
         var exec = new ExecStopServerCommand();
         await _medihater.Send(exec);
-
-        await dispatcher.Prepare<ServerStopDoneAction>().DispatchAsync();
     }
 }

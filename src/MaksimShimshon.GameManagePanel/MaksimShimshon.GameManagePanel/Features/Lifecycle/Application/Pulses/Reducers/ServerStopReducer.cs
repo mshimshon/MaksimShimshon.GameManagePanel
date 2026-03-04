@@ -5,15 +5,13 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Reducers;
 
-public class ServerStartDoneReducer : IReducer<ServerState, ServerStartDoneAction>
+internal class ServerStopReducer : IReducer<ServerState, ServerStopAction>
 {
-    public ServerState Reduce(ServerState state, ServerStartDoneAction action)
+    public ServerState Reduce(ServerState state, ServerStopAction action)
     {
         return state with
         {
-            //SkipNextUpdates = 4
-            Transition = ServerTransition.Starting,
-            Delay = 2
+            Transition = ServerTransition.Stopping,
         };
     }
 }

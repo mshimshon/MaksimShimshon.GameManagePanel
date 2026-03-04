@@ -3,6 +3,7 @@ using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.State
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using StatePulse.Net;
+using System.Data;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Components.ViewModels;
 
@@ -19,6 +20,7 @@ public class StartupParameterViewModel : WidgetViewModelBase, IStartupParameterV
         _ = GroupingParameters();
     }
 
+    public ServerState ServerState => _statePulse.StateOf<ServerState>(() => this, UpdateChanges);
 
     public GameInfoState GameInfoState => _statePulse.StateOf<GameInfoState>(() => this, OnUpdate);
     public Dictionary<string, List<GameStartupParameterEntity>> Parameters { get; private set; } = new();

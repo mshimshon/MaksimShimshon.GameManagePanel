@@ -7,7 +7,7 @@ using MaksimShimshon.GameManagePanel.Features.SystemInfo.Infrastructure.Configur
 using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using StatePulse.Net;
 
-namespace MaksimShimshon.GameManagePanel.Features.SystemInfo.Infrastructure.Workers;
+namespace MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Hooks;
 
 [EventScheduledBusId(SystemInfoKeys.Events.UpdateInformation, 0, 10, RunAtStartup = true)]
 internal sealed class PeriodicSystemInfoUpdate : IEventScheduledBusHandler

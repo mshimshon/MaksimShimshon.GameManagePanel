@@ -2,6 +2,6 @@
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
 
-public record ServerStartAction  : ISafeAction
+internal sealed record ServerStartAction : ISafeAction
 {
 }

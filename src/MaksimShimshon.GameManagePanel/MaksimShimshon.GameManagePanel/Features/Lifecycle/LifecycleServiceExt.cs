@@ -25,20 +25,19 @@ public static class LifecycleServiceExt
 
     public static void AddLifecycleFeatureServices(this IServiceCollection services, bool isMaster)
     {
-        services.AddScoped<IServerControlViewModel, ServerControlViewModel>();
+        services.AddScoped<IServerControlViewModel, ControlViewModel>();
         services.AddScoped<IStartupParameterViewModel, StartupParameterViewModel>();
 
         services.AddTransient<IStartupParameterFieldViewModel, StartupParameterFieldViewModel>();
         services.AddTransient<ILifecycleServices, LifecycleServices>();
+        services.AddStatePulseService<ServerStartReducer>();
         services.AddStatePulseService<FetchStartupParametersAction>();
         services.AddStatePulseService<FetchStartupParametersDoneAction>();
         services.AddStatePulseService<ServerGameInfoUpdateDoneAction>();
         services.AddStatePulseService<ServerStartAction>();
-        services.AddStatePulseService<ServerStartDoneAction>();
         services.AddStatePulseService<ServerStatusTransitionDoneAction>();
         services.AddStatePulseService<ServerStatusUpdateDoneAction>();
         services.AddStatePulseService<ServerStopAction>();
-        services.AddStatePulseService<ServerStopDoneAction>();
         services.AddStatePulseService<UpdateStartupParameterAction>();
         services.AddStatePulseService<UpdateStartupParameterDoneAction>();
         services.AddStatePulseService<ServerGameInfoUpdateAction>();
@@ -50,9 +49,8 @@ public static class LifecycleServiceExt
         services.AddStatePulseService<FetchStartupParametersDoneReducer>();
         services.AddStatePulseService<ServerGameInfoUpdatedReducer>();
         services.AddStatePulseService<ServerStatusTransitionDoneReducer>();
-        services.AddStatePulseService<ServerStartDoneReducer>();
         services.AddStatePulseService<ServerStatusUpdateDoneReducer>();
-        services.AddStatePulseService<ServerStopDoneReducer>();
+        services.AddStatePulseService<ServerStopReducer>();
         services.AddStatePulseService<GameInfoState>();
         services.AddStatePulseService<ServerState>();
 

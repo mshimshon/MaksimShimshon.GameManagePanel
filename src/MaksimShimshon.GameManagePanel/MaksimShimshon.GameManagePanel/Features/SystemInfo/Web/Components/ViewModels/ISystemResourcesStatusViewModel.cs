@@ -5,6 +5,6 @@ namespace MaksimShimshon.GameManagePanel.Features.SystemInfo.Web.Components.View
 
 public interface ISystemResourcesStatusViewModel : IWidgetViewModel
 {
-    public SystemInfoEntity? SystemInfo { get; }
-    public DateTime LastUpdate { get; }
+    SystemInfoEntity? SystemInfo { get; }
+    DateTime LastUpdate { get; }
 }

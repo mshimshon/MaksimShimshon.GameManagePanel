@@ -16,18 +16,15 @@ namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Hooks.Sc
 internal class GameServerScheduledEvent : IEventScheduledBusHandler
 {
     private readonly IStateAccessor<GameInfoState> _gameInfoStateAccess;
-    private readonly IStateAccessor<ServerState> _serverStateAccess;
     private readonly ICrazyReport _crazyReport;
     private readonly IDispatcher _dispatcher;
     private static bool _isBusy;
     private static readonly object _lock = new();
     public GameServerScheduledEvent(IStateAccessor<GameInfoState> gameInfoStateAccess,
-        IStateAccessor<ServerState> serverStateAccess,
         ICrazyReport crazyReport,
         IDispatcher dispatcher)
     {
         _gameInfoStateAccess = gameInfoStateAccess;
-        _serverStateAccess = serverStateAccess;
         _crazyReport = crazyReport;
         _dispatcher = dispatcher;
         _crazyReport.SetModule<GameServerScheduledEvent>(LifecycleModule.ModuleName);
@@ -62,7 +59,6 @@ internal class GameServerScheduledEvent : IEventScheduledBusHandler
         {
             lock (_lock)
                 _isBusy = false;
-
         }
 
     }

@@ -1,4 +1,7 @@
 @inherits WidgetComponentBase<PluginEntry>
-<MudItem xs=12 sm=12 md=4>
-    <ServerControl OnParentStateHasChanged=@InvokeParentStateChanged />
-</MudItem>
+
+<MudGrid>
+    <MudItem xs=12 sm=12 md=4>
+        <ServerControl OnParentStateHasChanged=@InvokeParentStateChanged />
+    </MudItem>
+</MudGrid>

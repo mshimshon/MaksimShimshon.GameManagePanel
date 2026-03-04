@@ -4,7 +4,7 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Reducers;
 
-public class FetchStartupParametersDoneReducer : IReducer<GameInfoState, FetchStartupParametersDoneAction>
+internal class FetchStartupParametersDoneReducer : IReducer<GameInfoState, FetchStartupParametersDoneAction>
 {
     public GameInfoState Reduce(GameInfoState state, FetchStartupParametersDoneAction action)
         => state with

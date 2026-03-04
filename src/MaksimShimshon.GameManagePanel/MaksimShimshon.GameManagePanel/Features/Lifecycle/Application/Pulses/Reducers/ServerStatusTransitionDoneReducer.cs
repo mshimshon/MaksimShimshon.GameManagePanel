@@ -5,7 +5,7 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Reducers;
 
-public class ServerStatusTransitionDoneReducer : IReducer<ServerState, ServerStatusTransitionDoneAction>
+internal class ServerStatusTransitionDoneReducer : IReducer<ServerState, ServerStatusTransitionDoneAction>
 {
     public ServerState Reduce(ServerState state, ServerStatusTransitionDoneAction action)
     {

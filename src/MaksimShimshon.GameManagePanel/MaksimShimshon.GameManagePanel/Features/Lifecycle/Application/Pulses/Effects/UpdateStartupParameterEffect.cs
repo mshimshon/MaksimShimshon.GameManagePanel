@@ -5,7 +5,7 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Effects;
 
-public class UpdateStartupParameterEffect : IEffect<UpdateStartupParameterAction>
+internal class UpdateStartupParameterEffect : IEffect<UpdateStartupParameterAction>
 {
     private readonly IMedihater _medihater;
 

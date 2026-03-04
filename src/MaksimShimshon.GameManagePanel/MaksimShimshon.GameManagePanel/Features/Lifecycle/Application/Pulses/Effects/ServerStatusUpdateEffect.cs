@@ -29,13 +29,14 @@ internal class ServerStatusUpdateEffect : IEffect<ServerStatusUpdateAction>
         var exec = new GetServerStatusQuery();
         var serverInfo = await _medihater.Send(exec);
         _crazyReport.ReportInfo("ServerInfoEntity = {0}", (serverInfo?.ToString() ?? "Null"));
-        if (serverInfo != default)
+        if (serverInfo != default && _stateAccessor.State.Transition != ServerTransition.Idle)
         {
             bool isStartingTransitionCompleted = _stateAccessor.State.Transition == ServerTransition.Starting && serverInfo.Status == Status.Running;
             bool isStoppedTransitionCompleted = _stateAccessor.State.Transition == ServerTransition.Stopping && serverInfo.Status == Status.Stopped;
+            _crazyReport.ReportInfo("Server Info Transition Starting Done = {0}, Stopping Done = {0}", isStartingTransitionCompleted, isStoppedTransitionCompleted);
 
             if (isStartingTransitionCompleted || isStoppedTransitionCompleted)
-                await dispatcher.Prepare<ServerStatusTransitionDoneAction>().DispatchAsync();
+                await dispatcher.Prepare<ServerStatusTransitionDoneAction>().Await().DispatchAsync();
         }
 
 

@@ -1,5 +1,6 @@
 ﻿using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.CQRS.Queries;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.CQRS.Queries.Handlers;
+using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Hooks;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Pulses.Effects;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Pulses.Reducers;
@@ -9,7 +10,6 @@ using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Infrastructure.Configurations;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Infrastructure.Services;
-using MaksimShimshon.GameManagePanel.Features.SystemInfo.Infrastructure.Workers;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Web.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Web.Hooks.Components.ViewModels;
 using MedihatR;

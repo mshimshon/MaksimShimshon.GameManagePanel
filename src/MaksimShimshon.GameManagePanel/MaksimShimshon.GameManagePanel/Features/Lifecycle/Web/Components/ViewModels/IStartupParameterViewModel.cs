@@ -1,4 +1,5 @@
 ﻿using LunaticPanel.Core.Abstraction.Widgets;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Components.ViewModels;
@@ -11,5 +12,6 @@ public interface IStartupParameterViewModel : IWidgetViewModel
     Task GroupingParameters();
     Dictionary<string, List<GameStartupParameterEntity>> Parameters { get; }
     string GetInitialValue(GameStartupParameterEntity parameter);
+    ServerState ServerState { get; }
 }
 

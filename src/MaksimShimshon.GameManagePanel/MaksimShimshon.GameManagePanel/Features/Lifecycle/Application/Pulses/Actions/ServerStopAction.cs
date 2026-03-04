@@ -2,6 +2,6 @@
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
 
-public class ServerStopAction: ISafeAction
+internal sealed record ServerStopAction : ISafeAction
 {
 }

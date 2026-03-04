@@ -1,6 +1,5 @@
 ﻿using LunaticPanel.Core.Abstraction.Widgets;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
-using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Enums;
 using StatePulse.Net;
@@ -15,7 +14,6 @@ public class StartupParameterFieldViewModel : WidgetViewModelBase, IStartupParam
     private readonly IStatePulse _statePulse;
     private readonly IDispatcher _dispatcher;
 
-    private GameInfoState GameInfoState => _statePulse.StateOf<GameInfoState>(() => this, UpdateChanges);
     public bool IsTouched => InitialValue != Value;
 
     public GameStartupParameterEntity Parameter { get; set; } = default!;

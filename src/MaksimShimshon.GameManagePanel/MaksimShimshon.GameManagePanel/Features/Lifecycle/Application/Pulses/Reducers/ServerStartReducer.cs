@@ -4,12 +4,11 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Reducers;
 
-internal class ServerGameInfoUpdatedReducer : IReducer<GameInfoState, ServerGameInfoUpdateDoneAction>
+internal class ServerStartReducer : IReducer<ServerState, ServerStartAction>
 {
-
-    public GameInfoState Reduce(GameInfoState state, ServerGameInfoUpdateDoneAction action)
+    public ServerState Reduce(ServerState state, ServerStartAction action)
         => state with
         {
-            GameInfo = action.GameInfo
+            Transition = States.Enums.ServerTransition.Starting
         };
 }

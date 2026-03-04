@@ -2,6 +2,6 @@
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
 
-public record UpdateStartupParameterDoneAction : IAction
+internal sealed record UpdateStartupParameterDoneAction : IAction
 {
 }

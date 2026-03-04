@@ -2,7 +2,7 @@
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
 
-public record ServerStatusTransitionDoneAction : IAction
+internal sealed record ServerStatusTransitionDoneAction : IAction
 {
-   
+
 }
