@@ -1,6 +1,7 @@
 ﻿using CoreMap;
 using LunaticPanel.Core.Abstraction.Tools.LinuxCommand;
 using LunaticPanel.Core.Extensions;
+using MaksimShimshon.GameManagePanel.Core.Features;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Dto;
@@ -39,7 +40,7 @@ internal class LifecycleServices : ILifecycleServices
         _pluginConfiguration = pluginConfiguration;
         _logger = logger;
         _crazyReport = crazyReport;
-        _crazyReport.SetModule<LifecycleServices>(LifecycleModule.ModuleName);
+        _crazyReport.SetModule<LifecycleServices>(LifecycleKeys.ModuleName);
         _jsonSerializerConfiguration = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
@@ -48,7 +49,7 @@ internal class LifecycleServices : ILifecycleServices
     }
     public async Task<Dictionary<string, string>> GetServerStartupParametersAsync(CancellationToken cancellationToken = default)
     {
-        string file = _pluginConfiguration.GetUserConfigFor(LifecycleModule.ModuleName, USER_DEF_STARTUP_PARAM_FILE);
+        string file = _pluginConfiguration.GetUserConfigFor(LifecycleKeys.ModuleName, USER_DEF_STARTUP_PARAM_FILE);
         _crazyReport.ReportInfo("Checking({1}) {0} ", file, File.Exists(file));
         if (!File.Exists(file)) return new();
         try
@@ -68,7 +69,7 @@ internal class LifecycleServices : ILifecycleServices
 
     public async Task<GameInfoEntity?> LoadGameInfoAsync(CancellationToken cancellationToken = default)
     {
-        string file = _pluginConfiguration.GetUserBashFor(LifecycleModule.ModuleName, [SERVER_CONTROL_FOLDER], GAMEINFO_FILE);
+        string file = _pluginConfiguration.GetUserBashFor(LifecycleKeys.ModuleName, [SERVER_CONTROL_FOLDER], GAMEINFO_FILE);
         _crazyReport.ReportInfo("Checking({1}) {0} ", file, File.Exists(file));
         if (!File.Exists(file)) return default;
         try
@@ -92,13 +93,13 @@ internal class LifecycleServices : ILifecycleServices
 
     public async Task ServerStartAsync(CancellationToken cancellationToken = default)
     {
-        var script = _pluginConfiguration.GetUserBashFor(LifecycleModule.ModuleName, [SERVER_CONTROL_FOLDER, SERVER_CONTROL_COMMON_FOLDER], SERVER_CONTROL_COMMON_START_FILE);
+        var script = _pluginConfiguration.GetUserBashFor(LifecycleKeys.ModuleName, [SERVER_CONTROL_FOLDER, SERVER_CONTROL_COMMON_FOLDER], SERVER_CONTROL_COMMON_START_FILE);
         await _linuxCommand.BuildBash(script).AsUser(USERNAME).ExecAsync(cancellationToken);
     }
 
     public async Task<ServerInfoEntity?> ServerStatusAsync(CancellationToken cancellationToken = default)
     {
-        var script = _pluginConfiguration.GetUserBashFor(LifecycleModule.ModuleName, [SERVER_CONTROL_FOLDER, SERVER_CONTROL_COMMON_FOLDER], SERVER_CONTROL_COMMON_STATUS_FILE);
+        var script = _pluginConfiguration.GetUserBashFor(LifecycleKeys.ModuleName, [SERVER_CONTROL_FOLDER, SERVER_CONTROL_COMMON_FOLDER], SERVER_CONTROL_COMMON_STATUS_FILE);
         var result = await _linuxCommand.BuildBash(script).Sudo().ExecAndReadAs<StatusResponse>((str) => new() { Completed = false, Failure = str }, cancellationToken);
         if (!result.Completed)
             throw new WebServiceException("Failed unable to get server status"); //TODO: Localize
@@ -108,13 +109,13 @@ internal class LifecycleServices : ILifecycleServices
 
     public async Task ServerStopAsync(CancellationToken cancellationToken = default)
     {
-        var script = _pluginConfiguration.GetUserBashFor(LifecycleModule.ModuleName, [SERVER_CONTROL_FOLDER, SERVER_CONTROL_COMMON_FOLDER], SERVER_CONTROL_COMMON_STOP_FILE);
+        var script = _pluginConfiguration.GetUserBashFor(LifecycleKeys.ModuleName, [SERVER_CONTROL_FOLDER, SERVER_CONTROL_COMMON_FOLDER], SERVER_CONTROL_COMMON_STOP_FILE);
         await _linuxCommand.BuildBash(script).AsUser(USERNAME).ExecAsync(cancellationToken);
     }
 
     public async Task UpdateStartupParameterAsync(string key, string value, CancellationToken cancellationToken = default)
     {
-        var script = _pluginConfiguration.GetBashFor(LifecycleModule.ModuleName, "update_startup_parameters.sh", key, value);
+        var script = _pluginConfiguration.GetBashFor(LifecycleKeys.ModuleName, "update_startup_parameters.sh", key, value);
         var result = await _linuxCommand.BuildBash(script).Sudo().ExecAndReadAs<ScriptResponse>((str) => new() { Completed = false, Failure = str }, cancellationToken);
         if (!result.Completed) throw new WebServiceException("Update of the startup parameter failed"); //TODO: Localize
     }

@@ -1,5 +1,6 @@
 ﻿using LunaticPanel.Core.Abstraction.Messaging.EventBus;
 using MaksimShimshon.GameManagePanel.Core;
+using MaksimShimshon.GameManagePanel.Core.Features;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
 using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
@@ -19,7 +20,7 @@ internal class LoadAvailableGameServerToInstallHandler : IEventBusHandler
         _linuxGameServerService = linuxGameServerService;
         _dispatcher = dispatcher;
         _crazyReport = crazyReport;
-        _crazyReport.SetModule(LinuxGameServerModule.ModuleName);
+        _crazyReport.SetModule(LinuxGameServerKeys.ModuleName);
     }
 
     public async Task HandleAsync(IEventBusMessage evt)

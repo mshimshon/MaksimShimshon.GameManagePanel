@@ -1,4 +1,5 @@
-﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.CQRS.Queries;
+﻿using MaksimShimshon.GameManagePanel.Core.Features;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.CQRS.Queries;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using MedihatR;
@@ -15,7 +16,7 @@ internal class ServerGameInfoUpdateEffect : IEffect<ServerGameInfoUpdateAction>
     {
         _medihater = medihater;
         _crazyReport = crazyReport;
-        _crazyReport.SetModule<ServerGameInfoUpdateEffect>(LifecycleModule.ModuleName);
+        _crazyReport.SetModule<ServerGameInfoUpdateEffect>(LifecycleKeys.ModuleName);
     }
     public async Task EffectAsync(ServerGameInfoUpdateAction action, IDispatcher dispatcher)
     {

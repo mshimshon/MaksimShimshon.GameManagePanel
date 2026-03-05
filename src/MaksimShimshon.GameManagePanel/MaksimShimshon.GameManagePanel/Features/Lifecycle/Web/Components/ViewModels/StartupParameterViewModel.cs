@@ -1,4 +1,5 @@
 ﻿using LunaticPanel.Core.Abstraction.Widgets;
+using MaksimShimshon.GameManagePanel.Core.Features;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
@@ -16,7 +17,7 @@ public class StartupParameterViewModel : WidgetViewModelBase, IStartupParameterV
     {
         _statePulse = statePulse;
         _crazyReport = crazyReport;
-        _crazyReport.SetModule<StartupParameterViewModel>(LifecycleModule.ModuleName);
+        _crazyReport.SetModule<StartupParameterViewModel>(LifecycleKeys.ModuleName);
         _ = GroupingParameters();
     }
 

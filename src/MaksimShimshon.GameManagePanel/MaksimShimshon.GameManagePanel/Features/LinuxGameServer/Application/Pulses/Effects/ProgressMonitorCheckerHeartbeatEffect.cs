@@ -1,4 +1,5 @@
-﻿using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.States;
+﻿using MaksimShimshon.GameManagePanel.Core.Features;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
 using MaksimShimshon.GameManagePanel.Kernel.Heartbeat.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
@@ -19,7 +20,7 @@ internal class ProgressMonitorCheckerHeartbeatEffect : IEffect<HeartbeatRunnerAc
         _installStateAccess = installStateAccess;
         _installationRefresherService = installationRefresherService;
         _crazyReport = crazyReport;
-        _crazyReport.SetModule(LinuxGameServerModule.ModuleName);
+        _crazyReport.SetModule(LinuxGameServerKeys.ModuleName);
     }
     public async Task EffectAsync(HeartbeatRunnerAction action, IDispatcher dispatcher)
     {

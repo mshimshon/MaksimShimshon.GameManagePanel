@@ -27,7 +27,7 @@ internal class GameServerScheduledEvent : IEventScheduledBusHandler
         _gameInfoStateAccess = gameInfoStateAccess;
         _crazyReport = crazyReport;
         _dispatcher = dispatcher;
-        _crazyReport.SetModule<GameServerScheduledEvent>(LifecycleModule.ModuleName);
+        _crazyReport.SetModule<GameServerScheduledEvent>(LifecycleKeys.ModuleName);
     }
     public EventScheduledBusMessageData DueToExecute(IEventScheduledBusMessage msg, CancellationToken ct = default)
     {

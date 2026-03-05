@@ -1,4 +1,5 @@
 ﻿using LunaticPanel.Core.Abstraction.Widgets;
+using MaksimShimshon.GameManagePanel.Core.Features;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
@@ -37,7 +38,7 @@ public class SetupProcessViewModel : WidgetViewModelBase, ISetupProcessViewModel
         _statePulse = statePulse;
         _dispatcher = statePulse.Dispatcher;
         RepositoryTarget = pluginConfiguration.Repositories.GitGameServerScriptRepository;
-        crazyReport.SetModule(LinuxGameServerModule.ModuleName);
+        crazyReport.SetModule(LinuxGameServerKeys.ModuleName);
         crazyReport.ReportInfo("Loaded Widget {0} and Found {1} Games Available.", nameof(SetupProcessViewModel), InstallState.AvailableGameServers.Count);
 
     }

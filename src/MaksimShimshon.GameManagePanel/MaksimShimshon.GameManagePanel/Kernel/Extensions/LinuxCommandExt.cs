@@ -29,7 +29,7 @@ public static class LinuxCommandExt
             JsonDocument.Parse(s);
             return true;
         }
-        catch (Exception ex)
+        catch
         {
             return false;
         }

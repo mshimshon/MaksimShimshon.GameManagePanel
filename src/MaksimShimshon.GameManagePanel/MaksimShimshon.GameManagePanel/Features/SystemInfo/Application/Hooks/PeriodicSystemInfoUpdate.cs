@@ -23,7 +23,7 @@ internal sealed class PeriodicSystemInfoUpdate : IEventScheduledBusHandler
         _linuxSystemInfoConfiguration = linuxSystemInfoConfiguration;
         _eventScheduler = eventScheduler;
         _crazyReport = crazyReport;
-        _crazyReport.SetModule<PeriodicSystemInfoUpdate>(SystemInfoModule.ModuleName);
+        _crazyReport.SetModule<PeriodicSystemInfoUpdate>(SystemInfoKeys.ModuleName);
     }
 
     public EventScheduledBusMessageData DueToExecute(IEventScheduledBusMessage msg, CancellationToken ct = default)

@@ -1,6 +1,7 @@
 ﻿using CoreMap;
 using LunaticPanel.Core.Abstraction.Tools.LinuxCommand;
 using LunaticPanel.Core.Extensions;
+using MaksimShimshon.GameManagePanel.Core.Features;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Dto;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Models;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
@@ -31,19 +32,19 @@ internal class LinuxGameServerService : ILinuxGameServerService
         _linuxLockFileController = linuxLockFileController;
         _crazyReport = crazyReport;
         _coreMap = coreMap;
-        crazyReport.SetModule(LinuxGameServerModule.ModuleName);
+        crazyReport.SetModule(LinuxGameServerKeys.ModuleName);
     }
 
     public Task<Dictionary<string, string>> GetAvailableGames(CancellationToken cancellation = default)
     {
         // TODO: Transfer Logic into Bash and only load a file with available list
         // The Bash will two:
-        // 1. Get a URL Git -> Download to _pluginConfiguration.GetReposFor(LinuxGameServerModule.ModuleName, "available_games");
+        // 1. Get a URL Git -> Download to _pluginConfiguration.GetReposFor(LinuxGameServerKeys.ModuleName, "available_games");
         // 2. Build a File from Available Directory follow below';s logic.
         // This service will call upon the built file
 
         _crazyReport.Report("GetAvailableGames...");
-        var reposFolder = _pluginConfiguration.GetReposFor(LinuxGameServerModule.ModuleName, "available_games");
+        var reposFolder = _pluginConfiguration.GetReposFor(LinuxGameServerKeys.ModuleName, "available_games");
         var gameFolders = Path.Combine(reposFolder, "games");
         _crazyReport.ReportInfo($"Check Games in {gameFolders}");
         var result = new Dictionary<string, string>();
@@ -73,7 +74,7 @@ internal class LinuxGameServerService : ILinuxGameServerService
 
     public async Task<GameServerInstallProcessModel?> GetInstallationProgress(CancellationToken cancellation = default)
     {
-        string file = _pluginConfiguration.GetConfigFor(LinuxGameServerModule.ModuleName, "installation_progress_state.json");
+        string file = _pluginConfiguration.GetConfigFor(LinuxGameServerKeys.ModuleName, "installation_progress_state.json");
         if (!File.Exists(file)) return default;
         try
         {
@@ -92,7 +93,7 @@ internal class LinuxGameServerService : ILinuxGameServerService
     }
     public async Task<GameServerInfoEntity?> GetInstalledGameServer(CancellationToken cancellation = default)
     {
-        string file = _pluginConfiguration.GetConfigFor(LinuxGameServerModule.ModuleName, "installation_state.json");
+        string file = _pluginConfiguration.GetConfigFor(LinuxGameServerKeys.ModuleName, "installation_state.json");
         if (!File.Exists(file)) return default;
         try
         {
@@ -112,7 +113,7 @@ internal class LinuxGameServerService : ILinuxGameServerService
 
     public async Task PerformServerInstallation(string gameServer, string displayName, CancellationToken cancellation = default)
     {
-        string scriptInstallGameServer = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "install_game_server.sh", gameServer, displayName);
+        string scriptInstallGameServer = _pluginConfiguration.GetBashFor(LinuxGameServerKeys.ModuleName, "install_game_server.sh", gameServer, displayName);
         _crazyReport.ReportInfo("Run Script: {0}", scriptInstallGameServer);
         await _linuxCommand.BuildBash(scriptInstallGameServer).Sudo().ExecAsync(cancellation);
     }

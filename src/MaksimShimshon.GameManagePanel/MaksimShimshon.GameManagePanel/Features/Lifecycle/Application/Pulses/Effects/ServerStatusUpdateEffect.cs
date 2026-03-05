@@ -1,4 +1,5 @@
-﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.CQRS.Queries;
+﻿using MaksimShimshon.GameManagePanel.Core.Features;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.CQRS.Queries;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States.Enums;
@@ -22,7 +23,7 @@ internal class ServerStatusUpdateEffect : IEffect<ServerStatusUpdateAction>
         _stateAccessor = stateAccessor;
         _medihater = medihater;
         _crazyReport = crazyReport;
-        _crazyReport.SetModule<ServerGameInfoUpdateEffect>(LifecycleModule.ModuleName);
+        _crazyReport.SetModule<ServerGameInfoUpdateEffect>(LifecycleKeys.ModuleName);
     }
     public async Task EffectAsync(ServerStatusUpdateAction action, IDispatcher dispatcher)
     {

@@ -1,5 +1,6 @@
 ﻿using LunaticPanel.Core.Abstraction.Tools.LinuxCommand;
 using LunaticPanel.Core.Extensions;
+using MaksimShimshon.GameManagePanel.Core.Features;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
 using MaksimShimshon.GameManagePanel.Kernel.Dto;
@@ -21,7 +22,7 @@ internal class GitService : IGitService
     public async Task CloneAsync(string gitUrl, string target, CancellationToken ct = default)
     {
 
-        var commandCheckGit = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "check_git_install.sh");
+        var commandCheckGit = _pluginConfiguration.GetBashFor(LinuxGameServerKeys.ModuleName, "check_git_install.sh");
         var checkGitResult = await _linuxCommand
             .BuildBash(commandCheckGit)
             .Sudo()
@@ -29,8 +30,8 @@ internal class GitService : IGitService
 
         Console.WriteLine(checkGitResult.ToString());
         if (!checkGitResult.Completed) throw new WebServiceException(checkGitResult.Failure);
-        var targetFolder = _pluginConfiguration.GetReposFor(LinuxGameServerModule.ModuleName, target);
-        var command = _pluginConfiguration.GetBashFor(LinuxGameServerModule.ModuleName, "git_clone.sh", gitUrl, targetFolder);
+        var targetFolder = _pluginConfiguration.GetReposFor(LinuxGameServerKeys.ModuleName, target);
+        var command = _pluginConfiguration.GetBashFor(LinuxGameServerKeys.ModuleName, "git_clone.sh", gitUrl, targetFolder);
         var result = await _linuxCommand.BuildBash(command)
             .Sudo()
             .ExecAndReadAs<ScriptResponse>((s) => new() { Failure = s }, ct);

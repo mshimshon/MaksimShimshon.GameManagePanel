@@ -26,7 +26,7 @@ internal class OnInstallationStateChangedEvent : IEventBusHandler
         _dispatcher = dispatcher;
         _gameInfoStateAccess = gameInfoStateAccess;
         _crazyReport = crazyReport;
-        crazyReport.SetModule<OnInstallationStateChangedEvent>(LifecycleModule.ModuleName);
+        crazyReport.SetModule<OnInstallationStateChangedEvent>(LifecycleKeys.ModuleName);
     }
     public async Task HandleAsync(IEventBusMessage evt)
     {

@@ -1,5 +1,6 @@
 ﻿using LunaticPanel.Core.Abstraction.Tools.LinuxCommand;
 using LunaticPanel.Core.Extensions;
+using MaksimShimshon.GameManagePanel.Core.Features;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Domain.ValueObjects;
@@ -24,18 +25,18 @@ internal class LinuxSystemInfoService : ISystemInfoService
 
     public async Task<SystemInfoEntity?> GetSystemInfoAsync(CancellationToken ct = default)
     {
-        var ramScript = _pluginConfiguration.GetBashFor(SystemInfoModule.ModuleName, "get_ram_info.sh");
+        var ramScript = _pluginConfiguration.GetBashFor(SystemInfoKeys.ModuleName, "get_ram_info.sh");
         var ram = await _linuxCommand.BuildBash(ramScript).Sudo().ExecAsync(ct);
 
         var ramUsage = float.Parse(ram.StandardOutput.Split(';')[0]);
         var ramTotal = float.Parse(ram.StandardOutput.Split(';')[1]);
 
-        var diskScript = _pluginConfiguration.GetBashFor(SystemInfoModule.ModuleName, "get_disk_info.sh", _linuxSystemInfoConfiguration.WorkingDisk);
+        var diskScript = _pluginConfiguration.GetBashFor(SystemInfoKeys.ModuleName, "get_disk_info.sh", _linuxSystemInfoConfiguration.WorkingDisk);
         var disk = await _linuxCommand.BuildBash(diskScript).Sudo().ExecAsync(ct);
         var diskUsage = float.Parse(disk.StandardOutput.Split(';')[0]);
         var diskTotal = float.Parse(disk.StandardOutput.Split(';')[1]);
 
-        var processorScript = _pluginConfiguration.GetBashFor(SystemInfoModule.ModuleName, "get_cpu_info.sh");
+        var processorScript = _pluginConfiguration.GetBashFor(SystemInfoKeys.ModuleName, "get_cpu_info.sh");
         var processor = await _linuxCommand.BuildBash(processorScript).Sudo().ExecAsync(ct);
         var processorUsage = float.Parse(processor.StandardOutput.Split(';')[0]);
         var processorCores = int.Parse(processor.StandardOutput.Split(';')[1]);

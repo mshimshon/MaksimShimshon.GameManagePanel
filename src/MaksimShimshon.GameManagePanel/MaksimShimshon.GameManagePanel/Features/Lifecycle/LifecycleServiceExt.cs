@@ -1,4 +1,5 @@
-﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.CQRS.Commands;
+﻿using MaksimShimshon.GameManagePanel.Core.Features;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.CQRS.Commands;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.CQRS.Commands.Handlers;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.CQRS.Queries;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.CQRS.Queries.Handlers;
@@ -78,7 +79,7 @@ public static class LifecycleServiceExt
             services.AddMasterStateFileWatcherService<FetchStartupParametersAction>(
                 c =>
                 {
-                    string path = c.GetUserConfigBase(LifecycleModule.ModuleName);
+                    string path = c.GetUserConfigBase(LifecycleKeys.ModuleName);
                     Console.WriteLine(path);
                     return path;
                 },

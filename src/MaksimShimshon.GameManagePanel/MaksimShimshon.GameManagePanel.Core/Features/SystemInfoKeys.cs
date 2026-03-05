@@ -5,6 +5,7 @@ namespace MaksimShimshon.GameManagePanel.Core.Features;
 [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
 public static class SystemInfoKeys
 {
+    public const string ModuleName = "systeminfo";
     public static class Events
     {
         /// <summary>

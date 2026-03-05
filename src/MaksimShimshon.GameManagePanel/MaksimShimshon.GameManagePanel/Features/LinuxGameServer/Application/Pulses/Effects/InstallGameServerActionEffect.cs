@@ -1,4 +1,5 @@
-﻿using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands;
+﻿using MaksimShimshon.GameManagePanel.Core.Features;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using MedihatR;
@@ -15,7 +16,7 @@ public record InstallGameServerActionEffect : IEffect<InstallGameServerAction>
     {
         _medihater = medihater;
         _crazyReport = crazyReport;
-        _crazyReport.SetModule<InstallGameServerActionEffect>(LinuxGameServerModule.ModuleName);
+        _crazyReport.SetModule<InstallGameServerActionEffect>(LinuxGameServerKeys.ModuleName);
     }
     public async Task EffectAsync(InstallGameServerAction action, IDispatcher dispatcher)
     {

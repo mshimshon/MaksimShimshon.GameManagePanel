@@ -1,4 +1,5 @@
-﻿using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands;
+﻿using MaksimShimshon.GameManagePanel.Core.Features;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands.Handlers;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Queries;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Queries.Handlers;
@@ -77,12 +78,12 @@ public static class LinuxGameServerExt
         if (isMaster)
         {
             services.AddMasterStateFileWatcherService<UpdateInstalledGameServerAction>(
-                c => c.GetConfigBase(LinuxGameServerModule.ModuleName),
+                c => c.GetConfigBase(LinuxGameServerKeys.ModuleName),
                 "installation_state.json",
                 [FileWatchEvents.Any]);
 
             services.AddMasterStateFileWatcherService<UpdateProgressStateFromDiskAction>(
-                c => c.GetConfigBase(LinuxGameServerModule.ModuleName),
+                c => c.GetConfigBase(LinuxGameServerKeys.ModuleName),
                 "installation_progress_state.json",
                 [FileWatchEvents.Any]);
         }

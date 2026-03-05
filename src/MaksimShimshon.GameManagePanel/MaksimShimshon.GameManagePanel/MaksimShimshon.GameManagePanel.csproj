@@ -40,6 +40,18 @@
 	  <Folder Include="Features\LinuxGameServer\Application\CQRS\Notifications\Handlers\" />
 	  <Folder Include="Features\LinuxGameServer\Domain\ValueObjects\" />
 	  <Folder Include="Features\LinuxGameServer\Infrastructure\Hooks\" />
+	  <Folder Include="Features\Mods\Application\Bash\" />
+	  <Folder Include="Features\Mods\Application\CQRS\Commands\Handlers\" />
+	  <Folder Include="Features\Mods\Application\CQRS\Queries\Handlers\" />
+	  <Folder Include="Features\Mods\Application\Hooks\Features\" />
+	  <Folder Include="Features\Mods\Application\Hooks\Scheduled\" />
+	  <Folder Include="Features\Mods\Application\Pulses\Actions\" />
+	  <Folder Include="Features\Mods\Application\Pulses\Effects\" />
+	  <Folder Include="Features\Mods\Application\Pulses\Reducers\" />
+	  <Folder Include="Features\Mods\Application\Services\" />
+	  <Folder Include="Features\Mods\Infrastructure\Services\" />
+	  <Folder Include="Features\Mods\Web\Components\" />
+	  <Folder Include="Features\Mods\Web\Hooks\" />
 	  <Folder Include="Features\SystemInfo\Application\CQRS\Commands\" />
 	  <Folder Include="Kernel\StateManagement\" />
   </ItemGroup>

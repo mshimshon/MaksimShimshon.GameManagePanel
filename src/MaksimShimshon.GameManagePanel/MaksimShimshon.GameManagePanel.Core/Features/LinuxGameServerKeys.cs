@@ -5,6 +5,8 @@ namespace MaksimShimshon.GameManagePanel.Core.Features;
 [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
 public static class LinuxGameServerKeys
 {
+    public const string ModuleName = "linuxgameserver";
+
     public static class Queries
     {
         public const string IsGameServerInstalled = $"{BaseInfo.AssemblyName}.{nameof(LinuxGameServerKeys)}.{nameof(Queries)}.{nameof(IsGameServerInstalled)}";

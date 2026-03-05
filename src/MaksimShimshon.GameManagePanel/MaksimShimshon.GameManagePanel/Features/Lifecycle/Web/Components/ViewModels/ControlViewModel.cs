@@ -1,4 +1,5 @@
 ﻿using LunaticPanel.Core.Abstraction.Widgets;
+using MaksimShimshon.GameManagePanel.Core.Features;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
@@ -16,9 +17,9 @@ internal class ControlViewModel : WidgetViewModelBase, IServerControlViewModel
     private readonly ICrazyReport _crazyReport;
     private readonly IStateAccessor<ServerState> _stateAccessor;
 
-    public ServerState ServerState => _statePulse.StateOf<ServerState>(() => this, UpdateParentChanges);
+    public ServerState ServerState => _statePulse.StateOf<ServerState>(() => this, UpdateState);
     //public ServerState ServerState => _stateAccessor.State;
-    public SystemInfoState SystemInfoState => _statePulse.StateOf<SystemInfoState>(() => this, UpdateParentChanges);
+    public SystemInfoState SystemInfoState => _statePulse.StateOf<SystemInfoState>(() => this, UpdateState);
     public GameInfoState GameInfoState => _statePulse.StateOf<GameInfoState>(() => this, UpdateParentChanges);
 
     public GameInfoEntity? GameInfo => GameInfoState?.GameInfo;
@@ -29,8 +30,7 @@ internal class ControlViewModel : WidgetViewModelBase, IServerControlViewModel
         _crazyReport = crazyReport;
         _stateAccessor = stateAccessor;
         //_stateAccessor.OnStateChangedNoDetails += (_, e) => { _ = UpdateState(); };
-        _crazyReport.SetModule<ControlViewModel>(LifecycleModule.ModuleName);
-        _crazyReport.ReportInfo("Constructed");
+        _crazyReport.SetModule<ControlViewModel>(LifecycleKeys.ModuleName);
     }
 
     public async Task UpdateState()
@@ -40,12 +40,6 @@ internal class ControlViewModel : WidgetViewModelBase, IServerControlViewModel
 
     }
 
-    public async Task UpdateState2()
-    {
-        _crazyReport.ReportError("{0} Received an Update 2 on Circuit", nameof(ServerState));
-        await UpdateChanges();
-
-    }
     public async Task Test()
     {
         _ = UpdateChanges();
