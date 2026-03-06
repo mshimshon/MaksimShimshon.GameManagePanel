@@ -8,6 +8,6 @@ public sealed record ModListState : IStateFeatureSingleton
     public IEnumerable<ModListEntity> Available { get; init; } = new List<ModListEntity>().AsReadOnly();
     public IEnumerable<PartSchematicEntity> SchematicParts { get; init; } = new List<PartSchematicEntity>().AsReadOnly();
     public ModListEntity? Current { get; init; }
-
+    public bool IsCurrentLoading { get; init; }
 
 }

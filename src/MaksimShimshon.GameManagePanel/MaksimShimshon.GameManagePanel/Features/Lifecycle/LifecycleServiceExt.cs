@@ -11,6 +11,7 @@ using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services.Dto.Mapping;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Components;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Kernel.Extensions;
 using MaksimShimshon.GameManagePanel.Kernel.Services.Enums;
@@ -26,7 +27,7 @@ public static class LifecycleServiceExt
 
     public static void AddLifecycleFeatureServices(this IServiceCollection services, bool isMaster)
     {
-        services.AddScoped<IServerControlViewModel, ControlViewModel>();
+        services.AddScoped<IServerControlViewModel, ServerControlViewModel>();
         services.AddScoped<IStartupParameterViewModel, StartupParameterViewModel>();
 
         services.AddTransient<IStartupParameterFieldViewModel, StartupParameterFieldViewModel>();

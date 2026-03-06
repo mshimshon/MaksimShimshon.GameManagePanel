@@ -45,15 +45,11 @@
 	  <Folder Include="Features\Mods\Application\CQRS\Queries\Handlers\" />
 	  <Folder Include="Features\Mods\Application\Hooks\Features\" />
 	  <Folder Include="Features\Mods\Application\Hooks\Scheduled\" />
-	  <Folder Include="Features\Mods\Application\Pulses\Actions\" />
-	  <Folder Include="Features\Mods\Application\Pulses\Effects\" />
-	  <Folder Include="Features\Mods\Application\Pulses\Reducers\" />
 	  <Folder Include="Features\Mods\Application\Services\" />
 	  <Folder Include="Features\Mods\Infrastructure\Services\" />
-	  <Folder Include="Features\Mods\Web\Components\" />
-	  <Folder Include="Features\Mods\Web\Hooks\" />
 	  <Folder Include="Features\SystemInfo\Application\CQRS\Commands\" />
 	  <Folder Include="Kernel\StateManagement\" />
+	  <Folder Include="Web\Pages\Hooks\Components\" />
   </ItemGroup>
 
 

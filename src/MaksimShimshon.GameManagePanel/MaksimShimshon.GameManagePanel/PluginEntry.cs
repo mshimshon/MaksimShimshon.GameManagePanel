@@ -7,6 +7,7 @@ using LunaticPanel.Core.Extensions;
 using MaksimShimshon.GameManagePanel.Core;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer;
+using MaksimShimshon.GameManagePanel.Features.Mods;
 using MaksimShimshon.GameManagePanel.Features.Notification;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
@@ -32,7 +33,7 @@ public class PluginEntry : PluginBase
     protected override void LoadConfiguration(IConfiguration configuration)
     {
         _configuration = configuration;
-        _heartbeatConfig = _configuration.GetSection("Heartbeat")?.Get<HeartbeatConfiguration>() ?? new();
+        _heartbeatConfig = _configuration.GetSection("Heartbeat")?.Get<HeartbeatConfiguration>() ?? new(); // TODO: Clean Up
         _repositoryConfig = _configuration.GetSection("Repositories")?.Get<RepositoryConfiguration>() ?? new();
 
     }
@@ -42,7 +43,6 @@ public class PluginEntry : PluginBase
     protected override void RegisterPluginServices(IServiceCollection services, CircuitIdentity circuit)
     {
         if (circuit.IsMaster) MasterId = circuit.CircuitId;
-        Console.WriteLine($"Is {circuit.CircuitId} DI Master? {(circuit.IsMaster)}");
 
         services.AddTransient<ILinuxLockFileController, LinuxLockFileController>();
         services.AddStatePulseService<DispatchErrorMiddleware>();
@@ -71,9 +71,11 @@ public class PluginEntry : PluginBase
         services.AddScoped<HomeViewModel>();
 
         services.AddLifecycleFeatureServices(circuit.IsMaster);
+        services.AddModFeatureServices(circuit.IsMaster);
         services.AddNotificationFeatureServices();
         services.AddLinuxGameServerFeatureServices(_crossCircuitSingletonProvider!, _configuration, circuit.IsMaster);
         services.AddSystemInfoFeatureServices(_configuration);
+
         services.AddTransient<ICrazyReport, CrazyReport>();
         // Make Singleton State cross circuit
         if (_statePulseStatesRedirectionSingleton == default)
@@ -114,9 +116,12 @@ public class PluginEntry : PluginBase
         var sp = pluginContext.GetRequired<IServiceProvider>();
         IEventBus eventBus = sp.GetRequiredService<IEventBus>();
         await eventBus.PublishDatalessAsync(PluginKeys.Events.OnBeforeRuntimeInitialization);
+
         await sp.RuntimeLifecycleInitializer(MasterId == pluginContext.CircuitId);
+        await sp.RuntimeModInitializer(MasterId == pluginContext.CircuitId);
         await sp.RuntimeLinuxGameServerInitializer(MasterId == pluginContext.CircuitId);
         await sp.RuntimeSystemInfoFeatureInitializer(MasterId == pluginContext.CircuitId);
+
         await eventBus.PublishDatalessAsync(PluginKeys.Events.OnAfterRuntimeInitialization);
     }
 }

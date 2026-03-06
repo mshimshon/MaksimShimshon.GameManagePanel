@@ -1,0 +1,16 @@
+@using MaksimShimshon.GameManagePanel.Features.Mods.Web.Components.ViewModels
+@inherits WidgetComponentBase<PluginEntry, IModListSelectorViewModel>
+
+<MudSelect @bind-Value=@ViewModel.CurrentModList
+           Label="Active ModList"
+           Placeholder=@("No ModList Selected")
+           HelperText=@("Modlist to be loaded at the next startup.")
+           Clearable>
+    @foreach (var modlist in ViewModel.ModListState.Available)
+    {
+        <MudSelectItem Value=modlist.Descriptor.Id>@modlist.Descriptor.Name</MudSelectItem>
+    }
+</MudSelect>
+<MudButton>
+    <MudIconButton Icon=@Icons.Material.Filled.Check />
+</MudButton>

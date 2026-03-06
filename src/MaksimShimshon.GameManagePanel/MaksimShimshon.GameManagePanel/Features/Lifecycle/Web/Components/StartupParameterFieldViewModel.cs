@@ -2,9 +2,10 @@
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Enums;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Components.ViewModels;
 using StatePulse.Net;
 
-namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Components.ViewModels;
+namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Components;
 
 public class StartupParameterFieldViewModel : WidgetViewModelBase, IStartupParameterFieldViewModel
 {

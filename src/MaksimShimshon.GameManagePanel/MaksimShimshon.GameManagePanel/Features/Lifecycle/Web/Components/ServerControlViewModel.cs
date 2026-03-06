@@ -4,14 +4,15 @@ using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.Actio
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Enums;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Features.SystemInfo.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using StatePulse.Net;
 
-namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Components.ViewModels;
+namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Components;
 
 
-internal class ControlViewModel : WidgetViewModelBase, IServerControlViewModel
+internal class ServerControlViewModel : WidgetViewModelBase, IServerControlViewModel
 {
     private readonly IStatePulse _statePulse;
     private readonly ICrazyReport _crazyReport;
@@ -24,13 +25,13 @@ internal class ControlViewModel : WidgetViewModelBase, IServerControlViewModel
 
     public GameInfoEntity? GameInfo => GameInfoState?.GameInfo;
 
-    public ControlViewModel(IStatePulse statePulse, ICrazyReport crazyReport, IStateAccessor<ServerState> stateAccessor)
+    public ServerControlViewModel(IStatePulse statePulse, ICrazyReport crazyReport, IStateAccessor<ServerState> stateAccessor)
     {
         _statePulse = statePulse;
         _crazyReport = crazyReport;
         _stateAccessor = stateAccessor;
         //_stateAccessor.OnStateChangedNoDetails += (_, e) => { _ = UpdateState(); };
-        _crazyReport.SetModule<ControlViewModel>(LifecycleKeys.ModuleName);
+        _crazyReport.SetModule<ServerControlViewModel>(LifecycleKeys.ModuleName);
     }
 
     public async Task UpdateState()

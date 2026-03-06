@@ -2,11 +2,12 @@
 using MaksimShimshon.GameManagePanel.Core.Features;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using StatePulse.Net;
 using System.Data;
 
-namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Components.ViewModels;
+namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Web.Components;
 
 public class StartupParameterViewModel : WidgetViewModelBase, IStartupParameterViewModel
 {
