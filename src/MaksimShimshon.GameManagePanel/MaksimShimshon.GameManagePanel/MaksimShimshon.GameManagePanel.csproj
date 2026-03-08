@@ -47,6 +47,7 @@
 	  <Folder Include="Features\Mods\Application\Hooks\Scheduled\" />
 	  <Folder Include="Features\Mods\Application\Services\" />
 	  <Folder Include="Features\Mods\Infrastructure\Services\" />
+	  <Folder Include="Features\Mods\Web\Pages\" />
 	  <Folder Include="Features\SystemInfo\Application\CQRS\Commands\" />
 	  <Folder Include="Kernel\StateManagement\" />
 	  <Folder Include="Web\Pages\Hooks\Components\" />

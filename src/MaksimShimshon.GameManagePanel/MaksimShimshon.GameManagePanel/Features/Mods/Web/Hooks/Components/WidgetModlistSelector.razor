@@ -5,7 +5,7 @@
 @if(ViewModel.ModsListState.Available.Count() > 0)
 {
     <MudGrid>
-        <MudItem xs=12 sm=12 md=4>
+        <MudItem xs=12>
             <MudPaper Class="justify-space-around mud-width-full py-6 px-6">
                 <ModListSelector OnParentStateHasChanged=@InvokeParentStateChanged />
             </MudPaper>

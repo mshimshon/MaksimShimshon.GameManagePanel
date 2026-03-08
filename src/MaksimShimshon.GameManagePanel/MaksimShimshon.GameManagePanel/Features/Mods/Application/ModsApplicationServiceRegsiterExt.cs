@@ -18,6 +18,7 @@ public static class ModsApplicationServiceRegsiterExt
         services.AddStatePulseService<UpdateCurrentModlistReducer>();
 
         services.AddStatePulseService<ModListState>();
+        services.AddStatePulseService<ModListLocalState>();
 
     }
 }

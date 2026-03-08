@@ -1,4 +1,10 @@
+@using Microsoft.AspNetCore.Components.Routing
 @inherits WidgetComponentBase<PluginEntry>
-<MudNavMenu Class="mud-width-full">
-    <MudNavLink Href="MaksimShimshon.GameManagePanel/" Icon="@Icons.Material.Filled.Dashboard">Game Server Management</MudNavLink>
+<MudNavMenu Dense="true" Rounded="true" Margin="Margin.Dense" Color="Color.Secondary" Class="mud-width-full pa-2">
+    <MudNavLink Href="MaksimShimshon.GameManagePanel/lifecycle" Icon="@Icons.Material.Filled.Dashboard">Server Lifecycle</MudNavLink>
+    <MudNavGroup Title="Advanced Lifecycle" Expanded="true">
+        <MudNavLink Href="MaksimShimshon.GameManagePanel/lifecycle/modlist" Icon="@Icons.Material.Filled.List">ModList</MudNavLink>
+        <MudNavLink Href="MaksimShimshon.GameManagePanel/lifecycle/startup-parameters" Icon="@Icons.Material.Filled.LocalPlay">Startup Parameters</MudNavLink>
+        <MudNavLink Href="MaksimShimshon.GameManagePanel/lifecycle/settings" Icon="@Icons.Material.Filled.Settings">Settings</MudNavLink>
+    </MudNavGroup>
 </MudNavMenu>

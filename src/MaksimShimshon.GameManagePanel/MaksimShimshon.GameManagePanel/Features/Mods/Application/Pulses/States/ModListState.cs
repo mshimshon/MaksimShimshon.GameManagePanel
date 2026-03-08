@@ -7,7 +7,10 @@ public sealed record ModListState : IStateFeatureSingleton
 {
     public IEnumerable<ModListEntity> Available { get; init; } = new List<ModListEntity>().AsReadOnly();
     public IEnumerable<PartSchematicEntity> SchematicParts { get; init; } = new List<PartSchematicEntity>().AsReadOnly();
-    public ModListEntity? Current { get; init; }
-    public bool IsCurrentLoading { get; init; }
+    /// <summary>
+    /// Currently Active ModList select for the server to use at startup.
+    /// </summary>
+    public ModListEntity? Active { get; init; }
+    public bool IsActiveLoading { get; init; }
 
 }
