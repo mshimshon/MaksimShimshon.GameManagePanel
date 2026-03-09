@@ -15,28 +15,28 @@ internal class ModListSelectorViewModel : WidgetViewModelBase, IModListSelectorV
     private readonly ICrazyReport _crazyReport;
 
     public ModListState ModListState => _statePulse.StateOf<ModListState>(() => this, UpdateState);
-    public string? CurrentModList { get; set; }
-    public string? InitialValue { get; private set; }
+    public Guid CurrentModList { get; set; }
+    public Guid InitialValue { get; private set; }
     public ModListSelectorViewModel(IStatePulse statePulse, ICrazyReport crazyReport)
     {
         _statePulse = statePulse;
         _crazyReport = crazyReport;
-        InitialValue = ModListState.Current?.Descriptor.Id;
+        InitialValue = ModListState.Active?.Descriptor.Id ?? Guid.Empty;
         CurrentModList = InitialValue;
         _crazyReport.SetModule<ModListSelectorViewModel>(ModKeys.ModuleName);
     }
     public async Task UpdateState()
     {
-        bool areBothDefined = InitialValue != default && ModListState.Current != default;
-        bool wasCurrentSetWhenInitialDef = InitialValue == default && ModListState.Current != default;
-        bool wasInitialSetWhenCurrentDef = InitialValue != default && ModListState.Current == default;
-        bool bothdefinedButDifferent = areBothDefined && InitialValue != ModListState.Current!.Descriptor.Id;
+        bool areBothDefined = InitialValue != Guid.Empty && ModListState.Active != default;
+        bool wasCurrentSetWhenInitialDef = InitialValue == Guid.Empty && ModListState.Active != default;
+        bool wasInitialSetWhenCurrentDef = InitialValue != Guid.Empty && ModListState.Active == default;
+        bool bothdefinedButDifferent = areBothDefined && InitialValue != ModListState.Active!.Descriptor.Id;
 
         bool requiresUpdate = wasCurrentSetWhenInitialDef || wasInitialSetWhenCurrentDef || bothdefinedButDifferent;
         if (requiresUpdate)
         {
 
-            InitialValue = ModListState.Current?.Descriptor.Id;
+            InitialValue = ModListState.Active?.Descriptor.Id ?? Guid.Empty;
             CurrentModList = InitialValue;
         }
 

@@ -3,13 +3,13 @@ using MaksimShimshon.GameManagePanel.Features.Mods.Domain.Exceptions.Extensions;
 
 namespace MaksimShimshon.GameManagePanel.Features.Mods.Domain.ValueObjects;
 
-public abstract record BaseId
+public abstract record BaseStringId
 {
     public string Id { get; }
-    protected BaseId(string id)
+    protected BaseStringId(string id)
     {
         Id = id;
-        ValidateId<BaseId>();
+        ValidateId<BaseStringId>();
     }
     protected virtual void ValidateId<TOrigin>()
     {
@@ -19,9 +19,9 @@ public abstract record BaseId
     }
 }
 
-public abstract record BaseId<TOrigin> : BaseId
+public abstract record BaseStringId<TOrigin> : BaseStringId
 {
-    protected BaseId(string id) : base(id)
+    protected BaseStringId(string id) : base(id)
     {
         Id.ThrowIfNullOrWhiteSpace<TOrigin>(nameof(Id));
     }

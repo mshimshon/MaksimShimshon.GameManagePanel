@@ -1,5 +1,6 @@
 @page "/MaksimShimshon.GameManagePanel"
 @page "/MaksimShimshon.GameManagePanel/lifecycle"
+@using MaksimShimshon.GameManagePanel.Features.Mods.Web.Hooks.Components
 @inherits WidgetComponentBase<PluginEntry, HomeViewModel>
 
 <MudGrid Justify=@Justify.FlexStart>
@@ -15,5 +16,8 @@
     </MudItem>
     <MudItem xs=12 sm=12 md=8>
         <WidgetStartupParameters />
+    </MudItem>
+    <MudItem xs=12 sm=12 md=8>
+        <WidgetModListWorkspace ModListId=@(Guid.NewGuid()) />
     </MudItem>
 </MudGrid>

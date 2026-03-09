@@ -6,5 +6,7 @@ namespace MaksimShimshon.GameManagePanel.Features.Mods.Web.Hooks.Components.View
 public interface IWidgetModListWorkspaceViewModel : IWidgetViewModel
 {
     ModListLocalState ModListLocalState { get; }
-    Task LoadAsync(Guid identifier, CancellationToken ct = default);
+    Guid ModListId { get; set; }
+    Guid GetModListId();
+
 }

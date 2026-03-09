@@ -4,20 +4,13 @@
 
 <MudGrid>
     <MudItem xs=12>
-        @if (!ViewModel.IsLoading)
+        @if (ViewModel.ModListLocalState.Current == default && ModListId == Guid.Empty)
         {
-            @if (ViewModel.ModListLocalState.Current == default)
-            {
-                <ModListExplorer OnParentStateHasChanged=OnParentStateHasChanged />
-            }
-            else
-            {
-                <ModListEditor OnParentStateHasChanged=OnParentStateHasChanged />
-            }
+            <ModListExplorer OnParentStateHasChanged=OnParentStateHasChanged />
         }
         else
         {
-            <p>Loading....</p>
+            <ModListEditor id=@ViewModel.GetModListId() OnParentStateHasChanged=OnParentStateHasChanged />
         }
 
     </MudItem>

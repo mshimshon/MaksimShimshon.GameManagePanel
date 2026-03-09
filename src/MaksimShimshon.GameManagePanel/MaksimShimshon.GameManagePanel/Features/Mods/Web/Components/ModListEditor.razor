@@ -1,3 +1,37 @@
+@using MaksimShimshon.GameManagePanel.Features.Mods.Domain.Entities
 @using MaksimShimshon.GameManagePanel.Features.Mods.Web.Components.ViewModels
 @inherits WidgetComponentBase<PluginEntry, IModListEditorViewModel>
+<MudGrid>
+    @if (ViewModel.IsLoading)
+    {
+        <MudItem>
+            <p>Loading...</p>
+        </MudItem>
+    }
+    else if (ViewModel.Information != default)
+    {
+        <MudItem >
+            @foreach (var schematicPart in ViewModel.ModListState.SchematicParts)
+            {
+                <MudDropContainer T="ModEntity" Items=@ViewModel.Information[schematicPart.Id] 
+                        ItemsSelector="@((item, dropzone) => true)" 
+                        ItemDropped="ItemUpdated"
+                        Class="d-flex flex-wrap flex-grow-1">
 
+                    <ChildContent>
+                        <MudDropZone T="ModEntity" Identifier=@schematicPart.Id.Id
+                                        AllowReorder
+                                        Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+                            <MudText Typo="Typo.h6" Class="mb-4">@schematicPart.Name</MudText>
+                        </MudDropZone>
+                    </ChildContent>
+                    <ItemRenderer>
+                        <MudPaper Elevation="25" Class="pa-4 my-4">@ViewModel.GetModName(context)</MudPaper>
+                    </ItemRenderer>
+
+                </MudDropContainer>
+            }
+        </MudItem>
+
+    }
+</MudGrid>

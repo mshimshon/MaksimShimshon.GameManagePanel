@@ -13,6 +13,11 @@ public static class ModServiceRegistrationExt
     {
         services.AddScoped<IModListSelectorViewModel, ModListSelectorViewModel>();
         services.AddScoped<IWidgetModlistSelectorViewModel, WidgetModlistSelectorViewModel>();
+        services.AddScoped<IModListEditorViewModel, ModListEditorViewModel>();
+        services.AddScoped<IModListExplorerViewModel, ModListExplorerViewModel>();
+        services.AddScoped<IModListFilesViewModel, ModListFilesViewModel>();
+        services.AddScoped<IModListToolbarViewModel, ModListToolbarViewModel>();
+        services.AddScoped<IWidgetModListWorkspaceViewModel, WidgetModListWorkspaceViewModel>();
 
         services.RegisterModInfrastructureServices();
 

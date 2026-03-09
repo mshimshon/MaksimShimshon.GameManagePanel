@@ -4,23 +4,11 @@ namespace MaksimShimshon.GameManagePanel.Features.Mods.Web.Hooks.Components;
 
 public partial class WidgetModListWorkspace
 {
-    [Parameter] public Guid FileIdentifier { get; set; }
-    private Guid _initialFileId;
-    protected override void OnWidgetInitialized()
-    {
-        _initialFileId = FileIdentifier;
-    }
+    [Parameter] public Guid ModListId { get; set; }
     protected override async Task OnWidgetParametersSetAsync()
     {
-        if (_initialFileId != FileIdentifier)
-            await ViewModel.LoadAsync(FileIdentifier);
-
+        ViewModel.ModListId = ModListId;
     }
 
-    protected override async Task OnWidgetAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-            await ViewModel.LoadAsync(FileIdentifier);
-    }
 
 }

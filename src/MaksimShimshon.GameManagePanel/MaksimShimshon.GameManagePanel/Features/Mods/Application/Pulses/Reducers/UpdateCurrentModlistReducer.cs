@@ -9,6 +9,6 @@ internal class UpdateCurrentModlistReducer : IReducer<ModListState, UpdateCurren
     public ModListState Reduce(ModListState state, UpdateCurrentModListAction action)
         => state with
         {
-            IsCurrentLoading = true
+            IsActiveLoading = true
         };
 }

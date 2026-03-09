@@ -9,21 +9,19 @@ internal class WidgetModListWorkspaceViewModel : WidgetViewModelBase, IWidgetMod
 {
     private readonly IStatePulse _statePulse;
     public ModListLocalState ModListLocalState => _statePulse.StateOf<ModListLocalState>(() => this, UpdateChanges);
-
+    public Guid ModListId { get; set; }
     public WidgetModListWorkspaceViewModel(IStatePulse statePulse)
     {
         _statePulse = statePulse;
-        IsLoading = true;
     }
 
-    public async Task LoadAsync(Guid identifier, CancellationToken ct = default)
-    {
-        if (identifier != Guid.Empty)
-        {
-            // TODO: StatePulse Dispatch
-        }
-        IsLoading = false;
-    }
 
     protected override bool GetStateLoadingStatus() => ModListLocalState.IsCurrentLoading;
+
+    public Guid GetModListId()
+    {
+        if (ModListLocalState.Current == default)
+            return ModListId;
+        return ModListLocalState.Current.Descriptor.Id;
+    }
 }

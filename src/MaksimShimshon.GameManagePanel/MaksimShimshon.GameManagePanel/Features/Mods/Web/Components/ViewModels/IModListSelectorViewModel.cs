@@ -5,7 +5,7 @@ namespace MaksimShimshon.GameManagePanel.Features.Mods.Web.Components.ViewModels
 
 public interface IModListSelectorViewModel : IWidgetViewModel
 {
-    string? CurrentModList { get; set; }
+    Guid CurrentModList { get; set; }
     ModListState ModListState { get; }
 
     Task Save();
