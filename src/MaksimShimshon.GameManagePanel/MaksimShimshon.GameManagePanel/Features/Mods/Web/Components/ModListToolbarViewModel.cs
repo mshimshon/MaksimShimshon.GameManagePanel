@@ -3,6 +3,6 @@ using MaksimShimshon.GameManagePanel.Features.Mods.Web.Components.ViewModels;
 
 namespace MaksimShimshon.GameManagePanel.Features.Mods.Web.Components;
 
-internal class ModListToolbarViewModel : WidgetViewModelBase, IModListToolbarViewModel
+internal sealed class ModListToolbarViewModel : WidgetViewModelBase, IModListToolbarViewModel
 {
 }

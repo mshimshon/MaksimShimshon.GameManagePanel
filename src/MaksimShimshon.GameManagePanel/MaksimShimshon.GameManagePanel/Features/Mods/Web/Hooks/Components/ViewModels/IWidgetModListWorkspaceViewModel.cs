@@ -6,7 +6,5 @@ namespace MaksimShimshon.GameManagePanel.Features.Mods.Web.Hooks.Components.View
 public interface IWidgetModListWorkspaceViewModel : IWidgetViewModel
 {
     ModListLocalState ModListLocalState { get; }
-    Guid ModListId { get; set; }
-    Guid GetModListId();
 
 }

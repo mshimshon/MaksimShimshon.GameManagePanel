@@ -20,7 +20,7 @@
     <PackageReference Include="LunaticPanel.Core" PrivateAssets="false" />
     <PackageReference Include="LunaticPanel.Core.Extensions" />
     <PackageReference Include="LunaticPanel.Engine.Core" PrivateAssets="false" />
-	<PackageReference Include="Microsoft.AspNetCore.Components.Web" PrivateAssets="false" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" />
 	<PackageReference Include="Microsoft.Extensions.Logging" />
 	<PackageReference Include="MudBlazor" PrivateAssets="false" />
 	<PackageReference Include="Newtonsoft.Json" />
@@ -41,13 +41,8 @@
 	  <Folder Include="Features\LinuxGameServer\Domain\ValueObjects\" />
 	  <Folder Include="Features\LinuxGameServer\Infrastructure\Hooks\" />
 	  <Folder Include="Features\Mods\Application\Bash\" />
-	  <Folder Include="Features\Mods\Application\CQRS\Commands\Handlers\" />
-	  <Folder Include="Features\Mods\Application\CQRS\Queries\Handlers\" />
 	  <Folder Include="Features\Mods\Application\Hooks\Features\" />
 	  <Folder Include="Features\Mods\Application\Hooks\Scheduled\" />
-	  <Folder Include="Features\Mods\Application\Services\" />
-	  <Folder Include="Features\Mods\Infrastructure\Services\" />
-	  <Folder Include="Features\Mods\Web\Pages\" />
 	  <Folder Include="Features\SystemInfo\Application\CQRS\Commands\" />
 	  <Folder Include="Kernel\StateManagement\" />
 	  <Folder Include="Web\Pages\Hooks\Components\" />

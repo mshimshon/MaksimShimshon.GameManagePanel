@@ -7,10 +7,12 @@ namespace MaksimShimshon.GameManagePanel.Features.Mods.Web.Components.ViewModels
 
 public interface IModListEditorViewModel : IWidgetViewModel
 {
-    Guid Id { get; set; }
-    Task LoadAsync(bool force = false);
+    Guid InitialId { get; set; }
     ModListLocalState ModListLocalState { get; }
     ModListState ModListState { get; }
     Dictionary<PartId, List<ModEntity>>? Information { get; }
     string GetModName(ModEntity item);
+    void MoveTo(string partId, ModEntity toMove, int targetIndex);
+    void AddTo(string partId, ModEntity toAdd);
+    void RemoveFrom(string partId, ModEntity toRemove);
 }

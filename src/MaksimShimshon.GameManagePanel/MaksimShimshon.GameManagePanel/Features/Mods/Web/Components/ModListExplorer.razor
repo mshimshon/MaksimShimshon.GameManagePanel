@@ -1,2 +1,35 @@
+@using MaksimShimshon.GameManagePanel.Features.Mods.Domain.ValueObjects
 @using MaksimShimshon.GameManagePanel.Features.Mods.Web.Components.ViewModels
 @inherits WidgetComponentBase<PluginEntry, IModListExplorerViewModel>
+
+<MudGrid>
+    @if (ViewModel.ModListLocalState.IsCurrentLoading)
+    {
+        <MudItem>
+            <p>loading...</p>
+        </MudItem>
+    }
+    else
+    {
+        <MudItem>
+
+            @if (ViewModel.ModListState.Available.Count() > 0)
+            {
+                <MudNavMenu>
+                    @foreach (var modlist in ViewModel.ModListState.Available)
+                    {
+                        <MudNavLink OnClick=@(() => OpenModList(modlist.Descriptor.Id))>
+                            @modlist.Descriptor.Name
+                        </MudNavLink>
+
+                    }
+                </MudNavMenu>
+            }
+            else
+            {
+                <p>No Modlist Currently Exist.</p>
+                
+            }
+        </MudItem>
+    }
+</MudGrid>

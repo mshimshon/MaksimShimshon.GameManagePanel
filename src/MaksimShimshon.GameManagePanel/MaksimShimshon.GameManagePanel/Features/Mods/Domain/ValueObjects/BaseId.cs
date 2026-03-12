@@ -30,4 +30,5 @@ public abstract record BaseStringId<TOrigin> : BaseStringId
     {
         base.ValidateId<TOrigin>();
     }
+
 }

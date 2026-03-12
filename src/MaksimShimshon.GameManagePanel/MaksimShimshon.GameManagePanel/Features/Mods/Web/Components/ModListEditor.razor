@@ -15,7 +15,7 @@
             {
                 <MudDropContainer T="ModEntity" Items=@ViewModel.Information[schematicPart.Id] 
                         ItemsSelector="@((item, dropzone) => true)" 
-                        ItemDropped="ItemUpdated"
+                        ItemDropped=ItemUpdated
                         Class="d-flex flex-wrap flex-grow-1">
 
                     <ChildContent>
@@ -24,14 +24,13 @@
                                         Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
                             <MudText Typo="Typo.h6" Class="mb-4">@schematicPart.Name</MudText>
                         </MudDropZone>
+                        <h1>Test</h1>
                     </ChildContent>
                     <ItemRenderer>
                         <MudPaper Elevation="25" Class="pa-4 my-4">@ViewModel.GetModName(context)</MudPaper>
                     </ItemRenderer>
-
                 </MudDropContainer>
             }
         </MudItem>
-
     }
 </MudGrid>

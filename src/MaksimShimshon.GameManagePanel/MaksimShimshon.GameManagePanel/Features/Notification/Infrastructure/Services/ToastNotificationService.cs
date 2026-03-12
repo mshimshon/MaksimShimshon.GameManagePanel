@@ -5,7 +5,7 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Notification.Infrastructure.Services;
 
-internal class ToastNotificationService : INotificationService
+internal sealed class ToastNotificationService : INotificationService
 {
     private readonly IDispatcher _dispatcher;
 

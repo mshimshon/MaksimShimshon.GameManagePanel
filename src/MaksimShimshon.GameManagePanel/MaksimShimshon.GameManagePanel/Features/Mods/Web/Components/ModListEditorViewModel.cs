@@ -7,13 +7,14 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Mods.Web.Components;
 
-internal class ModListEditorViewModel : WidgetViewModelBase, IModListEditorViewModel
+internal sealed class ModListEditorViewModel : WidgetViewModelBase, IModListEditorViewModel
 {
     private readonly IStatePulse _statePulse;
     public ModListLocalState ModListLocalState => _statePulse.StateOf<ModListLocalState>(() => this, UpdateState);
     public ModListState ModListState => _statePulse.StateOf<ModListState>(() => this, UpdateChanges);
     public Dictionary<PartId, List<ModEntity>>? Information { get; set; }
-    public Guid Id { get; set; }
+    public Guid InitialId { get; set; }
+
     private bool _isProcessing = false;
     private bool _reprocess = false;
     private object _lock = new();
@@ -23,32 +24,23 @@ internal class ModListEditorViewModel : WidgetViewModelBase, IModListEditorViewM
 
     }
     protected override bool GetStateLoadingStatus() => ModListLocalState.IsCurrentLoading || Information == default;
-    public async Task LoadAsync(bool force = false)
+
+    protected override async Task OnViewModelParametersSetAsync()
     {
-        Guid id = Id;
-        bool isIdUnknown = id == Guid.Empty && ModListLocalState.Current == default;
-        bool isUsingState = id == Guid.Empty && ModListLocalState.Current != default;
-
-        if (isIdUnknown)
-            return;
-        else if (isUsingState)
-            id = ModListLocalState.Current!.Descriptor.Id;
-
-        bool isStateSameAsId = id != Guid.Empty && ModListLocalState.Current != default && ModListLocalState.Current.Descriptor.Id == Id;
-        if (isStateSameAsId && !force)
+        if (ModListLocalState.Current == default)
         {
-            _ = ProcessModListParts();
+            Information = default;
+            InitialId = Guid.Empty;
             return;
         }
 
-        // TODO: Dispatch
+        bool informationUndefined = Information == default;
+        bool informationDifferent = ModListLocalState.Current.Descriptor.Id != InitialId;
+        bool isReprocessRequired = _reprocess || informationUndefined || informationDifferent;
+        if (isReprocessRequired)
+            await ProcessModListParts();
 
-        lock (_lock)
-        {
-            if (!_reprocess)
-                _reprocess = true;
-        }
-
+        InitialId = ModListLocalState.Current?.Descriptor.Id ?? Guid.Empty;
     }
 
     private async Task ProcessModListParts(CancellationToken ct = default)
@@ -61,41 +53,83 @@ internal class ModListEditorViewModel : WidgetViewModelBase, IModListEditorViewM
             if (_reprocess)
                 _reprocess = false;
         }
-
-        if (ModListLocalState.Current == default) return;
-        Information = ModListLocalState.Current.Mods
-            .ToDictionary(p => p.Key with { }, p => p.Value.Select(p => p with { })
-            .ToList());
-        await UpdateChanges();
-        lock (_lock)
+        try
         {
-            _isProcessing = false;
+            Information = default;
+            if (ModListLocalState.Current == default) return;
+            Information = ModListLocalState.Current.Mods
+                .ToDictionary(p => p.Key, p => p.Value.ToList());
+        }
+        catch (Exception)
+        {
+            // TODO: LOGG
+        }
+        finally
+        {
+            lock (_lock)
+            {
+                _isProcessing = false;
+            }
+            await UpdateChanges();
         }
     }
 
-    public async Task MoveTo(PartId partId, ModEntity toMove, int targetIndex)
+    public void RemoveFrom(string partId, ModEntity toRemove)
     {
         // TODO: TOAST NOTIFICATION
-        if (Information == default) return;
+        if (Information == default || !Information.Any(p => p.Key.Id == partId))
+            return;
+        var kp = Information.Single(p => p.Key.Id == partId);
+        kp.Value.Remove(toRemove);
+        _ = UpdateChanges();
+    }
 
-        var list = Information[partId].ToList();
+    public void AddTo(string partId, ModEntity toAdd)
+    {
+        // TODO: TOAST NOTIFICATION
+        if (Information == default || !Information.Any(p => p.Key.Id == partId))
+            return;
+        var kp = Information.Single(p => p.Key.Id == partId);
+        kp.Value.Add(toAdd);
+        _ = UpdateChanges();
+    }
+
+    public void MoveTo(string partId, ModEntity toMove, int targetIndex)
+    {
+        // TODO: TOAST NOTIFICATION
+        if (Information == default || !Information.Any(p => p.Key.Id == partId))
+            return;
+
+        var kp = Information.Single(p => p.Key.Id == partId);
+        var list = kp.Value;
         var fallbackIndex = list.IndexOf(toMove);
         list.Remove(toMove);
         if (targetIndex > list.Count || targetIndex < 0)
             list.Insert(fallbackIndex, toMove);
         else
             list.Insert(targetIndex, toMove);
+        Information[kp.Key] = list;
+
+        _ = UpdateChanges();
+    }
+
+    public async Task SaveAsync()
+    {
+        // TODO: SEND SP ACTION
+    }
+
+    public async Task CloseAsync()
+    {
+
     }
 
     private async Task UpdateState()
     {
-        bool isReprocessRequired = _reprocess && ModListLocalState.Current != default || Information == default && ModListLocalState.Current != default;
-        if (isReprocessRequired)
-            _ = ProcessModListParts();
-
         await UpdateChanges();
     }
 
     public string GetModName(ModEntity item)
         => item.Name == default ? item.Id.Id : item.Name.Name;
+
+
 }

@@ -1,4 +1,8 @@
-@page "/MaksimShimshon.GameManagePanel/lifecycle/modlist"
-@inherits WidgetComponentBase<PluginEntry>
-
-    <h1>Test</h1>
+@page "/MaksimShimshon.GameManagePanel/modlist/"
+@page "/MaksimShimshon.GameManagePanel/modlist/{id:guid?}"
+@using MaksimShimshon.GameManagePanel.Features.Mods.Web.Hooks.Components
+@using MaksimShimshon.GameManagePanel.Features.Mods.Web.Pages.ViewModels
+@inherits WidgetComponentBase<PluginEntry, IModListHomeViewModel>
+<WidgetModListWorkspace  
+    AutoRedirect
+    OnParentStateHasChanged=InvokeParentStateChanged />

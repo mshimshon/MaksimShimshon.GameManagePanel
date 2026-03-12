@@ -9,7 +9,7 @@ using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Mods.Web.Components;
 
-internal class ModListSelectorViewModel : WidgetViewModelBase, IModListSelectorViewModel
+internal sealed class ModListSelectorViewModel : WidgetViewModelBase, IModListSelectorViewModel
 {
     private readonly IStatePulse _statePulse;
     private readonly ICrazyReport _crazyReport;

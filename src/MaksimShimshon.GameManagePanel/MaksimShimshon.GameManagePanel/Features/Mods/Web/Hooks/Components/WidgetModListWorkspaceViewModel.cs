@@ -18,10 +18,4 @@ internal class WidgetModListWorkspaceViewModel : WidgetViewModelBase, IWidgetMod
 
     protected override bool GetStateLoadingStatus() => ModListLocalState.IsCurrentLoading;
 
-    public Guid GetModListId()
-    {
-        if (ModListLocalState.Current == default)
-            return ModListId;
-        return ModListLocalState.Current.Descriptor.Id;
-    }
 }

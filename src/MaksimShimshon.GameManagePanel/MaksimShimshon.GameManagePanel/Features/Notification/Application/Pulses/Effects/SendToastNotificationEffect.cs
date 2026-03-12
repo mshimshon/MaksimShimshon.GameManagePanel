@@ -16,6 +16,7 @@ public class SendToastNotificationEffect : IEffect<SendToastNotificationAction>
     }
     public Task EffectAsync(SendToastNotificationAction action, IDispatcher dispatcher)
     {
+
         Severity selectedSeverity = action.Color switch
         {
             NotificationSeverity.Error => Severity.Error,
@@ -24,6 +25,7 @@ public class SendToastNotificationEffect : IEffect<SendToastNotificationAction>
             _ => Severity.Info
         };
         _snackbar.Add((MarkupString)action.Message, selectedSeverity);
+
         return Task.CompletedTask;
     }
 }
