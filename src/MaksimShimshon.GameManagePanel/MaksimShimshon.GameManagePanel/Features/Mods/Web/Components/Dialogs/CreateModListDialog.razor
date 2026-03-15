@@ -8,24 +8,34 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        @if (ViewModel.ModListLocalState.IsCreationLoading)
-        {
-            <MudProgressLinear Color=Color.Warning
-                               Indeterminate
-                               Class="my-7" />
-        }
-        else
-        {
-            <MudTextField Value=@ViewModel.Id.ToString() Label="ModList Id" ReadOnly="true" />
-            <MudTextField @bind-Value=ViewModel.Name Label="ModList Name"
-                          Validation=_nameValidator
-                          Placeholder="Any name will be okay"
-                          Immediate
-                          MaxLength="256"
-                          ReadOnly=ViewModel.IsAllowedComplete
-                          Disabled=ViewModel.IsBusy() />
-        }
+        <MudGrid>
+            @if (ViewModel.ModListLocalState.IsCreationLoading)
+            {
+                <MudItem>
+                    <MudProgressLinear Color=Color.Warning
+                                       Indeterminate
+                                       Class="my-7" />
+                </MudItem>
 
+            }
+            else
+            {
+                <MudItem xs=12>
+                    <MudTextField Value=@ViewModel.Id.ToString() Label="ModList Id" ReadOnly="true" />
+
+                </MudItem>
+                <MudItem xs=12>
+                    <MudTextField @bind-Value=ViewModel.Name Label="ModList Name"
+                                  Validation=_nameValidator
+                                  Placeholder="Any name will be okay"
+                                  Immediate
+                                  MaxLength="256"
+                                  ReadOnly=ViewModel.IsAllowedComplete
+                                  Disabled=ViewModel.IsBusy() />
+                </MudItem>
+
+            }
+        </MudGrid>
     </DialogContent>
     <DialogActions>
         @if (ViewModel.IsAllowedComplete)
@@ -35,7 +45,7 @@
         else
         {
             <MudButton OnClick=CancelAsync Disabled=ViewModel.IsBusy()>Cancel</MudButton>
-            <MudButton Color=Color.Primary OnClick=CreateAsync Disabled=ViewModel.IsBusy()>Create</MudButton>
+            <MudButton Color=Color.Primary OnClick=ViewModel.CreateAsync Disabled=@(ViewModel.IsBusy() || !ViewModel.IsFormValid())>Create</MudButton>
         }
     </DialogActions>
 </MudDialog>

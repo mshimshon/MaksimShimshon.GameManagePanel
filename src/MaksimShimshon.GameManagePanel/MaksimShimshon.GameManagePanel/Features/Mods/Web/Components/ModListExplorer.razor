@@ -12,14 +12,14 @@
     else
     {
         <MudItem>
-
+            <MudButton OnClick=CreateAsync>Create</MudButton>
             @if (ViewModel.ModListState.Available.Count() > 0)
             {
                 <MudNavMenu>
                     @foreach (var modlist in ViewModel.ModListState.Available)
                     {
-                        <MudNavLink OnClick=@(() => OpenModList(modlist.Descriptor.Id))>
-                            @modlist.Descriptor.Name
+                        <MudNavLink OnClick=@(() => OpenModList(modlist.Id))>
+                            @modlist.Name
                         </MudNavLink>
 
                     }

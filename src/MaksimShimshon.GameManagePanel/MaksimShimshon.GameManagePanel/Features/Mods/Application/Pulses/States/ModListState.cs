@@ -12,7 +12,7 @@ public sealed record ModListState : IStateFeatureSingleton
     /// <summary>
     /// Currently Active ModList select for the server to use at startup.
     /// </summary>
-    public ModListEntity? Active { get; init; }
+    public ModListDescriptor? Active { get; init; }
     public bool IsActiveLoading { get; init; }
 
 

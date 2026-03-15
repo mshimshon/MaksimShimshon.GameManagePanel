@@ -1,6 +1,8 @@
 ﻿using LunaticPanel.Core.Abstraction.Widgets.Enum;
+using MaksimShimshon.GameManagePanel.Features.Mods.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.Mods.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.Mods.Web.Components.Dialogs.ViewModels;
+using MaksimShimshon.GameManagePanel.Kernel.Notification.Services;
 using StatePulse.Net;
 using System.Text.RegularExpressions;
 
@@ -18,34 +20,57 @@ internal class CreateModListDialogViewModel : ICreateModListDialogViewModel
 
     private const string ALPHA_NUMERIC_N_SPACES = @"^[A-Za-z0-9 ]+$";
     private readonly IStatePulse _statePulse;
+    private readonly INotificationService _notification;
+
+    private IDispatcher Dispatcher => _statePulse.Dispatcher;
     public ModListState ModListState => _statePulse.StateOf<ModListState>(() => this, UpdateChanges);
     public ModListLocalState ModListLocalState => _statePulse.StateOf<ModListLocalState>(() => this, UpdateChanges);
     public bool IsAllowedComplete { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
+    private bool _performInitialAttemptToSave = false;
     public bool IsBusy()
         => IsLoading || ModListState.IsLoadingAvailable || ModListLocalState.IsCreationLoading;
 
     public void OnParameterSet()
     {
-        IsAllowedComplete = ModListState.Available.Any(p => p.Id == Id);
+        IsAllowedComplete = !ModListLocalState.IsCurrentLoading && !ModListLocalState.DidLastCreationFailed && _performInitialAttemptToSave;
     }
 
     private async Task UpdateChanges()
     {
         SpreadChanges?.Invoke(SpreadChangeOption.TouchMyComponentOnly);
     }
-    public CreateModListDialogViewModel(IStatePulse statePulse)
+    public CreateModListDialogViewModel(IStatePulse statePulse, INotificationService notification)
     {
         _statePulse = statePulse;
+        _notification = notification;
     }
+    public bool IsFormValid()
+        => IsNotNullPass(Name) &&
+           IsMaxCharacterPass(Name, 256) &&
+           IsMinCharacterPass(Name, 5) &&
+           IsAlphaNumericAndSpacePass(Name);
 
     public bool IsNotNullPass(string? str) => !string.IsNullOrWhiteSpace(str);
     public bool IsMaxCharacterPass(string str, int maxLength) => str.Length <= maxLength;
-    public bool IsMinCharacterPass(string str, int minLength) => str.Length > minLength;
+    public bool IsMinCharacterPass(string str, int minLength) => str.Length >= minLength;
     public bool IsAlphaNumericAndSpacePass(string str) => Regex.IsMatch(str, ALPHA_NUMERIC_N_SPACES);
     public async Task CreateAsync()
-
     {
+        if (!IsFormValid())
+        {
+            await _notification.NotifyAsync("Validation Error", Kernel.Notification.Enums.NotificationSeverity.Error);
+            return;
+        }
+        IsLoading = true;
+        _performInitialAttemptToSave = true;
+        await UpdateChanges();
+        await Dispatcher
+            .Prepare<CreateModListAction>()
+            .With(p => p.Name, Name)
+            .DispatchAsync();
+        IsLoading = false;
+        await UpdateChanges();
 
     }
 }

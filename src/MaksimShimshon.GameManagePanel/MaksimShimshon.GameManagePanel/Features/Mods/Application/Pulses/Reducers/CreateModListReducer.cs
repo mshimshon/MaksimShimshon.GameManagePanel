@@ -8,6 +8,7 @@ internal class CreateModListReducer : IReducer<ModListLocalState, CreateModListA
 {
     public ModListLocalState Reduce(ModListLocalState state, CreateModListAction action) => state with
     {
+        DidLastCreationFailed = false,
         IsCurrentLoading = true
     };
 }

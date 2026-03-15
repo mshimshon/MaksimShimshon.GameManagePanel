@@ -17,4 +17,5 @@ public interface ICreateModListDialogViewModel : IWidgetViewModel
     Task CreateAsync();
     void OnParameterSet();
     bool IsBusy();
+    bool IsFormValid();
 }

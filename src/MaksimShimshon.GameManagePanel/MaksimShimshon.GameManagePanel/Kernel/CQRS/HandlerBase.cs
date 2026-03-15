@@ -15,7 +15,7 @@ public abstract class HandlerBase
         _notificationService = notificationService;
         _logger = logger;
     }
-    protected virtual async Task ExecAndHandleExceptions(Func<Task> exec)
+    protected virtual async Task ExecAndHandleExceptions(Func<Task> exec, Action<WebServiceException>? onError = default)
     {
         try
         {
@@ -23,18 +23,22 @@ public abstract class HandlerBase
         }
         catch (WebServiceException ex)
         {
-            Console.WriteLine("WebService Error: {0}", ex.Message);
+            Console.WriteLine("WebService Error: {0}", ex.Message); // TODO: Localize
             await _notificationService.NotifyAsync(ex.Message, NotificationSeverity.Error);
             if (ex.Origin != default)
                 _logger.LogError(ex, ex.Origin.Message);
             else
                 _logger.LogError(ex, ex.Message);
+            if (onError != default)
+                onError.Invoke(ex);
         }
         catch (Exception ex)
         {
             Console.WriteLine("WebService Error: {0}", ex.Message);
-            await _notificationService.NotifyAsync("Unknown Error, Please contact admins if persistent.", NotificationSeverity.Error);
+            await _notificationService.NotifyAsync("Unknown Error, Please contact admins if persistent.", NotificationSeverity.Error); // TODO: Localize
             _logger.LogError(ex, ex.Message);
+            if (onError != default)
+                onError.Invoke(new("Unknown Error, Please contact admins if persistent.")); // TODO: Localize
         }
     }
 

@@ -39,7 +39,7 @@ public static class ModsApplicationServiceRegsiterExt
         services.AddStatePulseService<ModListLocalState>();
 
         services.AddMedihaterRequestHandler<GetModListQuery, GetModListHandler, ModListEntity?>();
-        services.AddMedihaterRequestHandler<CreateModListCommand, CreateModListHandler, ModListEntity?>();
+        services.AddMedihaterRequestHandler<CreateModListCommand, CreateModListHandler>();
 
     }
 }

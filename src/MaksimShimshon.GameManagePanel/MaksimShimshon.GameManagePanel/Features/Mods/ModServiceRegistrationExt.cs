@@ -1,5 +1,7 @@
 ﻿using MaksimShimshon.GameManagePanel.Features.Mods.Infrastructure;
 using MaksimShimshon.GameManagePanel.Features.Mods.Web.Components;
+using MaksimShimshon.GameManagePanel.Features.Mods.Web.Components.Dialogs;
+using MaksimShimshon.GameManagePanel.Features.Mods.Web.Components.Dialogs.ViewModels;
 using MaksimShimshon.GameManagePanel.Features.Mods.Web.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Features.Mods.Web.Hooks.Components;
 using MaksimShimshon.GameManagePanel.Features.Mods.Web.Hooks.Components.ViewModels;
@@ -21,6 +23,7 @@ public static class ModServiceRegistrationExt
         services.AddScoped<IModListToolbarViewModel, ModListToolbarViewModel>();
         services.AddScoped<IWidgetModListWorkspaceViewModel, WidgetModListWorkspaceViewModel>();
         services.AddScoped<IModListHomeViewModel, ModListHomeViewModel>();
+        services.AddTransient<ICreateModListDialogViewModel, CreateModListDialogViewModel>();
         services.RegisterModInfrastructureServices();
 
     }

@@ -2,7 +2,6 @@
 using MaksimShimshon.GameManagePanel.Core.Features;
 using MaksimShimshon.GameManagePanel.Features.Mods.Application.Pulses.Actions;
 using MaksimShimshon.GameManagePanel.Features.Mods.Application.Pulses.States;
-using MaksimShimshon.GameManagePanel.Features.Mods.Domain.Entities;
 using MaksimShimshon.GameManagePanel.Features.Mods.Web.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using StatePulse.Net;
@@ -21,7 +20,7 @@ internal sealed class ModListSelectorViewModel : WidgetViewModelBase, IModListSe
     {
         _statePulse = statePulse;
         _crazyReport = crazyReport;
-        InitialValue = ModListState.Active?.Descriptor.Id ?? Guid.Empty;
+        InitialValue = ModListState.Active?.Id ?? Guid.Empty;
         CurrentModList = InitialValue;
         _crazyReport.SetModule<ModListSelectorViewModel>(ModKeys.ModuleName);
     }
@@ -30,13 +29,13 @@ internal sealed class ModListSelectorViewModel : WidgetViewModelBase, IModListSe
         bool areBothDefined = InitialValue != Guid.Empty && ModListState.Active != default;
         bool wasCurrentSetWhenInitialDef = InitialValue == Guid.Empty && ModListState.Active != default;
         bool wasInitialSetWhenCurrentDef = InitialValue != Guid.Empty && ModListState.Active == default;
-        bool bothdefinedButDifferent = areBothDefined && InitialValue != ModListState.Active!.Descriptor.Id;
+        bool bothdefinedButDifferent = areBothDefined && InitialValue != ModListState.Active!.Id;
 
         bool requiresUpdate = wasCurrentSetWhenInitialDef || wasInitialSetWhenCurrentDef || bothdefinedButDifferent;
         if (requiresUpdate)
         {
 
-            InitialValue = ModListState.Active?.Descriptor.Id ?? Guid.Empty;
+            InitialValue = ModListState.Active?.Id ?? Guid.Empty;
             CurrentModList = InitialValue;
         }
 
@@ -46,7 +45,7 @@ internal sealed class ModListSelectorViewModel : WidgetViewModelBase, IModListSe
     }
     public async Task Save()
     {
-        ModListEntity? newElement = CurrentModList != default ? ModListState.Available.SingleOrDefault(p => p.Descriptor.Id == CurrentModList) : default;
+        var newElement = CurrentModList != default ? ModListState.Available.SingleOrDefault(p => p.Id == CurrentModList) : default;
         await _statePulse.Dispatcher
             .Prepare<UpdateCurrentModListAction>()
             .With(p => p.Current, newElement)

@@ -8,7 +8,7 @@
            Clearable>
     @foreach (var modlist in ViewModel.ModListState.Available)
     {
-        <MudSelectItem Value=modlist.Descriptor.Id>@modlist.Descriptor.Name</MudSelectItem>
+        <MudSelectItem Value=modlist.Id>@modlist.Name</MudSelectItem>
     }
 </MudSelect>
 <MudButton>

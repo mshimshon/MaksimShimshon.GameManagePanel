@@ -16,13 +16,13 @@ public partial class CreateModListDialog
     private IEnumerable<string> NameValidator(string name)
     {
         if (!ViewModel.IsNotNullPass(name))
-            yield return "Name is required.";
+            yield return "Name is required."; // TODO: Localize
         if (!ViewModel.IsMaxCharacterPass(name, 256))
-            yield return "Max 256 characters";
+            yield return "Max 256 characters"; // TODO: Localize
         if (!ViewModel.IsMinCharacterPass(name, 5))
-            yield return "Min 5 characters";
+            yield return "Min 5 characters"; // TODO: Localize
         if (!ViewModel.IsAlphaNumericAndSpacePass(name))
-            yield return "Only A-Z, 0-9 and Space is allowed.";
+            yield return "Only A-Z, 0-9 and Space is allowed."; // TODO: Localize
     }
 
     protected override void OnWidgetParametersSet()
@@ -30,14 +30,11 @@ public partial class CreateModListDialog
         ViewModel.OnParameterSet();
     }
 
-    private async Task CreateAsync()
-    {
-
-    }
     private async Task CompleteAsync()
     {
         MudDialog.Close(DialogResult.Ok(ViewModel.Id));
     }
+
     private async Task CancelAsync()
     {
         MudDialog.Cancel();

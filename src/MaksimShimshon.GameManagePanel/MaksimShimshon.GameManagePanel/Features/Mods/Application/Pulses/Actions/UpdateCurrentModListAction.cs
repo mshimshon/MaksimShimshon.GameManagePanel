@@ -1,9 +1,9 @@
-﻿using MaksimShimshon.GameManagePanel.Features.Mods.Domain.Entities;
+﻿using MaksimShimshon.GameManagePanel.Features.Mods.Domain.ValueObjects;
 using StatePulse.Net;
 
 namespace MaksimShimshon.GameManagePanel.Features.Mods.Application.Pulses.Actions;
 
 internal sealed record UpdateCurrentModListAction : IAction
 {
-    public ModListEntity? Current { get; set; }
+    public ModListDescriptor? Current { get; set; }
 }

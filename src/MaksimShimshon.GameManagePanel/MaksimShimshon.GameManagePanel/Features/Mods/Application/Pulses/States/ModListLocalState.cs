@@ -9,6 +9,6 @@ public record ModListLocalState : IStateFeature
     public bool IsCurrentLoading { get; init; }
 
     public bool IsCreationLoading { get; init; }
-    public string? HasCreatingErrors { get; init; }
+    public bool DidLastCreationFailed { get; init; }
 
 }
