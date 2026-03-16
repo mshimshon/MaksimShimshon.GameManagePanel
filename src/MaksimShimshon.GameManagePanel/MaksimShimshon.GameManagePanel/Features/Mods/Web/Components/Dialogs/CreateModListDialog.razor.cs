@@ -27,6 +27,7 @@ public partial class CreateModListDialog
 
     protected override void OnWidgetParametersSet()
     {
+        Console.WriteLine("Parameter Set");
         ViewModel.OnParameterSet();
     }
 

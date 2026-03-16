@@ -18,22 +18,28 @@ internal sealed class ModListExplorerViewModel : WidgetViewModelBase, IModListEx
     {
         _statePulse = statePulse;
     }
-    public async Task CreateAsync()
+
+    protected override async Task OnViewModelAfterRenderAsync(bool firstRender)
     {
-        if (Create == default) return;
-        await Dispatcher.Prepare<CreateModListAction>()
-            .With(p => p.Id, Create!.Id)
-            .With(p => p.Name, Create.Name)
-            .DispatchAsync();
+        if (firstRender)
+            await GetAvailableAsync();
+    }
+    public async Task GetAvailableAsync()
+    {
+        IsLoading = true;
+        await Dispatcher.Prepare<GetAvailableModListAction>().DispatchAsync();
+        IsLoading = false;
     }
 
     public async Task GetAsync(Guid id)
     {
+        IsLoading = true;
         await Dispatcher.Prepare<GetModListAction>()
             .With(p => p.Id, id)
             .DispatchAsync();
+        IsLoading = false;
     }
 
-    protected override bool GetStateLoadingStatus() => ModListLocalState.IsCurrentLoading;
+    protected override bool GetStateLoadingStatus() => ModListLocalState.IsCurrentLoading || ModListState.IsLoadingAvailable || !FirstRenderCompleted;
 
 }

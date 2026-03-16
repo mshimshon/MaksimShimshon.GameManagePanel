@@ -1,0 +1,25 @@
+﻿using MaksimShimshon.GameManagePanel.Features.Mods.Application.Services;
+using MaksimShimshon.GameManagePanel.Features.Mods.Domain.ValueObjects;
+using MaksimShimshon.GameManagePanel.Kernel.CQRS;
+using MaksimShimshon.GameManagePanel.Kernel.Notification.Services;
+using MedihatR;
+using Microsoft.Extensions.Logging;
+
+namespace MaksimShimshon.GameManagePanel.Features.Mods.Application.CQRS.Queries.Handlers;
+
+internal class GetAllModListHandler : HandlerBase, IRequestHandler<GetAllModListQuery, ICollection<ModListDescriptor>>
+{
+    private readonly IModListService _modListService;
+
+    public GetAllModListHandler(IModListService modListService, INotificationService notificationService, ILogger<GetAllModListHandler> logger) :
+        base(notificationService, logger)
+    {
+        _modListService = modListService;
+    }
+
+    public async Task<ICollection<ModListDescriptor>> Handle(GetAllModListQuery request, CancellationToken cancellationToken)
+                => await ExecAndHandleExceptions(
+                () => _modListService.GetAllAsync(cancellationToken),
+                () => new List<ModListDescriptor>()
+                );
+}

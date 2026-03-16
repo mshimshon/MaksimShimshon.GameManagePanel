@@ -22,7 +22,7 @@ internal sealed class ModListSelectorViewModel : WidgetViewModelBase, IModListSe
         _crazyReport = crazyReport;
         InitialValue = ModListState.Active?.Id ?? Guid.Empty;
         CurrentModList = InitialValue;
-        _crazyReport.SetModule<ModListSelectorViewModel>(ModKeys.ModuleName);
+        _crazyReport.SetModule<ModListSelectorViewModel>(ModListKeys.ModuleName);
     }
     public async Task UpdateState()
     {

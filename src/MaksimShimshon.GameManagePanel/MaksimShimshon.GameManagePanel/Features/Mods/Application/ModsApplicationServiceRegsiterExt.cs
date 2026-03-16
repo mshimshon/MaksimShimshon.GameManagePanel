@@ -7,6 +7,7 @@ using MaksimShimshon.GameManagePanel.Features.Mods.Application.Pulses.Effects;
 using MaksimShimshon.GameManagePanel.Features.Mods.Application.Pulses.Reducers;
 using MaksimShimshon.GameManagePanel.Features.Mods.Application.Pulses.States;
 using MaksimShimshon.GameManagePanel.Features.Mods.Domain.Entities;
+using MaksimShimshon.GameManagePanel.Features.Mods.Domain.ValueObjects;
 using MedihatR;
 using Microsoft.Extensions.DependencyInjection;
 using StatePulse.Net;
@@ -35,11 +36,18 @@ public static class ModsApplicationServiceRegsiterExt
         services.AddStatePulseService<CreateModListReducer>();
         services.AddStatePulseService<CreateModListDoneReducer>();
 
+        services.AddStatePulseService<GetAvailableModListAction>();
+        services.AddStatePulseService<GetAvailableModListDoneAction>();
+        services.AddStatePulseService<GetAvailableModListEffect>();
+        services.AddStatePulseService<GetAvailableModListReducer>();
+        services.AddStatePulseService<GetAvailableModListDoneReducer>();
+
         services.AddStatePulseService<ModListState>();
         services.AddStatePulseService<ModListLocalState>();
 
         services.AddMedihaterRequestHandler<GetModListQuery, GetModListHandler, ModListEntity?>();
         services.AddMedihaterRequestHandler<CreateModListCommand, CreateModListHandler>();
+        services.AddMedihaterRequestHandler<GetAllModListQuery, GetAllModListHandler, ICollection<ModListDescriptor>>();
 
     }
 }

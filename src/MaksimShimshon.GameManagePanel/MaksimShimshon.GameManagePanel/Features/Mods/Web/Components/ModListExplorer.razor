@@ -3,7 +3,7 @@
 @inherits WidgetComponentBase<PluginEntry, IModListExplorerViewModel>
 
 <MudGrid>
-    @if (ViewModel.ModListLocalState.IsCurrentLoading)
+    @if (ViewModel.IsLoading)
     {
         <MudItem>
             <p>loading...</p>

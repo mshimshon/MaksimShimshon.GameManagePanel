@@ -11,7 +11,7 @@ public sealed record ModListEntity
     public IReadOnlyDictionary<PartId, IReadOnlyList<ModEntity>> Mods =>
            _mods.ToDictionary(p => p.Key, p => (IReadOnlyList<ModEntity>)p.Value.AsReadOnly()).AsReadOnly();
 
-    public ModListEntity(ModListDescriptor descriptor, IReadOnlyDictionary<PartId, IReadOnlyList<ModEntity>> mods)
+    public ModListEntity(ModListDescriptor descriptor, IDictionary<PartId, ICollection<ModEntity>> mods)
     {
         _mods = mods.ToDictionary(p => p.Key, p => p.Value.ToList());
         Descriptor = descriptor;

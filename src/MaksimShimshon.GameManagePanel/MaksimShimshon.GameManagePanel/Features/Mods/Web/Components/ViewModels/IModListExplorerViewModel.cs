@@ -7,6 +7,6 @@ public interface IModListExplorerViewModel : IWidgetViewModel
 {
     ModListLocalState ModListLocalState { get; }
     ModListState ModListState { get; }
-    Task CreateAsync();
     Task GetAsync(Guid id);
+    Task GetAvailableAsync();
 }

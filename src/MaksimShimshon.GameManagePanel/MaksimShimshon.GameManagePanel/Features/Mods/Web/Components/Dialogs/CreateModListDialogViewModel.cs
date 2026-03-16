@@ -33,13 +33,18 @@ internal class CreateModListDialogViewModel : ICreateModListDialogViewModel
 
     public void OnParameterSet()
     {
-        IsAllowedComplete = !ModListLocalState.IsCurrentLoading && !ModListLocalState.DidLastCreationFailed && _performInitialAttemptToSave;
+        Console.WriteLine($"ModListLocalState.IsCreationLoading = {ModListLocalState.IsCreationLoading}");
+        Console.WriteLine($"ModListLocalState.DidLastCreationFailed = {ModListLocalState.DidLastCreationFailed}");
+        Console.WriteLine($"_performInitialAttemptToSave = {_performInitialAttemptToSave}");
+        IsAllowedComplete = !ModListLocalState.IsCreationLoading && !ModListLocalState.DidLastCreationFailed && _performInitialAttemptToSave;
     }
 
     private async Task UpdateChanges()
     {
+        OnParameterSet();
         SpreadChanges?.Invoke(SpreadChangeOption.TouchMyComponentOnly);
     }
+
     public CreateModListDialogViewModel(IStatePulse statePulse, INotificationService notification)
     {
         _statePulse = statePulse;
@@ -67,6 +72,7 @@ internal class CreateModListDialogViewModel : ICreateModListDialogViewModel
         await UpdateChanges();
         await Dispatcher
             .Prepare<CreateModListAction>()
+            .With(p => p.Id, Id)
             .With(p => p.Name, Name)
             .DispatchAsync();
         IsLoading = false;

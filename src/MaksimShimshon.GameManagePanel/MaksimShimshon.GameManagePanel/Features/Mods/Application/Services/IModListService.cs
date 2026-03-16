@@ -7,4 +7,5 @@ public interface IModListService
 {
     Task CreateAsync(ModListDescriptor descriptor, CancellationToken ct = default);
     Task<ModListEntity?> GetAsync(Guid id, CancellationToken ct = default);
+    Task<ICollection<ModListDescriptor>> GetAllAsync(CancellationToken ct = default);
 }
