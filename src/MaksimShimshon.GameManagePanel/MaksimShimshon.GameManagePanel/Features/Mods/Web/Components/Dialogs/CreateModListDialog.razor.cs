@@ -31,6 +31,11 @@ public partial class CreateModListDialog
         ViewModel.OnParameterSet();
     }
 
+    protected override void OnWidgetBeforeRender()
+    {
+        ViewModel.OnParameterSet();
+    }
+
     private async Task CompleteAsync()
     {
         MudDialog.Close(DialogResult.Ok(ViewModel.Id));

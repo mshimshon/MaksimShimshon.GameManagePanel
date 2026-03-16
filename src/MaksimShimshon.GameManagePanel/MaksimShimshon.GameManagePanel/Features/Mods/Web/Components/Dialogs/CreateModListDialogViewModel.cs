@@ -37,11 +37,11 @@ internal class CreateModListDialogViewModel : ICreateModListDialogViewModel
         Console.WriteLine($"ModListLocalState.DidLastCreationFailed = {ModListLocalState.DidLastCreationFailed}");
         Console.WriteLine($"_performInitialAttemptToSave = {_performInitialAttemptToSave}");
         IsAllowedComplete = !ModListLocalState.IsCreationLoading && !ModListLocalState.DidLastCreationFailed && _performInitialAttemptToSave;
+
     }
 
     private async Task UpdateChanges()
     {
-        OnParameterSet();
         SpreadChanges?.Invoke(SpreadChangeOption.TouchMyComponentOnly);
     }
 

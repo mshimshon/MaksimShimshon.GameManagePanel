@@ -27,6 +27,10 @@ internal sealed class ModListEditorViewModel : WidgetViewModelBase, IModListEdit
 
     protected override async Task OnViewModelParametersSetAsync()
     {
+
+    }
+    protected override async Task OnViewModelBeforeRenderAsync()
+    {
         if (ModListLocalState.Current == default)
         {
             Information = default;
@@ -37,12 +41,12 @@ internal sealed class ModListEditorViewModel : WidgetViewModelBase, IModListEdit
         bool informationUndefined = Information == default;
         bool informationDifferent = ModListLocalState.Current.Descriptor.Id != InitialId;
         bool isReprocessRequired = _reprocess || informationUndefined || informationDifferent;
+        Console.WriteLine($"ModListEditorViewModel::{isReprocessRequired}");
         if (isReprocessRequired)
             await ProcessModListParts();
 
         InitialId = ModListLocalState.Current?.Descriptor.Id ?? Guid.Empty;
     }
-
     private async Task ProcessModListParts(CancellationToken ct = default)
     {
         lock (_lock)
