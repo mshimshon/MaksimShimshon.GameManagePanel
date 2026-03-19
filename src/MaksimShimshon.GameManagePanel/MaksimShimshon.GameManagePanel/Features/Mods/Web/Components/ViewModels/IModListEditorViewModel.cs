@@ -12,7 +12,7 @@ public interface IModListEditorViewModel : IWidgetViewModel
     ModListState ModListState { get; }
     Dictionary<PartId, List<ModEntity>>? Information { get; }
     string GetModName(ModEntity item);
-    void MoveTo(string partId, ModEntity toMove, int targetIndex);
-    void AddTo(string partId, ModEntity toAdd);
-    void RemoveFrom(string partId, ModEntity toRemove);
+    void MoveTo(PartId partId, ModEntity toMove, int targetIndex);
+    void AddTo(PartId partId, ModEntity toAdd);
+    void RemoveFrom(PartId partId, ModEntity toRemove);
 }

@@ -11,32 +11,45 @@
             <p>Loading...</p>
         </MudItem>
     }
+    else if (ViewModel.ModListState.SchematicParts.Count <= 0)
+    {
+        <MudItem>
+            <MudAlert Severity=Severity.Error>
+                @ERROR_SCHEMATIC_PARTS
+            </MudAlert>
+        </MudItem>
+    }
     else if (ViewModel.Information != default)
     {
-        <MudItem >
-            @foreach (var schematicPart in ViewModel.ModListState.SchematicParts)
-            {
-                <MudDropContainer T="ModEntity" Items=@ViewModel.Information[schematicPart.Id] 
-                        ItemsSelector="@((item, dropzone) => true)" 
-                        ItemDropped=ItemUpdated
-                        Class="d-flex flex-wrap flex-grow-1">
+        @foreach (var schematicPart in ViewModel.ModListState.SchematicParts)
+        {
+            <MudItem xl=12 md=6>
+
+                <MudDropContainer T="ModEntity" Items=@ViewModel.Information[schematicPart.Id]
+                                  ItemsSelector="@((item, dropzone) => true)"
+                                  ItemDropped=ItemUpdated
+                                  Class="d-flex flex-wrap flex-grow-1">
 
                     <ChildContent>
-                        <MudDropZone T="ModEntity" Identifier=@schematicPart.Id.Id
-                                        AllowReorder
-                                        Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
-                            <MudText Typo="Typo.h6" Class="mb-4">@schematicPart.Name</MudText>
-                        </MudDropZone>
-                        <h1>Test</h1>
-                        <MudButton>Create</MudButton>
+                        <h1>Test</h1><br/>
+                        <MudButton OnClick=@(() => AddInto(schematicPart.Id))>Create</MudButton>
 
+                        <MudDropZone T="ModEntity" Identifier=@schematicPart.Id.Id
+                                     AllowReorder
+                                     Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+                            <MudText Typo="Typo.h6" Class="mb-4">@schematicPart.Name.Name</MudText>
+                        </MudDropZone>
                     </ChildContent>
                     <ItemRenderer>
-                        <MudPaper Elevation="25" Class="pa-4 my-4">@ViewModel.GetModName(context)</MudPaper>
+                        <MudPaper Elevation="25" Class="pa-4 my-4">
+                            <DeleteButtonIcon TEntity=ModEntity Item=context OnClick=@((p) => DeleteEntity(schematicPart.Id, p)) />
+                            @ViewModel.GetModName(context)
+                        </MudPaper>
 
                     </ItemRenderer>
                 </MudDropContainer>
-            }
-        </MudItem>
+            </MudItem>
+        }
+        
     }
 </MudGrid>

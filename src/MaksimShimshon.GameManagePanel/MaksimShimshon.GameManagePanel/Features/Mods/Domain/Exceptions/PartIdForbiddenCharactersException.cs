@@ -2,7 +2,7 @@
 
 public class PartIdForbiddenCharactersException : DomainException
 {
-    public PartIdForbiddenCharactersException(string detectedChar) : base($"Part Id contains forbiden characters ({detectedChar})")
+    public PartIdForbiddenCharactersException(string detectedChar) : base($"Id contains forbiden characters ({detectedChar})")
     {
     }
 }

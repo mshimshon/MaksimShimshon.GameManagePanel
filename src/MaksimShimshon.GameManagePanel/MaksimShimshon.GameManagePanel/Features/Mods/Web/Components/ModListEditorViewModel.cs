@@ -4,6 +4,7 @@ using MaksimShimshon.GameManagePanel.Features.Mods.Domain.Entities;
 using MaksimShimshon.GameManagePanel.Features.Mods.Domain.ValueObjects;
 using MaksimShimshon.GameManagePanel.Features.Mods.Web.Components.ViewModels;
 using StatePulse.Net;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MaksimShimshon.GameManagePanel.Features.Mods.Web.Components;
 
@@ -23,7 +24,7 @@ internal sealed class ModListEditorViewModel : WidgetViewModelBase, IModListEdit
         _statePulse = statePulse;
 
     }
-    protected override bool GetStateLoadingStatus() => ModListLocalState.IsCurrentLoading || Information == default;
+    protected override bool GetStateLoadingStatus() => ModListState.IsSchematicPartsLoading || ModListLocalState.IsCurrentLoading || Information == default;
 
     protected override async Task OnViewModelParametersSetAsync()
     {
@@ -31,7 +32,7 @@ internal sealed class ModListEditorViewModel : WidgetViewModelBase, IModListEdit
     }
     protected override async Task OnViewModelBeforeRenderAsync()
     {
-        if (ModListLocalState.Current == default)
+        if (ModListLocalState.Current == default || ModListState.SchematicParts.Count <= 0)
         {
             Information = default;
             InitialId = Guid.Empty;
@@ -47,6 +48,7 @@ internal sealed class ModListEditorViewModel : WidgetViewModelBase, IModListEdit
 
         InitialId = ModListLocalState.Current?.Descriptor.Id ?? Guid.Empty;
     }
+
     private async Task ProcessModListParts(CancellationToken ct = default)
     {
         lock (_lock)
@@ -61,8 +63,35 @@ internal sealed class ModListEditorViewModel : WidgetViewModelBase, IModListEdit
         {
             Information = default;
             if (ModListLocalState.Current == default) return;
-            Information = ModListLocalState.Current.Mods
-                .ToDictionary(p => p.Key, p => p.Value.ToList());
+            var information = ModListLocalState.Current.Mods;
+            /* 1 -> Check if Current Key Still Exist in Schematic or remove
+             * 2 -> add all missing schematic keys into dictionnary
+             * 
+             */
+            var currentIds = information.Keys.Select(k => k).ToHashSet();
+            var schematicIds = ModListState.SchematicParts.Select(p => p.Id).ToHashSet();
+            bool hasMismatch = !currentIds.SetEquals(schematicIds);
+
+            if (hasMismatch)
+            {
+                var keepers = information
+                    .Where(kvp => schematicIds.Contains(kvp.Key))
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToList());
+
+                foreach (var id in schematicIds)
+                {
+                    if (!keepers.ContainsKey(id))
+                        keepers[id] = new List<ModEntity>();
+                }
+                Information = keepers;
+
+            }
+            else
+            {
+                Information = information
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToList());
+
+            }
         }
         catch (Exception)
         {
@@ -78,42 +107,37 @@ internal sealed class ModListEditorViewModel : WidgetViewModelBase, IModListEdit
         }
     }
 
-    public void RemoveFrom(string partId, ModEntity toRemove)
+    public void RemoveFrom(PartId partId, ModEntity toRemove)
     {
         // TODO: TOAST NOTIFICATION
-        if (Information == default || !Information.Any(p => p.Key.Id == partId))
+        if (!TryGetInInformation(partId, out KeyValuePair<PartId, List<ModEntity>>? kp))
             return;
-        var kp = Information.Single(p => p.Key.Id == partId);
-        kp.Value.Remove(toRemove);
+        kp!.Value.Value.Remove(toRemove);
         _ = UpdateChanges();
     }
 
-    public void AddTo(string partId, ModEntity toAdd)
+    public void AddTo(PartId partId, ModEntity toAdd)
     {
         // TODO: TOAST NOTIFICATION
-        if (Information == default || !Information.Any(p => p.Key.Id == partId))
+        if (!TryGetInInformation(partId, out KeyValuePair<PartId, List<ModEntity>>? kp))
             return;
-        var kp = Information.Single(p => p.Key.Id == partId);
-        kp.Value.Add(toAdd);
+        kp!.Value.Value.Add(toAdd);
         _ = UpdateChanges();
     }
 
-    public void MoveTo(string partId, ModEntity toMove, int targetIndex)
+    public void MoveTo(PartId partId, ModEntity toMove, int targetIndex)
     {
         // TODO: TOAST NOTIFICATION
-        if (Information == default || !Information.Any(p => p.Key.Id == partId))
+        if (!TryGetInInformation(partId, out KeyValuePair<PartId, List<ModEntity>>? kp))
             return;
-
-        var kp = Information.Single(p => p.Key.Id == partId);
-        var list = kp.Value;
+        var list = kp!.Value.Value;
         var fallbackIndex = list.IndexOf(toMove);
         list.Remove(toMove);
         if (targetIndex > list.Count || targetIndex < 0)
             list.Insert(fallbackIndex, toMove);
         else
             list.Insert(targetIndex, toMove);
-        Information[kp.Key] = list;
-
+        Information![kp.Value.Key] = list;
         _ = UpdateChanges();
     }
 
@@ -135,5 +159,14 @@ internal sealed class ModListEditorViewModel : WidgetViewModelBase, IModListEdit
     public string GetModName(ModEntity item)
         => item.Name == default ? item.Id.Id : item.Name.Name;
 
-
+    public bool TryGetInInformation(PartId partId, [MaybeNullWhen(false)] out KeyValuePair<PartId, List<ModEntity>>? result)
+    {
+        if (Information == default || !Information.ContainsKey(partId))
+        {
+            result = default;
+            return false;
+        }
+        result = Information.Single(p => p.Key == partId);
+        return true;
+    }
 }
