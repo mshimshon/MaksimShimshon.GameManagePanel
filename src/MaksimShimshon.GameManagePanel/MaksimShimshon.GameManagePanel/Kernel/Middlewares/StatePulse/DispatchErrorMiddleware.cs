@@ -16,7 +16,7 @@ internal class DispatchErrorMiddleware : IDispatcherMiddleware
     public Task BeforeDispatch(object action) => Task.CompletedTask;
     public Task OnDispatchFailure(Exception exception, object action)
     {
-        _crazyReport.ReportError(exception.Message);
+        _crazyReport.ReportError(":[{0}]: {1} ", action.GetType(), exception.Message);
         return Task.CompletedTask;
     }
 }

@@ -20,14 +20,15 @@ internal class SpreadInstallationStateMiddleware : IReducerMiddleware
     {
         _eventBus = eventBus;
         _crazyReport = crazyReport;
+        crazyReport.SetModule<SpreadInstallationStateMiddleware>(LinuxGameServerKeys.ModuleName);
     }
 
     public async Task AfterReducing(object state, object action)
     {
-        _crazyReport.ReportInfo("Reducer {0} Called for State {1} with Action {2}", nameof(SpreadInstallationStateMiddleware), state.GetType(), action.GetType());
+        _crazyReport.ReportInfo("Reducer Middleware {0} Called for State {1} with Action {2}", nameof(SpreadInstallationStateMiddleware), state.GetType(), action.GetType());
         if (state.GetType() == typeof(InstallationState))
         {
-            _crazyReport.ReportInfo("Reducer {0} Detected State {1} change therefore triggering {2}", nameof(SpreadInstallationStateMiddleware), state.GetType(), LinuxGameServerKeys.Events.OnGameServerInstallStateChanged);
+            _crazyReport.ReportInfo("Reducer Middleware {0} Detected State {1} change therefore triggering {2}", nameof(SpreadInstallationStateMiddleware), state.GetType(), LinuxGameServerKeys.Events.OnGameServerInstallStateChanged);
             _ = _eventBus.PublishDataAsync(LinuxGameServerKeys.Events.OnGameServerInstallStateChanged, state);
 
         }

@@ -9,3 +9,9 @@ public record GameInfoState : IStateFeatureSingleton
     public Dictionary<string, string> StartupParameters { get; init; } = new();
     public bool SavedParametersLoaded { get; init; }
 }
+
+/*
+ * Get the GameInfo -> Mod Parts
+ * QueryBus -> Get GameInfo Raw Json 
+ * 
+ */

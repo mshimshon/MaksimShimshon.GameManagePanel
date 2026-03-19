@@ -3,6 +3,9 @@
 @inherits WidgetComponentBase<PluginEntry, IModListExplorerViewModel>
 
 <MudGrid>
+    <MudItem>
+        <p>@ViewModel.ModListState.SchematicParts.Count</p>
+</MudItem>
     @if (ViewModel.IsLoading)
     {
         <MudItem>

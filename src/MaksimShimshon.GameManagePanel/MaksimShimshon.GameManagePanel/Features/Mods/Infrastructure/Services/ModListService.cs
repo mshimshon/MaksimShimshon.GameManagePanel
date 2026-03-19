@@ -1,4 +1,6 @@
 ﻿using CoreMap;
+using LunaticPanel.Core.Abstraction.Messaging.QuerySystem;
+using LunaticPanel.Core.Extensions;
 using MaksimShimshon.GameManagePanel.Core.Features;
 using MaksimShimshon.GameManagePanel.Features.Mods.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.Mods.Domain.Entities;
@@ -16,15 +18,17 @@ internal sealed class ModListService : IModListService
 {
     private readonly PluginConfiguration _pluginConfiguration;
     private readonly ICoreMap _coreMap;
+    private readonly IQueryBus _queryBus;
     private readonly JsonSerializerOptions _serializerOption = new JsonSerializerOptions()
     {
         ReferenceHandler = ReferenceHandler.IgnoreCycles,
         PropertyNameCaseInsensitive = true
     };
-    public ModListService(PluginConfiguration pluginConfiguration, ICoreMap coreMap)
+    public ModListService(PluginConfiguration pluginConfiguration, ICoreMap coreMap, IQueryBus queryBus)
     {
         _pluginConfiguration = pluginConfiguration;
         _coreMap = coreMap;
+        _queryBus = queryBus;
     }
     public async Task CreateAsync(ModListDescriptor descriptor, CancellationToken ct = default)
     {
@@ -44,10 +48,10 @@ internal sealed class ModListService : IModListService
             var content = JsonSerializer.Serialize(dto, _serializerOption);
             await File.WriteAllTextAsync(filename, content, ct);
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
 
-            throw new WebServiceException($"Operation to create modlist {descriptor.Id} was cancelled.");
+            throw new WebServiceException($"Operation to create modlist {descriptor.Id} was cancelled.", ex);
         }
         catch
         {
@@ -98,17 +102,30 @@ internal sealed class ModListService : IModListService
             var result = _coreMap.Map(dto).To<ModListEntity>();
             return result;
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
-            throw new WebServiceException($"Operation to get modlist {id} was cancelled.");
+            throw new WebServiceException($"Operation to get modlist {id} was cancelled.", ex);
         }
-        catch (JsonException)
+        catch (JsonException ex)
         {
-            throw new WebServiceException($"The ModList {id} seems to be corrupted.");
+            throw new WebServiceException($"The ModList {id} seems to be corrupted.", ex);
         }
         catch
         {
             throw;
         }
+    }
+
+    public async Task<IReadOnlyCollection<PartSchematicEntity>?> GetSchematic(CancellationToken ct = default)
+    {
+        var qryResult = await _queryBus.QueryWithoutDataAsync(LifecycleKeys.Queries.GetRawGameInfo);
+        var json = await qryResult.ReadAs<string>();
+        if (json == default) return default;
+        var gameinfo = JsonSerializer.Deserialize<GameInfoResponse>(json, _serializerOption);
+        if (gameinfo == default) return default;
+        if (gameinfo.Schema == default) return default;
+        // TODO: USE COREMAP WHEN 2.0 RELEASES
+        List<PartSchematicEntity> result = gameinfo.Schema.Select(p => new PartSchematicEntity(p.Key, p.Value.Name, p.Value.Type)).ToList();
+        return result.AsReadOnly();
     }
 }

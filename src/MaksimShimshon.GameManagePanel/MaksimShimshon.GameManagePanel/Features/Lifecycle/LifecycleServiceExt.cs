@@ -31,7 +31,11 @@ public static class LifecycleServiceExt
         services.AddScoped<IStartupParameterViewModel, StartupParameterViewModel>();
 
         services.AddTransient<IStartupParameterFieldViewModel, StartupParameterFieldViewModel>();
-        services.AddTransient<ILifecycleServices, LifecycleServices>();
+        services.AddScoped<LifecycleServices>();
+        services.AddScoped<ILifecycleServices>(sp => sp.GetRequiredService<LifecycleServices>());
+        services.AddScoped<IGameInfoService>(sp => sp.GetRequiredService<LifecycleServices>());
+        services.AddScoped<IStartupParameterService>(sp => sp.GetRequiredService<LifecycleServices>());
+
         services.AddStatePulseService<ServerStartReducer>();
         services.AddStatePulseService<FetchStartupParametersAction>();
         services.AddStatePulseService<FetchStartupParametersDoneAction>();
@@ -66,6 +70,7 @@ public static class LifecycleServiceExt
         services.AddMedihaterRequestHandler<ExecStopServerCommand, ExecStopServerHandler>();
         services.AddMedihaterRequestHandler<ExecUpdateStartupParameterCommand, ExecUpdateStartupParameterHandler>();
         services.AddMedihaterRequestHandler<GetGameInfoQuery, GetGameInfoHandler, GameInfoEntity?>();
+        services.AddMedihaterRequestHandler<GetRawGameInfoQuery, GetRawGameInfoHandler, string?>();
 
         services.AddCoreMapHandler<AllowedValueResponseToAllowedValueEntity>();
         services.AddCoreMapHandler<GameStartupParameterResponseToStartupParameter>();

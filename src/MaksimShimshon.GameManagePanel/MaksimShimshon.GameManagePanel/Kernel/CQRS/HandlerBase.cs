@@ -1,19 +1,20 @@
 ﻿using MaksimShimshon.GameManagePanel.Kernel.Exceptions;
 using MaksimShimshon.GameManagePanel.Kernel.Notification.Enums;
 using MaksimShimshon.GameManagePanel.Kernel.Notification.Services;
-using Microsoft.Extensions.Logging;
+using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 
 namespace MaksimShimshon.GameManagePanel.Kernel.CQRS;
 
 public abstract class HandlerBase
 {
     protected readonly INotificationService _notificationService;
-    protected readonly ILogger _logger;
+    private readonly ICrazyReport _crazyReport;
 
-    protected HandlerBase(INotificationService notificationService, ILogger logger)
+    protected HandlerBase(INotificationService notificationService, ICrazyReport crazyReport)
     {
         _notificationService = notificationService;
-        _logger = logger;
+        _crazyReport = crazyReport;
+        _crazyReport.SetModule(KernelModule.ModuleName);
     }
     protected virtual async Task ExecAndHandleExceptions(Func<Task> exec, Action<WebServiceException>? onError = default)
     {
@@ -23,22 +24,20 @@ public abstract class HandlerBase
         }
         catch (WebServiceException ex)
         {
-            Console.WriteLine("WebService Error: {0}", ex.Message); // TODO: Localize
+            _crazyReport.ReportError(ex.Message);
             await _notificationService.NotifyAsync(ex.Message, NotificationSeverity.Error);
             if (ex.Origin != default)
-                _logger.LogError(ex, ex.Origin.Message);
-            else
-                _logger.LogError(ex, ex.Message);
+                _crazyReport.ReportError(ex.Origin.Message);
+
             if (onError != default)
                 onError.Invoke(ex);
         }
         catch (Exception ex)
         {
-            Console.WriteLine("WebService Error: {0}", ex.Message);
             await _notificationService.NotifyAsync("Unknown Error, Please contact admins if persistent.", NotificationSeverity.Error); // TODO: Localize
-            _logger.LogError(ex, ex.Message);
+            _crazyReport.ReportError(ex.Message);
             if (onError != default)
-                onError.Invoke(new("Unknown Error, Please contact admins if persistent.")); // TODO: Localize
+                onError.Invoke(new("Unknown Error, Please contact admins if persistent.", ex)); // TODO: Localize
         }
     }
 

@@ -1,17 +1,23 @@
 ﻿using LunaticPanel.Core.Abstraction.Circuit;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
+
+internal class CrazyReport<TClass> : CrazyReport, ICrazyReport<TClass> where TClass : class
+{
+    public CrazyReport(ICircuitRegistry circuitRegistry) : base(circuitRegistry)
+    {
+        SetClass<TClass>();
+    }
+}
 
 internal class CrazyReport : ICrazyReport
 {
     private string? _moduleName = "[System]";
     private string? _className = "[Object]";
     Guid _circuitId;
-    public CrazyReport(IServiceProvider serviceProvider)
+    public CrazyReport(ICircuitRegistry circuitRegistry)
     {
-        var pluginContext = serviceProvider.GetService<ICircuitRegistry>();
-        _circuitId = pluginContext?.CurrentCircuit?.CircuitId ?? Guid.Empty;
+        _circuitId = circuitRegistry?.CurrentCircuit?.CircuitId ?? Guid.Empty;
     }
 
     public void Report(string line) => Console.WriteLine(line);

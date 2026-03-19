@@ -10,17 +10,15 @@ using MaksimShimshon.GameManagePanel.Kernel.Dto;
 using MaksimShimshon.GameManagePanel.Kernel.Exceptions;
 using MaksimShimshon.GameManagePanel.Kernel.Extensions;
 using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
-using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Infrastructure.Services;
 
-internal class LifecycleServices : ILifecycleServices
+internal class LifecycleServices : ILifecycleServices, IGameInfoService, IStartupParameterService
 {
     private readonly ILinuxCommand _linuxCommand;
     private readonly ICoreMap _coreMap;
     private readonly PluginConfiguration _pluginConfiguration;
-    private readonly ILogger<LifecycleServices> _logger;
     private readonly ICrazyReport _crazyReport;
     private const string SERVER_CONTROL_FOLDER = "server_control";
     private const string SERVER_CONTROL_COMMON_FOLDER = "common";
@@ -32,15 +30,14 @@ internal class LifecycleServices : ILifecycleServices
     private const string USERNAME = "lgsm";
 
     private readonly JsonSerializerOptions _jsonSerializerConfiguration;
-
-    public LifecycleServices(ILinuxCommand linuxCommand, ICoreMap coreMap, PluginConfiguration pluginConfiguration, ILogger<LifecycleServices> logger, ICrazyReport crazyReport)
+    private string? _rawGameInfo;
+    public LifecycleServices(ILinuxCommand linuxCommand, ICoreMap coreMap, PluginConfiguration pluginConfiguration, ICrazyReport<LifecycleServices> crazyReport)
     {
         _linuxCommand = linuxCommand;
         _coreMap = coreMap;
         _pluginConfiguration = pluginConfiguration;
-        _logger = logger;
         _crazyReport = crazyReport;
-        _crazyReport.SetModule<LifecycleServices>(LifecycleKeys.ModuleName);
+        _crazyReport.SetModule(LifecycleKeys.ModuleName);
         _jsonSerializerConfiguration = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
@@ -63,19 +60,38 @@ internal class LifecycleServices : ILifecycleServices
         catch (Exception ex)
         {
             _crazyReport.ReportError(ex.Message);
-            throw new WebServiceException($"Unable to load {USER_DEF_STARTUP_PARAM_FILE}");
+            throw new WebServiceException($"Unable to load {USER_DEF_STARTUP_PARAM_FILE}", ex);
+        }
+    }
+
+    public async Task<string?> GetRawGameInfoAsync(CancellationToken ct = default)
+    {
+        try
+        {
+            if (_rawGameInfo != default)
+                return _rawGameInfo;
+
+            string file = _pluginConfiguration.GetUserBashFor(LifecycleKeys.ModuleName, [SERVER_CONTROL_FOLDER], GAMEINFO_FILE);
+            _crazyReport.ReportInfo("Checking({1}) {0} ", file, File.Exists(file));
+            if (!File.Exists(file)) return default;
+            string jsonString = await File.ReadAllTextAsync(file);
+            _crazyReport.ReportInfo(jsonString);
+            _rawGameInfo = jsonString;
+            return _rawGameInfo;
+        }
+        catch (Exception ex)
+        {
+            _crazyReport.ReportError(ex.Message);
+            throw new WebServiceException($"Unable to load {GAMEINFO_FILE}", ex);
         }
     }
 
     public async Task<GameInfoEntity?> LoadGameInfoAsync(CancellationToken cancellationToken = default)
     {
-        string file = _pluginConfiguration.GetUserBashFor(LifecycleKeys.ModuleName, [SERVER_CONTROL_FOLDER], GAMEINFO_FILE);
-        _crazyReport.ReportInfo("Checking({1}) {0} ", file, File.Exists(file));
-        if (!File.Exists(file)) return default;
         try
         {
-            string jsonString = await File.ReadAllTextAsync(file);
-            _crazyReport.ReportInfo(jsonString);
+            var jsonString = await GetRawGameInfoAsync(cancellationToken);
+            if (jsonString == default) return default;
             var result = JsonSerializer.Deserialize<GameInfoResponse>(jsonString, _jsonSerializerConfiguration)!;
             if (result == default) return default;
             var entity = _coreMap.Map(result).To<GameInfoEntity>();
@@ -84,7 +100,7 @@ internal class LifecycleServices : ILifecycleServices
         catch (Exception ex)
         {
             _crazyReport.ReportError(ex.Message);
-            throw new WebServiceException($"Unable to load {GAMEINFO_FILE}");
+            throw new WebServiceException($"Unable to load {GAMEINFO_FILE}", ex);
         }
     }
 

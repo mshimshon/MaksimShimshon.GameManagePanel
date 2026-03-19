@@ -19,3 +19,5 @@ public interface ICrazyReport
     void ReportSuccess(string line);
     void ReportSuccess(string format, params object?[]? arg);
 }
+
+public interface ICrazyReport<T> : ICrazyReport { }

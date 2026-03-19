@@ -42,12 +42,21 @@ public static class ModsApplicationServiceRegsiterExt
         services.AddStatePulseService<GetAvailableModListReducer>();
         services.AddStatePulseService<GetAvailableModListDoneReducer>();
 
+
+        services.AddStatePulseService<LoadModListSchematicAction>();
+        services.AddStatePulseService<LoadModListSchematicDoneAction>();
+        services.AddStatePulseService<LoadModListSchematicEffect>();
+        services.AddStatePulseService<LoadModListSchematicReducer>();
+        services.AddStatePulseService<LoadModListSchematicDoneReducer>();
+
+
         services.AddStatePulseService<ModListState>();
         services.AddStatePulseService<ModListLocalState>();
 
         services.AddMedihaterRequestHandler<GetModListQuery, GetModListHandler, ModListEntity?>();
         services.AddMedihaterRequestHandler<CreateModListCommand, CreateModListHandler>();
         services.AddMedihaterRequestHandler<GetAllModListQuery, GetAllModListHandler, ICollection<ModListDescriptor>>();
+        services.AddMedihaterRequestHandler<GetModSchematicQuery, GetModSchematicHandler, IReadOnlyCollection<PartSchematicEntity>?>();
 
     }
 }

@@ -1,8 +1,9 @@
-﻿using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
+﻿using MaksimShimshon.GameManagePanel.Core.Features;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.Services;
 using MaksimShimshon.GameManagePanel.Kernel.CQRS;
 using MaksimShimshon.GameManagePanel.Kernel.Notification.Services;
+using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using MedihatR;
-using Microsoft.Extensions.Logging;
 
 namespace MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Application.CQRS.Commands.Handlers;
 
@@ -10,11 +11,10 @@ public class InstallGameServerHandler : HandlerBase, IRequestHandler<InstallGame
 {
     private readonly ILinuxGameServerService _linuxGameServerService;
 
-    public InstallGameServerHandler(ILinuxGameServerService linuxGameServerService, INotificationService notificationService, ILogger<InstallGameServerHandler> logger) : base(notificationService, logger)
+    public InstallGameServerHandler(ILinuxGameServerService linuxGameServerService, INotificationService notificationService, ICrazyReport<InstallGameServerHandler> logger) : base(notificationService, logger)
     {
-        Console.WriteLine("Perform Install MEDITR");
-
         _linuxGameServerService = linuxGameServerService;
+        logger.SetModule(LinuxGameServerKeys.ModuleName);
     }
 
     public async Task Handle(InstallGameServerCommand request, CancellationToken cancellationToken)

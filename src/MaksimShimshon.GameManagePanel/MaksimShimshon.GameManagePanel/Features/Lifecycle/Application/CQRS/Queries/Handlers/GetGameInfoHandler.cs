@@ -1,23 +1,25 @@
-﻿using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Services;
+﻿using MaksimShimshon.GameManagePanel.Core.Features;
+using MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.Services;
 using MaksimShimshon.GameManagePanel.Features.Lifecycle.Domain.Entites;
 using MaksimShimshon.GameManagePanel.Kernel.CQRS;
 using MaksimShimshon.GameManagePanel.Kernel.Notification.Services;
+using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using MedihatR;
-using Microsoft.Extensions.Logging;
 
 namespace MaksimShimshon.GameManagePanel.Features.Lifecycle.Application.CQRS.Queries.Handlers;
 
 internal sealed class GetGameInfoHandler : HandlerBase, IRequestHandler<GetGameInfoQuery, GameInfoEntity?>
 {
-    private readonly ILifecycleServices _lifecycleServices;
+    private readonly IGameInfoService _gameInfoService;
 
-    public GetGameInfoHandler(ILifecycleServices lifecycleServices, INotificationService notificationService, ILogger<GetGameInfoHandler> logger) : base(notificationService, logger)
+    public GetGameInfoHandler(IGameInfoService gameInfoService, INotificationService notificationService, ICrazyReport<GetGameInfoHandler> logger) : base(notificationService, logger)
     {
-        _lifecycleServices = lifecycleServices;
+        _gameInfoService = gameInfoService;
+        logger.SetModule(LifecycleKeys.ModuleName);
     }
     public async Task<GameInfoEntity?> Handle(GetGameInfoQuery request, CancellationToken cancellationToken)
         => await ExecAndHandleExceptions(
-                () => _lifecycleServices.LoadGameInfoAsync(cancellationToken),
+                () => _gameInfoService.LoadGameInfoAsync(cancellationToken),
                 () => default
                 );
 }

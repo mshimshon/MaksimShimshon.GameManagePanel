@@ -1,8 +1,9 @@
-﻿using MaksimShimshon.GameManagePanel.Features.Mods.Application.Services;
+﻿using MaksimShimshon.GameManagePanel.Core.Features;
+using MaksimShimshon.GameManagePanel.Features.Mods.Application.Services;
 using MaksimShimshon.GameManagePanel.Kernel.CQRS;
 using MaksimShimshon.GameManagePanel.Kernel.Notification.Services;
+using MaksimShimshon.GameManagePanel.Kernel.Services.ConsoleController;
 using MedihatR;
-using Microsoft.Extensions.Logging;
 
 namespace MaksimShimshon.GameManagePanel.Features.Mods.Application.CQRS.Commands.Handlers;
 
@@ -10,10 +11,11 @@ internal class CreateModListHandler : HandlerBase, IRequestHandler<CreateModList
 {
     private readonly IModListService _modListService;
 
-    public CreateModListHandler(IModListService modListService, INotificationService notificationService, ILogger<CreateModListHandler> logger) :
+    public CreateModListHandler(IModListService modListService, INotificationService notificationService, ICrazyReport<CreateModListHandler> logger) :
         base(notificationService, logger)
     {
         _modListService = modListService;
+        logger.SetModule(ModListKeys.ModuleName);
     }
 
     public async Task Handle(CreateModListCommand request, CancellationToken cancellationToken)

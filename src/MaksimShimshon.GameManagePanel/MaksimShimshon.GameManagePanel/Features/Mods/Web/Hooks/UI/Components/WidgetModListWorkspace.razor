@@ -1,0 +1,17 @@
+@using MaksimShimshon.GameManagePanel.Features.Mods.Web.Components
+@using MaksimShimshon.GameManagePanel.Features.Mods.Web.Hooks.UI.Components.ViewModels
+@inherits WidgetComponentBase<PluginEntry, IWidgetModListWorkspaceViewModel>
+
+<MudGrid>
+    <MudItem xs=12>
+        @if (ViewModel.ModListLocalState.Current == default)
+        {
+            <ModListExplorer LinkBase=LinkBase AutoRedirect=AutoRedirect OnParentStateHasChanged=OnParentStateHasChanged />
+        }
+        else
+        {
+            <ModListEditor OnParentStateHasChanged=OnParentStateHasChanged />
+        }
+
+    </MudItem>
+</MudGrid>

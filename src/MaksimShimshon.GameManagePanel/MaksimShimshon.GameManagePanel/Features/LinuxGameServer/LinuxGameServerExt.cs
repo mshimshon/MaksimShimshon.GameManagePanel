@@ -15,7 +15,7 @@ using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Domain.Entities;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Configuration;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Infrastructure.Services;
 using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Components.ViewModels;
-using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Hooks.Components.ViewModels;
+using MaksimShimshon.GameManagePanel.Features.LinuxGameServer.Web.Hooks.UI.Components.ViewModels;
 using MaksimShimshon.GameManagePanel.Kernel.Configuration;
 using MaksimShimshon.GameManagePanel.Kernel.Extensions;
 using MaksimShimshon.GameManagePanel.Kernel.Services.Enums;

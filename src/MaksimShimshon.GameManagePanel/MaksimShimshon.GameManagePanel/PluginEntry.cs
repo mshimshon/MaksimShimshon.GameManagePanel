@@ -76,6 +76,7 @@ public class PluginEntry : PluginBase
         services.AddLinuxGameServerFeatureServices(_crossCircuitSingletonProvider!, _configuration, circuit.IsMaster);
         services.AddSystemInfoFeatureServices(_configuration);
 
+        services.AddTransient(typeof(ICrazyReport<>), typeof(CrazyReport<>));
         services.AddTransient<ICrazyReport, CrazyReport>();
         // Make Singleton State cross circuit
         if (_statePulseStatesRedirectionSingleton == default)

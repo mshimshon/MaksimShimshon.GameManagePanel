@@ -41,10 +41,11 @@
 	  <Folder Include="Features\LinuxGameServer\Domain\ValueObjects\" />
 	  <Folder Include="Features\LinuxGameServer\Infrastructure\Hooks\" />
 	  <Folder Include="Features\Mods\Application\Bash\" />
-	  <Folder Include="Features\Mods\Application\Hooks\Features\" />
-	  <Folder Include="Features\Mods\Application\Hooks\Scheduled\" />
+	  <Folder Include="Features\Mods\Application\Hooks\" />
+	  <Folder Include="Features\Mods\Web\Hooks\Queries\" />
+	  <Folder Include="Features\Mods\Web\Hooks\Events\Scheduled\" />
 	  <Folder Include="Features\SystemInfo\Application\CQRS\Commands\" />
-	  <Folder Include="Kernel\StateManagement\" />
+	  <Folder Include="Features\SystemInfo\Web\Hooks\Queries\" />
 	  <Folder Include="Web\Pages\Hooks\Components\" />
   </ItemGroup>
 
