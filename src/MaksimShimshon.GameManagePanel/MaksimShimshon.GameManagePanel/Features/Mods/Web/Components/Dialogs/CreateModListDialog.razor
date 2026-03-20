@@ -25,13 +25,16 @@
 
                 </MudItem>
                 <MudItem xs=12>
-                    <MudTextField @bind-Value=ViewModel.Name Label="ModList Name"
-                                  Validation=_nameValidator
-                                  Placeholder="Any name will be okay"
-                                  Immediate
-                                  MaxLength="256"
-                                  ReadOnly=ViewModel.IsAllowedComplete
-                                  Disabled=ViewModel.IsBusy() />
+                    <MudFocusTrap DefaultFocus=DefaultFocus.FirstChild>
+                        <MudTextField @bind-Value=ViewModel.Name @ref=_nameRef
+                                      Label="ModList Name"
+                                      Validation=_nameValidator
+                                      Placeholder="Any name will be okay"
+                                      Immediate
+                                      MaxLength="256"
+                                      ReadOnly=ViewModel.IsAllowedComplete
+                                      Disabled=ViewModel.IsBusy() />
+                    </MudFocusTrap>
                 </MudItem>
 
             }

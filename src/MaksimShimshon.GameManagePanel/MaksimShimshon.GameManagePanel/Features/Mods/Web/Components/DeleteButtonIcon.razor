@@ -4,13 +4,35 @@
 @switch (_stage)
 {
     case Stage.Confirm:
-        <MudIconButton Icon="@Icons.Material.Filled.AutoDelete" Color=Color.Warning OnClick=Confirm Disabled=Disabled />
+        <MudIconButton Variant=Variant.Outlined
+                       Icon=@Icons.Material.Filled.AutoDelete
+                       Color=Color.Warning
+                       OnClick=Confirm
+                       Disabled=Disabled />
+        break;
+    case Stage.Busy:
+        <ButtonLoader />
+
+        break;
+    case Stage.Deleted:
+        <MudIconButton Variant=Variant.Outlined
+                       Icon=@Icons.Material.Filled.DeleteForever
+                       Color=Color.Error
+                       Disabled=true />
         break;
     case Stage.Cancel:
-        <MudIconButton Icon="@Icons.Material.Filled.RestoreFromTrash" Color=Color.Primary OnClick=Cancel Disabled=Disabled />
+        <MudIconButton Variant=Variant.Outlined
+                       Icon=@Icons.Material.Filled.RestoreFromTrash
+                       Color=Color.Success
+                       OnClick=Cancel
+                       Disabled=Disabled />
         break;
     default:
-        <MudIconButton Icon="@Icons.Material.Filled.Delete" Color=Color.Error OnClick=InitialClick Disabled=Disabled />
+        <MudIconButton Variant=Variant.Outlined
+                       Icon=@Icons.Material.Filled.Delete
+                       Color=Color.Error
+                       OnClick=InitialClick
+                       Disabled=Disabled />
         break;
 }
 

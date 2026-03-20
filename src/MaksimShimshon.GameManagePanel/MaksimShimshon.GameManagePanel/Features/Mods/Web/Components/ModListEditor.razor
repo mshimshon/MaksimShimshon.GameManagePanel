@@ -23,7 +23,7 @@
     {
         @foreach (var schematicPart in ViewModel.ModListState.SchematicParts)
         {
-            <MudItem xl=12 md=6>
+            <MudItem xs=12 xl=6>
 
                 <MudDropContainer T="ModEntity" Items=@ViewModel.Information[schematicPart.Id]
                                   ItemsSelector="@((item, dropzone) => true)"
@@ -41,9 +41,17 @@
                         </MudDropZone>
                     </ChildContent>
                     <ItemRenderer>
-                        <MudPaper Elevation="25" Class="pa-4 my-4">
-                            <DeleteButtonIcon TEntity=ModEntity Item=context OnClick=@((p) => DeleteEntity(schematicPart.Id, p)) />
-                            @ViewModel.GetModName(context)
+                        <MudPaper Elevation="25" Class="d-flex justify-center align-center pa-4 my-4">
+                            <MudGrid>
+                                <MudItem xs=2 Class="d-flex align-center">
+                                    <DeleteButtonIcon TEntity=ModEntity Item=context
+                                                      OnClick=@((p, ct) => DeleteEntity(schematicPart.Id, p, ct)) />
+                                </MudItem>
+                                <MudItem xs=10 Class="d-flex align-center">
+                                    @ViewModel.GetModName(context)
+                                </MudItem>
+                            </MudGrid>
+  
                         </MudPaper>
 
                     </ItemRenderer>

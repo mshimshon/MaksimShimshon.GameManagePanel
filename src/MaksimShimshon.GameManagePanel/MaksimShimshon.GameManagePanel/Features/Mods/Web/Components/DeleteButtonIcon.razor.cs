@@ -6,21 +6,24 @@ namespace MaksimShimshon.GameManagePanel.Features.Mods.Web.Components;
 public partial class DeleteButtonIcon<TEntity>
 {
 
-    private enum Stage
+    public enum Stage
     {
         Initial,
         Confirm,
-        Cancel
+        Cancel,
+        Busy,
+        Deleted
     }
 
     [Parameter]
-    public EventCallback<TEntity> OnClick { get; set; }
+    public Func<TEntity, CancellationToken, Task<bool>> OnClick { get; set; } = default!;
+
 
     [Parameter]
-    public int ResetDelay { get; set; } = 500;
+    public Func<TEntity, CancellationToken, Task<bool>>? OnRestore { get; set; }
 
     [Parameter]
-    public int CancelDelay { get; set; } = 500;
+    public int ResetDelay { get; set; } = 800;
 
     [Parameter]
     public bool Disabled { get; set; }
@@ -28,15 +31,33 @@ public partial class DeleteButtonIcon<TEntity>
     [Parameter]
     public TEntity Item { get; set; } = default!;
 
+    [Parameter]
+    public bool IsDeleted { get; set; }
+
+    [Parameter]
+    public Stage InitialStage { get; set; } = Stage.Initial;
+
     private Stage _stage = Stage.Initial;
     private CancellationTokenSource _waitCancelSource = new();
     private object _lockStage = new();
+
+    protected override void OnWidgetInitialized()
+    {
+        _stage = InitialStage;
+    }
+    protected override void OnWidgetParametersSet()
+    {
+        if (_stage != Stage.Deleted && IsDeleted)
+            _stage = Stage.Deleted;
+    }
+
     private async Task InitialClick()
     {
         lock (_lockStage)
         {
             if (_stage != Stage.Initial) return;
-            _waitCancelSource.Cancel();
+            if (!_waitCancelSource.IsCancellationRequested)
+                _waitCancelSource.Cancel();
             _stage = Stage.Confirm;
         }
         await InvokeAsync(StateHasChanged);
@@ -49,29 +70,43 @@ public partial class DeleteButtonIcon<TEntity>
         lock (_lockStage)
         {
             if (_stage != Stage.Confirm) return;
-            _waitCancelSource.Cancel();
-            _stage = Stage.Cancel;
+            if (!_waitCancelSource.IsCancellationRequested)
+                _waitCancelSource.Cancel();
+            _stage = Stage.Busy;
+
         }
         await InvokeAsync(StateHasChanged);
-        _waitCancelSource = new();
-        _ = Wait(ResetDelay, (ct) => _stage = Stage.Initial, _waitCancelSource.Token);
+
+        var successful = await OnClick.Invoke(Item, _waitCancelSource.Token);
+        if (OnRestore != default && successful)
+        {
+            _stage = Stage.Cancel;
+        }
+        else
+            _stage = Stage.Deleted;
+
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task Cancel()
     {
+        if (OnRestore == default) return;
         lock (_lockStage)
         {
             if (_stage != Stage.Cancel) return;
-            _waitCancelSource.Cancel();
-            _stage = Stage.Initial;
+            if (!_waitCancelSource.IsCancellationRequested)
+                _waitCancelSource.Cancel();
+            _stage = Stage.Busy;
         }
         await InvokeAsync(StateHasChanged);
-        _waitCancelSource = new();
-        _ = Wait(CancelDelay, (ct) =>
+        var successful = await OnRestore.Invoke(Item, _waitCancelSource.Token);
+        if (successful)
         {
             _stage = Stage.Initial;
-            _ = OnClick.InvokeAsync(Item);
-        }, _waitCancelSource.Token);
+        }
+        else
+            _stage = Stage.Cancel;
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task Wait(int delay, Action<CancellationToken> exec, CancellationToken ct = default)

@@ -26,6 +26,7 @@ internal sealed class CreateModListEffect : IEffect<CreateModListAction>
             await _medihater.Send(command);
             await _notificationService.NotifyAsync($"The Modlist {action.Name} was successfully created.", NotificationSeverity.Success); // TODO: Localize
             await dispatcher.Prepare<CreateModListDoneAction>().DispatchAsync();
+            await dispatcher.Prepare<GetAvailableModListAction>().DispatchAsync();
         }
         catch (WebServiceException)
         {

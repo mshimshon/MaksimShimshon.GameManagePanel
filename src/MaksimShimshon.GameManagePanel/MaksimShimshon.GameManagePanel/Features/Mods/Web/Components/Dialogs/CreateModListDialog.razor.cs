@@ -8,7 +8,9 @@ public partial class CreateModListDialog
     [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; } = default!;
 
+    private MudTextField<string> _nameRef = default!;
     private Func<string, IEnumerable<string>> _nameValidator = default!;
+
     protected override void OnWidgetInitialized()
     {
         _nameValidator = NameValidator;
@@ -30,7 +32,6 @@ public partial class CreateModListDialog
         Console.WriteLine("Parameter Set");
         ViewModel.OnParameterSet();
     }
-
     protected override void OnWidgetBeforeRender()
     {
         ViewModel.OnParameterSet();

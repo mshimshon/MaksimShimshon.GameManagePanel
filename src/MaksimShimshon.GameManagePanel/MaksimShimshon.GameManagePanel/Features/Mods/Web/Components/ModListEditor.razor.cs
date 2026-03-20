@@ -17,8 +17,22 @@ public partial class ModListEditor
         _counter++;
     }
 
-    private async Task DeleteEntity(PartId partId, ModEntity toDelete)
+    private async Task<bool> DeleteEntity(PartId partId, ModEntity toDelete, CancellationToken ct = default)
     {
-        ViewModel.RemoveFrom(partId, toDelete);
+        try
+        {
+            await Task.Delay(2000);
+            //ViewModel.RemoveFrom(partId, toDelete);
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    private async Task<bool> Restore(PartId partId, ModEntity toDelete, CancellationToken ct = default)
+    {
+        return true;
     }
 }
